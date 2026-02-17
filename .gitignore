@@ -1,0 +1,18 @@
+# Logs y Errores
+*.log
+error_log
+.php_error.log
+
+# Sistema y SO
+.DS_Store
+Thumbs.db
+.cache/
+
+# Plesk / FTP
+.ftpquota
+.well-known/
+cgi-bin/
+
+# IDEs
+.vscode/
+.idea/
