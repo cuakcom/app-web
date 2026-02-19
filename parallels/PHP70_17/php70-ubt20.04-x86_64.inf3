@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<build confver="3.11" os_name="Linux" os_vendor="Ubuntu" os_version="20.04" os_release_name="focal" os_arch="x86_64" environment="" build_dir="dist-deb-Ubuntu-20.04-x86_64" send_feedback="true" uninstall_support="yes" gpgcheck="yes" persistent_repo="true" yum_repo_id="PLESK_17_PHP70" yum_repo_name="PHP 7.0" apt_source="" persistent_apt_source="PHP70_17 focal all">
+    <product id="php70">
+        <keypackages>
+            <keypackage>plesk-php70</keypackage>
+        </keypackages>
+        <release id="PHP_7_0" name="PHP v 7.0" version="7.0.33" upgrade_allowed_from="" />
+    </product>
+    <component name="php7.0" description="PHP 7.0 (outdated)" classes="vendor=parallels">
+        <keypackages>
+            <keypackage name="plesk-php70" />
+        </keypackages>
+        <package name="plesk-php70" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="421708" buildtime="0" md5="03ca3aa5fe759139918fcc93cfa8b45b" arch="amd64" />
+        <package name="plesk-php70-bcmath" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-bcmath_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="13696" buildtime="0" md5="cc455973f091db1e81e847674f1f1e14" arch="amd64" />
+        <package name="plesk-php70-cli" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-cli_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="2512316" buildtime="0" md5="52265a6a4947b6fd68d5fb3a46f4bb5e" arch="amd64" />
+        <package name="plesk-php70-dba" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-dba_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="20232" buildtime="0" md5="2690a2089a8ed950a067815fa74ff27d" arch="amd64" />
+        <package name="plesk-php70-enchant" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-enchant_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="8112" buildtime="0" md5="cbaf0eeef80349644ecdfc04a0a3eb39" arch="amd64" />
+        <package name="plesk-php70-fpm" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-fpm_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="1528168" buildtime="0" md5="2726bd4320009d15dc52f20a6ffb2c77" arch="amd64" />
+        <package name="plesk-php70-gd" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-gd_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="101360" buildtime="0" md5="d6abe61531bab9bc47c13e30611adc92" arch="amd64" />
+        <package name="plesk-php70-imagick" version="3.4.3" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-imagick_3.4.3-ubuntu.20.04.251015.0904_amd64.deb" size="90972" buildtime="0" md5="050a92416148c8e1dfb0050a5a5f7941" arch="amd64" />
+        <package name="plesk-php70-imap" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-imap_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="28604" buildtime="0" md5="d14fb589319633a8df936fd74728b4bc" arch="amd64" />
+        <package name="plesk-php70-intl" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-intl_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="123768" buildtime="0" md5="4f6f9f5a277495d0e2bdf1a9bbcf4f43" arch="amd64" />
+        <package name="plesk-php70-ioncube-loader" version="14.4.0" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-ioncube-loader_14.4.0-ubuntu.20.04.251015.0904_amd64.deb" size="414700" buildtime="0" md5="7e96f47823591dde76bcca338c9940a6" arch="amd64" />
+        <package name="plesk-php70-ldap" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-ldap_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="19968" buildtime="0" md5="df0c78e1e877b14f2dcc1a67aea3ae70" arch="amd64" />
+        <package name="plesk-php70-mbstring" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-mbstring_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="453940" buildtime="0" md5="eb7ee65db94ba3abc2bb7c33b0ee0313" arch="amd64" />
+        <package name="plesk-php70-mcrypt" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-mcrypt_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="13096" buildtime="0" md5="a15b64fa9a679fce74215a7039a4a345" arch="amd64" />
+        <package name="plesk-php70-mysql" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-mysql_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="123200" buildtime="0" md5="a5e5ced66e200244e693e6fcef0769e0" arch="amd64" />
+        <package name="plesk-php70-odbc" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-odbc_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="29572" buildtime="0" md5="e946894e4db663a9bf27dc300b4bf6fc" arch="amd64" />
+        <package name="plesk-php70-opcache" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-opcache_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="78428" buildtime="0" md5="188354fcb0a44b9b6abd4196ead7fbc9" arch="amd64" />
+        <package name="plesk-php70-pdo" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-pdo_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="479592" buildtime="0" md5="787d93a1b221c02ce8ea1baa8a6c6d0c" arch="amd64" />
+        <package name="plesk-php70-pear" version="1.10.1" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-pear_1.10.1-ubuntu.20.04.251015.0904_all.deb" size="267092" buildtime="0" md5="d97fc1ed39873c3aa7c88414b603eb3a" arch="all" />
+        <package name="plesk-php70-pgsql" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-pgsql_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="54240" buildtime="0" md5="60dde5fec60ad2e249e62983fe3091d2" arch="amd64" />
+        <package name="plesk-php70-process" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-process_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="18436" buildtime="0" md5="7a809ec6e76a28b8275f714ba1faf377" arch="amd64" />
+        <package name="plesk-php70-pspell" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-pspell_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="7312" buildtime="0" md5="7d69a0c3324251b9633f4fe2b1c4c008" arch="amd64" />
+        <package name="plesk-php70-redis" version="3.0.0" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-redis_3.0.0-ubuntu.20.04.251015.0904_amd64.deb" size="114464" buildtime="0" md5="275d3adc2858b2a8e14b950a3eb99f57" arch="amd64" />
+        <package name="plesk-php70-snmp" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-snmp_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="17896" buildtime="0" md5="de125c6a8417169a002fbd5af37b3446" arch="amd64" />
+        <package name="plesk-php70-soap" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-soap_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="115220" buildtime="0" md5="74cbda50bffeb29108eda1d2b3e4ac8c" arch="amd64" />
+        <package name="plesk-php70-sodium" version="2.0.13" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-sodium_2.0.13-ubuntu.20.04.251015.0904_amd64.deb" size="23044" buildtime="0" md5="79c2ced4690cefbf9fd30feecd5a2028" arch="amd64" />
+        <package name="plesk-php70-tidy" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-tidy_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="15916" buildtime="0" md5="f2d98d63aeb5e62da753a834712f919c" arch="amd64" />
+        <package name="plesk-php70-xdebug" version="2.5.0" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-xdebug_2.5.0-ubuntu.20.04.251015.0904_amd64.deb" size="89900" buildtime="0" md5="747b6b3ee83ca4731e61ea8c5c962fc1" arch="amd64" />
+        <package name="plesk-php70-xml" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-xml_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="70216" buildtime="0" md5="6f94efb9e80bfad512ac85223ad5cebe" arch="amd64" />
+        <package name="plesk-php70-xmlrpc" version="7.0.33" release="ubuntu.20.04.251015.0904" file="packages/plesk-php70-xmlrpc_7.0.33-ubuntu.20.04.251015.0904_amd64.deb" size="30928" buildtime="0" md5="1a20423345fbcd36b7232cb2183a77c1" arch="amd64" />
+    </component>
+    <updates updates_dir="update-deb-Ubuntu-20.04-x86_64" headers_file="" />
+    <thirdparty thirdparty_dir="thirdparty-deb-Ubuntu-20.04-x86_64" />
+    <force_remove_packages />
+</build>

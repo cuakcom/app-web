@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<build confver="3.11" os_name="Linux" os_vendor="Debian" os_version="all" os_release_name="all" os_arch="all" environment="" build_dir="dist-deb-Debian-all-all" send_feedback="true" uninstall_support="yes" gpgcheck="yes" apt_source="SITEBUILDER_18.0.29 all all">
+    <product id="sitebuilder">
+        <keypackages>
+            <keypackage>pp-sitebuilder</keypackage>
+        </keypackages>
+        <release id="SITEBUILDER_18_0_29" name="SITEBUILDER 18.0.29" version="18.0.29" upgrade_allowed_from="5.0.0" />
+    </product>
+    <component name="sitebuilder" description="Web Presence Builder">
+        <package name="pp-sitebuilder" version="18.0.29" release="21032421" file="base/pp-sitebuilder_18.0.29-21032421_all.deb" size="1014" buildtime="0" md5="5d6db85e03438a8747a1fd2c53ddf73a" arch="all" />
+        <package name="wpb-core" version="18.0.29" release="43750.21032421" file="base/wpb-core_18.0.29-43750.21032421_all.deb" size="27194966" buildtime="0" md5="b1bb2fde501d7242af2594cf7dbc7103" arch="all" />
+        <package name="wpb-designs-00" version="18.0.29" release="43750.21032420" file="base/wpb-designs-00_18.0.29-43750.21032420_all.deb" size="2139706" buildtime="0" md5="1300ba713e81226b08b716eb3498111b" arch="all" />
+        <package name="wpb-designs-01" version="18.0.29" release="43750.21032420" file="base/wpb-designs-01_18.0.29-43750.21032420_all.deb" size="2470248" buildtime="0" md5="61c4555993486ef18654bf02b56562ce" arch="all" />
+        <package name="wpb-designs-03" version="18.0.29" release="43750.21032420" file="base/wpb-designs-03_18.0.29-43750.21032420_all.deb" size="2682462" buildtime="0" md5="d1b4ffd45383dfdc3e3158821da70091" arch="all" />
+        <package name="wpb-designs-04" version="18.0.29" release="43750.21032420" file="base/wpb-designs-04_18.0.29-43750.21032420_all.deb" size="3025834" buildtime="0" md5="8e7ab5da1e5616f684b8269ef4ac9c6f" arch="all" />
+        <package name="wpb-designs-05" version="18.0.29" release="43750.21032420" file="base/wpb-designs-05_18.0.29-43750.21032420_all.deb" size="2435428" buildtime="0" md5="b55759980e31835222b6ae4d18198b98" arch="all" />
+        <package name="wpb-designs-07" version="18.0.29" release="43750.21032420" file="base/wpb-designs-07_18.0.29-43750.21032420_all.deb" size="2682768" buildtime="0" md5="a5ecaf05957ea6c0fffa2d42c655935a" arch="all" />
+        <package name="wpb-designs-09" version="18.0.29" release="43750.21032420" file="base/wpb-designs-09_18.0.29-43750.21032420_all.deb" size="3213724" buildtime="0" md5="1c7323562b0d03f3de7ee49124923aff" arch="all" />
+        <package name="wpb-designs-12" version="18.0.29" release="43750.21032420" file="base/wpb-designs-12_18.0.29-43750.21032420_all.deb" size="2637144" buildtime="0" md5="0f4eb341422e4d1bf9c97b8f55798932" arch="all" />
+        <package name="wpb-designs-14" version="18.0.29" release="43750.21032420" file="base/wpb-designs-14_18.0.29-43750.21032420_all.deb" size="2737526" buildtime="0" md5="efb46d6c8612203c5ac74a54ae384df3" arch="all" />
+        <package name="wpb-designs-20" version="18.0.29" release="43750.21032420" file="base/wpb-designs-20_18.0.29-43750.21032420_all.deb" size="2792568" buildtime="0" md5="e26316440e9c0f484ee3abf3ac0453a7" arch="all" />
+        <package name="wpb-headers" version="18.0.29" release="43750.21032421" file="base/wpb-headers_18.0.29-43750.21032421_all.deb" size="135881056" buildtime="0" md5="37f8fbcf7843c4df907c258a0dbdbd74" arch="all" />
+    </component>
+    <updates updates_dir="update-deb-Debian-all-all" headers_file="" />
+    <thirdparty thirdparty_dir="thirdparty-deb-Debian-all-all">
+        <package name="pp-sitebuilder-default-templates" version="12.0.1" release="21032420" file="../dist-deb-Debian-all-all/contrib/pp-sitebuilder-default-templates_12.0.1-21032420_all.deb" size="712" buildtime="0" md5="7c5a918b805b2fced91ab8846307aabb" arch="all" />
+        <package name="pp-sitebuilder-skins" version="12.0.1" release="21032420" file="../dist-deb-Debian-all-all/contrib/pp-sitebuilder-skins_12.0.1-21032420_all.deb" size="704" buildtime="0" md5="9b8842fbcca436e255634db26ad7f3ea" arch="all" />
+    </thirdparty>
+    <force_remove_packages />
+</build>

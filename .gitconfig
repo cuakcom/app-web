@@ -1,0 +1,7 @@
+[safe]
+	directory = /var/www/vhosts/inteligenciageneral.com/httpdocs/app
+[user]
+	name = cuakcom
+	email = github@cuak.com
+[credential]
+	helper = store
