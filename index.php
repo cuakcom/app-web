@@ -1,11 +1,13 @@
 <?php
+require_once 'functions.php';
+
 /**
  * LÓGICA DE DESCARGA UNIFICADA
  */
 if (isset($_POST['action']) && $_POST['action'] == 'download') {
     $contenido = $_POST['content'] ?? '';
-    $filename = "reporte_" . ($_POST['type'] ?? 'consulta') . "_" . date('Ymd_His') . ".txt";
-    header('Content-Type: text/plain');
+    $filename  = "reporte_" . ($_POST['type'] ?? 'consulta') . "_" . date('Ymd_His') . ".txt";
+    header('Content-Type: text/plain; charset=UTF-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     echo "==========================================\n";
     echo "   REPORTE TÉCNICO CUAKCOM EXPERT\n";
@@ -13,38 +15,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'download') {
     echo "==========================================\n\n";
     echo $contenido;
     exit;
-}
-
-/**
- * FUNCIONES AUXILIARES
- */
-function obtenerWhois($dominio) {
-    $servidorWhois = "whois.iana.org";
-    $fp = @fsockopen($servidorWhois, 43);
-    if (!$fp) return "Error de conexión WHOIS.";
-    fputs($fp, $dominio . "\r\n");
-    $out = "";
-    while (!feof($fp)) { $out .= fgets($fp, 128); }
-    fclose($fp);
-    return $out;
-}
-
-function obtenerColorDns($tipo) {
-    $colores = [
-        'A' => 'bg-primary', 'MX' => 'bg-warning text-dark', 'NS' => 'bg-danger', 
-        'TXT' => 'bg-success', 'AAAA' => 'bg-info text-dark', 'CNAME' => 'bg-secondary',
-        'IP' => 'bg-primary', 'HOST' => 'bg-dark'
-    ];
-    return $colores[$tipo] ?? 'bg-dark';
-}
-
-function esPuertoAbierto($host, $puerto) {
-    $connection = @fsockopen($host, $puerto, $errno, $errstr, 0.3);
-    if (is_resource($connection)) {
-        fclose($connection);
-        return true;
-    }
-    return false;
 }
 ?>
 <!DOCTYPE html>
@@ -67,7 +37,7 @@ function esPuertoAbierto($host, $puerto) {
 <div class="container pb-5">
     <div class="row justify-content-center">
         <div class="col-lg-12">
-            
+
             <div class="card p-4 mb-4">
                 <div class="row g-2 align-items-center justify-content-center">
                     <div class="col-md-9">
@@ -116,26 +86,43 @@ function esPuertoAbierto($host, $puerto) {
                 </div>
             </div>
 
-            <?php if (isset($_POST['tool']) && !empty($_POST['dominio'])): 
-                $dominio = explode('/', preg_replace('#^https?://(www\.)?#', '', trim($_POST['dominio'])))[0];
+            <?php if (isset($_POST['tool']) && !empty($_POST['dominio'])):
+                // Extract and sanitize the domain from the submitted value
+                $rawInput = trim($_POST['dominio']);
+                $rawInput = preg_replace('#^https?://(www\.)?#', '', $rawInput);
+                $rawInput = explode('/', $rawInput)[0];
+                $dominio  = limpiarHost($rawInput);
+
+                if (!validarDominio($dominio)):
+            ?>
+                <div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    Dominio no válido: <strong><?php echo htmlspecialchars($rawInput); ?></strong>. Introduce un dominio con formato correcto (ej. <em>ejemplo.com</em>).
+                </div>
+            <?php else:
                 $modulos_activos = $_POST['modulos'] ?? [];
-                $totalExport = "DOMINIO: $dominio\n";
+                $totalExport     = "DOMINIO: $dominio\n";
             ?>
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <?php $ip = gethostbyname($dominio); $host = gethostbyaddr($ip); $redTxt = "RED:\nIP: $ip\nHOST: $host\n"; $totalExport .= "\n$redTxt"; ?>
+                        <?php
+                        $ip      = gethostbyname($dominio);
+                        $host    = gethostbyaddr($ip);
+                        $redTxt  = "RED:\nIP: $ip\nHOST: $host\n";
+                        $totalExport .= "\n$redTxt";
+                        ?>
                         <div class="card mb-3">
                             <div class="card-header-cuak">
                                 <span class="header-badge bg-primary">Resolución</span>
                                 <form action="index.php" method="POST" class="m-0">
-                                    <input type="hidden" name="action" value="download"><input type="hidden" name="type" value="red">
-                                    <input type="hidden" name="content" value="<?php echo $redTxt; ?>">
+                                    <input type="hidden" name="action" value="download">
+                                    <input type="hidden" name="type" value="red">
+                                    <input type="hidden" name="content" value="<?php echo htmlspecialchars($redTxt); ?>">
                                     <button type="submit" class="btn btn-link text-primary p-0"><i class="fa-solid fa-download"></i></button>
                                 </form>
                             </div>
                             <div class="card-body p-3">
-                                <div class="dns-row d-flex align-items-center gap-2 border-0"><span class="badge dns-badge bg-primary">IP</span><div class="dns-value text-primary fw-bold"><?php echo $ip; ?></div></div>
-                                <div class="dns-row d-flex align-items-start gap-2 border-0"><span class="badge dns-badge bg-dark">HOST</span><div class="dns-value text-secondary small"><?php echo $host; ?></div></div>
+                                <div class="dns-row d-flex align-items-center gap-2 border-0"><span class="badge dns-badge bg-primary">IP</span><div class="dns-value text-primary fw-bold"><?php echo htmlspecialchars($ip); ?></div></div>
+                                <div class="dns-row d-flex align-items-start gap-2 border-0"><span class="badge dns-badge bg-dark">HOST</span><div class="dns-value text-secondary small"><?php echo htmlspecialchars($host); ?></div></div>
                             </div>
                         </div>
 
@@ -144,26 +131,27 @@ function esPuertoAbierto($host, $puerto) {
                             <div class="card-header-cuak">
                                 <span class="header-badge bg-dark">Puertos</span>
                                 <form action="index.php" method="POST" class="m-0">
-                                    <input type="hidden" name="action" value="download"><input type="hidden" name="type" value="puertos">
+                                    <input type="hidden" name="action" value="download">
+                                    <input type="hidden" name="type" value="puertos">
                                     <input type="hidden" name="content" id="ports-export-content" value="">
                                     <button type="submit" class="btn btn-link text-dark p-0"><i class="fa-solid fa-download"></i></button>
                                 </form>
                             </div>
                             <div class="card-body p-3">
-                                <?php 
-                                $puertoTxt = "PUERTOS:\n";
+                                <?php
+                                $puertoTxt  = "PUERTOS:\n";
                                 $categorias = [
-                                    'Web' => [80 => 'HTTP', 443 => 'HTTPS', 8080 => 'PROXY'],
-                                    'Correo' => [25 => 'SMTP', 465 => 'SMTPS', 587 => 'SMTP-S', 110 => 'POP3', 995 => 'POP3S', 143 => 'IMAP', 993 => 'IMAPS'],
-                                    'Bases de Datos' => [3306 => 'MYSQL', 5432 => 'POSTGRE', 1433 => 'SQL'],
-                                    'Acceso/Otros' => [22 => 'SSH', 3389 => 'RDP', 53 => 'DNS']
+                                    'Web'           => [80 => 'HTTP',  443 => 'HTTPS',  8080 => 'PROXY'],
+                                    'Correo'        => [25 => 'SMTP',  465 => 'SMTPS',  587 => 'SMTP-S', 110 => 'POP3', 995 => 'POP3S', 143 => 'IMAP', 993 => 'IMAPS'],
+                                    'Bases de Datos'=> [3306 => 'MYSQL', 5432 => 'POSTGRE', 1433 => 'SQL'],
+                                    'Acceso/Otros'  => [22 => 'SSH', 3389 => 'RDP', 53 => 'DNS'],
                                 ];
                                 foreach ($categorias as $cat => $ports): ?>
                                     <div class="port-group-title"><?php echo $cat; ?></div>
                                     <div class="row g-2">
-                                        <?php foreach ($ports as $p => $label): 
-                                            $isOpen = esPuertoAbierto($dominio, $p); 
-                                            $puertoTxt .= "[$p] $label: ".($isOpen?'OPEN':'CLOSED')."\n"; 
+                                        <?php foreach ($ports as $p => $label):
+                                            $isOpen = esPuertoAbierto($dominio, $p);
+                                            $puertoTxt .= "[$p] $label: " . ($isOpen ? 'OPEN' : 'CLOSED') . "\n";
                                         ?>
                                             <div class="col-6">
                                                 <div class="port-row">
@@ -186,19 +174,38 @@ function esPuertoAbierto($host, $puerto) {
                             <div class="card-header-cuak">
                                 <span class="header-badge bg-primary">DNS</span>
                                 <form action="index.php" method="POST" class="m-0">
-                                    <input type="hidden" name="action" value="download"><input type="hidden" name="type" value="dns">
+                                    <input type="hidden" name="action" value="download">
+                                    <input type="hidden" name="type" value="dns">
                                     <input type="hidden" name="content" id="dns-export-content" value="">
                                     <button type="submit" class="btn btn-link text-primary p-0"><i class="fa-solid fa-download"></i></button>
                                 </form>
                             </div>
                             <div class="card-body p-3"><div class="row">
-                                <?php $dnsExport = "DNS:\n"; foreach ([['A', 'MX'], ['NS', 'TXT']] as $idx => $colGroup): ?>
-                                    <div class="col-md-6 <?php echo $idx == 0 ? 'border-end' : ''; ?>">
-                                        <?php foreach ($colGroup as $t): $regs = @dns_get_record($dominio, constant("DNS_$t"));
+                                <?php
+                                $dnsExport  = "DNS:\n";
+                                // Two columns: left [A, AAAA, MX] and right [NS, TXT, CNAME]
+                                $dnsColumns = [['A', 'AAAA', 'MX'], ['NS', 'TXT', 'CNAME']];
+                                foreach ($dnsColumns as $idx => $colGroup): ?>
+                                    <div class="col-md-6 <?php echo $idx === 0 ? 'border-end' : ''; ?>">
+                                        <?php foreach ($colGroup as $t):
+                                            $regs = @dns_get_record($dominio, constant("DNS_$t"));
                                             echo "<div class='text-muted mt-2 mb-2 fw-bold text-uppercase' style='font-size:0.6rem;'>$t Records</div>";
-                                            if ($regs): foreach ($regs as $r): $val = $r['ip'] ?? $r['target'] ?? $r['txt'] ?? '---'; $dnsExport .= "[$t] $val\n"; ?>
-                                                <div class="dns-row d-flex align-items-start gap-2"><span class="badge dns-badge <?php echo obtenerColorDns($t); ?>"><?php echo $t; ?></span><div class="dns-value"><?php echo $val; ?></div></div>
-                                        <?php endforeach; else: echo "<div class='small text-muted opacity-50'>No data</div>"; endif; endforeach; ?>
+                                            if ($regs):
+                                                foreach ($regs as $r):
+                                                    // Handle all record types correctly
+                                                    $val = $r['ip'] ?? $r['ipv6'] ?? $r['target'] ?? $r['txt'] ?? '---';
+                                                    $dnsExport .= "[$t] $val\n";
+                                                    ?>
+                                                    <div class="dns-row d-flex align-items-start gap-2">
+                                                        <span class="badge dns-badge <?php echo obtenerColorDns($t); ?>"><?php echo $t; ?></span>
+                                                        <div class="dns-value"><?php echo htmlspecialchars($val); ?></div>
+                                                    </div>
+                                                    <?php
+                                                endforeach;
+                                            else:
+                                                echo "<div class='small text-muted opacity-50'>No data</div>";
+                                            endif;
+                                        endforeach; ?>
                                     </div>
                                 <?php endforeach; $totalExport .= "\n$dnsExport"; ?>
                                 <script>document.getElementById('dns-export-content').value = `<?php echo addslashes($dnsExport); ?>`;</script>
@@ -213,7 +220,8 @@ function esPuertoAbierto($host, $puerto) {
                             <span class="header-badge bg-danger">Whois</span>
                             <form action="index.php" method="POST" class="m-0">
                                 <?php $whoisData = obtenerWhois($dominio); $totalExport .= "\nWHOIS:\n$whoisData"; ?>
-                                <input type="hidden" name="action" value="download"><input type="hidden" name="type" value="whois">
+                                <input type="hidden" name="action" value="download">
+                                <input type="hidden" name="type" value="whois">
                                 <input type="hidden" name="content" value="<?php echo htmlspecialchars($whoisData); ?>">
                                 <button type="submit" class="btn btn-link text-danger p-0"><i class="fa-solid fa-download"></i></button>
                             </form>
@@ -223,7 +231,7 @@ function esPuertoAbierto($host, $puerto) {
                     <?php endif; ?>
                 </div>
                 <script>document.getElementById('export-all-content').value = `<?php echo addslashes($totalExport); ?>`;</script>
-            <?php endif; ?>
+            <?php endif; endif; ?>
         </div>
     </div>
 </div>
