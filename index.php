@@ -80,8 +80,8 @@ define('APP_VERSION', '2.0.0');
     <div id="results" class="d-none">
         <div class="row g-3">
 
-            <!-- Columna izquierda (md-4) -->
-            <div class="col-12 col-md-4 d-flex flex-column gap-3">
+            <!-- Columna izquierda (md-6) -->
+            <div class="col-12 col-md-6 d-flex flex-column gap-3">
 
                 <!-- Resolución (siempre activo) -->
                 <div class="card result-card" id="card-resolution">
@@ -151,8 +151,8 @@ define('APP_VERSION', '2.0.0');
 
             </div><!-- /col-left -->
 
-            <!-- Columna derecha (md-8) -->
-            <div class="col-12 col-md-8 d-flex flex-column gap-3">
+            <!-- Columna derecha (md-6) -->
+            <div class="col-12 col-md-6 d-flex flex-column gap-3">
 
                 <!-- DNS -->
                 <div class="card result-card d-none" id="card-dns">
