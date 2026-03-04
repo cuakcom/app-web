@@ -1,30 +1,35 @@
 <?php
-// modules/dns.php
-$host_escaped_dns = escapeshellarg($host_clean);
-$salida = shell_exec("dig $host_escaped_dns ANY +noall +answer 2>&1");
+/**
+ * Módulo: Registros DNS (A, AAAA, CNAME, MX, NS, TXT)
+ * Variables disponibles: $domain (string, sanitizado por api.php)
+ */
 
-echo "<h3>3. Registros DNS (A, MX, TXT)</h3>";
-echo "<table class='custom-table'>";
-echo "<thead><tr><th>Entrada</th><th>Tipo</th><th>Valor / Destino</th></tr></thead>";
-echo "<tbody>";
+$typeMap = [
+    'A'     => DNS_A,
+    'AAAA'  => DNS_AAAA,
+    'CNAME' => DNS_CNAME,
+    'MX'    => DNS_MX,
+    'NS'    => DNS_NS,
+    'TXT'   => DNS_TXT,
+];
 
-if ($salida) {
-    $lineas = explode("\n", trim($salida));
-    foreach ($lineas as $linea) {
-        if (preg_match('/^(\S+)\s+\d+\s+IN\s+(\S+)\s+(.*)$/', $linea, $matches)) {
-            $entrada = rtrim($matches[1], '.');
-            $tipo    = $matches[2];
-            $valor   = $matches[3];
-
-            echo "<tr>";
-            echo "<td><strong>$entrada</strong></td>";
-            echo "<td><span class='badge badge-$tipo'>$tipo</span></td>";
-            echo "<td><code>$valor</code></td>";
-            echo "</tr>";
+$records = [];
+foreach ($typeMap as $type => $const) {
+    $res = @dns_get_record($domain, $const);
+    if (empty($res)) continue;
+    foreach ($res as $r) {
+        $value = $r['ip'] ?? $r['ipv6'] ?? $r['target'] ?? $r['txt'] ?? $r['host'] ?? '';
+        if ($value === '') continue;
+        $entry = [
+            'type'  => $type,
+            'value' => $value,
+            'ttl'   => $r['ttl'] ?? null,
+        ];
+        if (isset($r['pri'])) {
+            $entry['priority'] = (int)$r['pri'];
         }
+        $records[] = $entry;
     }
-} else {
-    echo "<tr><td colspan='3'>No se encontraron registros.</td></tr>";
 }
-echo "</tbody></table>";
-?>
+
+echo json_encode(['success' => true, 'records' => $records]);
