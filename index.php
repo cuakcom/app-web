@@ -15,6 +15,7 @@ define('APP_VERSION', '2.0.0');
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
 <body>
 
@@ -81,12 +82,15 @@ define('APP_VERSION', '2.0.0');
         <div class="row g-3">
 
             <!-- Columna izquierda (md-6) -->
-            <div class="col-12 col-md-6 d-flex flex-column gap-3">
+            <div class="col-12 col-md-6 d-flex flex-column gap-3" id="col-left">
 
                 <!-- Resolución (siempre activo) -->
                 <div class="card result-card" id="card-resolution">
                     <div class="card-header-cuak">
-                        <span class="header-badge bg-primary">Resolución</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge bg-primary">Resolución</span>
+                        </div>
                         <button class="btn btn-link p-0 text-primary" onclick="downloadCard('resolution')" title="Descargar">
                             <i class="fa-solid fa-download"></i>
                         </button>
@@ -102,7 +106,10 @@ define('APP_VERSION', '2.0.0');
                 <!-- SSL -->
                 <div class="card result-card d-none" id="card-ssl">
                     <div class="card-header-cuak">
-                        <span class="header-badge bg-success" id="badge-ssl">SSL</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge bg-success" id="badge-ssl">SSL</span>
+                        </div>
                         <button class="btn btn-link p-0 text-success" id="dl-ssl" onclick="downloadCard('ssl')" title="Descargar">
                             <i class="fa-solid fa-download"></i>
                         </button>
@@ -119,7 +126,10 @@ define('APP_VERSION', '2.0.0');
                 <!-- Puertos -->
                 <div class="card result-card d-none" id="card-ports">
                     <div class="card-header-cuak">
-                        <span class="header-badge bg-dark">Puertos</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge bg-dark">Puertos</span>
+                        </div>
                         <button class="btn btn-link p-0 text-dark" onclick="downloadCard('ports')" title="Descargar">
                             <i class="fa-solid fa-download"></i>
                         </button>
@@ -136,7 +146,10 @@ define('APP_VERSION', '2.0.0');
                 <!-- Ping -->
                 <div class="card result-card d-none" id="card-ping">
                     <div class="card-header-cuak">
-                        <span class="header-badge" style="background:#ea580c">Ping</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge" style="background:#ea580c">Ping</span>
+                        </div>
                         <button class="btn btn-link p-0" style="color:#ea580c" onclick="downloadCard('ping')" title="Descargar">
                             <i class="fa-solid fa-download"></i>
                         </button>
@@ -152,12 +165,15 @@ define('APP_VERSION', '2.0.0');
             </div><!-- /col-left -->
 
             <!-- Columna derecha (md-6) -->
-            <div class="col-12 col-md-6 d-flex flex-column gap-3">
+            <div class="col-12 col-md-6 d-flex flex-column gap-3" id="col-right">
 
                 <!-- DNS -->
                 <div class="card result-card d-none" id="card-dns">
                     <div class="card-header-cuak">
-                        <span class="header-badge" style="background:#7c3aed">DNS</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge" style="background:#7c3aed">DNS</span>
+                        </div>
                         <button class="btn btn-link p-0" style="color:#7c3aed" onclick="downloadCard('dns')" title="Descargar">
                             <i class="fa-solid fa-download"></i>
                         </button>
@@ -175,7 +191,10 @@ define('APP_VERSION', '2.0.0');
                 <!-- WHOIS -->
                 <div class="card result-card d-none" id="card-whois">
                     <div class="card-header-cuak">
-                        <span class="header-badge bg-danger">WHOIS</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge bg-danger">WHOIS</span>
+                        </div>
                         <button class="btn btn-link p-0 text-danger" onclick="downloadCard('whois')" title="Descargar">
                             <i class="fa-solid fa-download"></i>
                         </button>
@@ -536,6 +555,17 @@ function esc(str) {
 function stamp() {
     return new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 }
+
+// ---- Drag & drop entre columnas (SortableJS) ----
+const sortableOptions = {
+    group:     'cards',
+    handle:    '.drag-handle',
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    dragClass:  'sortable-drag',
+};
+new Sortable(document.getElementById('col-left'),  sortableOptions);
+new Sortable(document.getElementById('col-right'), sortableOptions);
 </script>
 </body>
 </html>

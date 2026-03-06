@@ -62,6 +62,36 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* --- Drag handle --- */
+.drag-handle {
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    cursor: grab;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.drag-handle:hover {
+    color: #64748b;
+    background: #f1f5f9;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.result-card.sortable-ghost {
+    opacity: 0.35;
+}
+
+.result-card.sortable-drag {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: rotate(1deg);
+}
+
 /* --- Module selectors --- */
 .module-selectors {
     display: flex;
