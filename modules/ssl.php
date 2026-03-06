@@ -44,5 +44,6 @@ echo json_encode([
     'valid_to'   => date('d/m/Y', $info['validTo_time_t']),
     'days_left'  => $daysLeft,
     'expired'    => $daysLeft < 0,
-    'warning'    => ($daysLeft >= 0 && $daysLeft < 30),
+    'warning'    => ($daysLeft >= 0 && $daysLeft < 30),   // < 1 mes → rojo
+    'soon'       => ($daysLeft >= 30 && $daysLeft <= 60),  // 1-2 meses → naranja
 ]);
