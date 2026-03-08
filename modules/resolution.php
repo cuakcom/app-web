@@ -2,21 +2,26 @@
 /**
  * Módulo: Resolución IP / DNS inverso
  * Variables disponibles: $domain (string, sanitizado por api.php)
+ *
+ * ARSYS se detecta si:
+ *  - IP empieza por 217.76. / 82.223. / 82.233.
+ *  - PTR (reverso) coincide con *.servidoresdns.net o *.serviciodecorreo.es
  */
 
 $ip      = gethostbyname($domain);
 $hasIP   = ($ip !== $domain);
 $reverse = $hasIP ? gethostbyaddr($ip) : null;
 
-// Detección ARSYS: rangos IP 217.76.x.x / 82.233.x.x o hostname *.servidoresdns.net
 $arsys = false;
 if ($hasIP) {
-    if (strpos($ip, '217.76.') === 0 || strpos($ip, '82.233.') === 0) {
-        $arsys = true;
+    foreach (['217.76.', '82.223.', '82.233.'] as $range) {
+        if (strpos($ip, $range) === 0) { $arsys = true; break; }
     }
 }
-if (!$arsys && $reverse && preg_match('/\.servidoresdns\.net\.?$/i', $reverse)) {
-    $arsys = true;
+if (!$arsys && $reverse) {
+    if (preg_match('/\.(servidoresdns\.net|serviciodecorreo\.es)\.?$/i', $reverse)) {
+        $arsys = true;
+    }
 }
 
 echo json_encode([

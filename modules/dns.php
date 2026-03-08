@@ -41,6 +41,19 @@ $phpTypeMap = [
 $records = [];
 $arsysNs = false;
 
+// Helper: detectar si un valor (IP o hostname) pertenece a ARSYS
+$isArsys = function(string $value, string $type): bool {
+    if ($type === 'A') {
+        foreach (['217.76.', '82.223.', '82.233.'] as $range) {
+            if (strpos($value, $range) === 0) return true;
+        }
+    }
+    if (in_array($type, ['NS', 'MX', 'CNAME', 'SRV'])) {
+        if (preg_match('/\.(servidoresdns\.net|serviciodecorreo\.es)\.?$/i', $value)) return true;
+    }
+    return false;
+};
+
 foreach ($activeTypes as $type) {
     switch ($type) {
 
@@ -101,10 +114,10 @@ foreach ($activeTypes as $type) {
                 if ($type === 'MX' && isset($r['pri'])) {
                     $entry['priority'] = (int)$r['pri'];
                 }
-                // Detectar NS de ARSYS
-                if ($type === 'NS' && preg_match('/\.servidoresdns\.net\.?$/i', $value)) {
-                    $arsysNs = true;
+                // Detectar ARSYS (NS, MX, A, CNAME…)
+                if ($isArsys($value, $type)) {
                     $entry['arsys'] = true;
+                    if ($type === 'NS') $arsysNs = true;
                 }
                 $records[] = $entry;
             }
