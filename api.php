@@ -47,7 +47,8 @@ if (empty($domain)) {
 
 $allowed = ['resolution', 'dns', 'ports', 'whois', 'ssl', 'ping',
             'headers', 'blacklist', 'traceroute', 'redirect', 'mailtest',
-            'dnsquery', 'webinfo'];
+            'dnsquery', 'webinfo', 'geoip', 'dnspropagation', 'seocheck',
+            'sslscan', 'smtprelay'];
 
 if (!in_array($module, $allowed, true)) {
     echo json_encode(['success' => false, 'error' => 'Módulo desconocido']);
@@ -55,7 +56,17 @@ if (!in_array($module, $allowed, true)) {
 }
 
 // ── Caché de archivo para módulos costosos ────────────────────────────────────
-$cacheable = ['dns' => 300, 'whois' => 3600, 'blacklist' => 1800, 'mailtest' => 300, 'webinfo' => 600]; // TTL en segundos
+$cacheable = [
+    'dns'           => 300,
+    'whois'         => 3600,
+    'blacklist'     => 1800,
+    'mailtest'      => 300,
+    'webinfo'       => 600,
+    'geoip'         => 3600,
+    'dnspropagation'=> 120,
+    'seocheck'      => 600,
+    'sslscan'       => 600,
+]; // TTL en segundos
 $useCache  = false;
 $cacheFile = null;
 

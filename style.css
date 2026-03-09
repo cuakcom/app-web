@@ -1,5 +1,5 @@
 /* ============================================================
-   Cuakcom Expert Suite v2.3.0 — Estilos principales
+   Cuakcom Expert Suite v3.0.0 — Estilos principales
    Mobile-first, compatible con Bootstrap 5.3
    ============================================================ */
 
@@ -857,3 +857,173 @@ body.dark-mode .main-tab-btn.active { color: #93c5fd; border-bottom-color: #93c5
     .webinfo-stat  { min-width: 120px; padding: 5px 10px; }
     .eml-headers-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Geo IP card ────────────────────────────────────────────── */
+.geoip-header {
+    font-size: 1rem;
+    font-weight: 700;
+}
+.geoip-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--dns-border);
+    font-size: 0.82rem;
+}
+.geoip-row:last-child { border-bottom: none; }
+.geoip-val { font-weight: 600; color: var(--text); }
+.geoip-sub { font-size: 0.72rem; color: var(--text-muted); }
+
+/* ── DNS Propagation table ──────────────────────────────────── */
+.prop-table {
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+.prop-table th {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 4px 8px;
+    border-bottom: 2px solid var(--border);
+}
+.prop-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--dns-border);
+    vertical-align: middle;
+}
+.prop-table tr:last-child td { border-bottom: none; }
+.prop-server-name { font-weight: 600; white-space: nowrap; }
+.prop-server-ip   { font-size: 0.7rem; white-space: nowrap; }
+.prop-val {
+    display: inline-block;
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.72rem;
+    margin: 1px 2px;
+}
+
+/* ── SEO / Web tab ──────────────────────────────────────────── */
+.seo-field {
+    margin-bottom: 10px;
+}
+.seo-label {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+.seo-val {
+    font-size: 0.82rem;
+    word-break: break-word;
+    color: var(--text);
+}
+.seo-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    margin-bottom: 6px;
+}
+
+/* ── Tech detection badges ──────────────────────────────────── */
+.tech-cat-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+.tech-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+.tech-badge {
+    display: inline-block;
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text);
+}
+.tech-badge small { font-weight: 400; color: var(--text-muted); margin-left: 3px; }
+
+/* ── SSL/TLS scan ───────────────────────────────────────────── */
+.ssl-chain-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 2px;
+    background: var(--field-bg);
+}
+.ssl-chain-leaf { border-color: #3b82f6; }
+.ssl-chain-ca   { opacity: 0.85; }
+.ssl-chain-idx  {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--border);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+.ssl-chain-arrow {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+/* SAN grid */
+.san-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+.san-entry {
+    display: inline-block;
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.72rem;
+    color: var(--text);
+}
+
+/* ── SMTP dialog ────────────────────────────────────────────── */
+.smtp-dialog {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.72rem;
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.smtp-line { padding: 1px 0; }
+.smtp-dir  { color: var(--text-muted); display: inline-block; width: 34px; flex-shrink: 0; }
+.smtp-send { color: #2563eb; }
+.smtp-recv { color: var(--text); }
+.smtp-fail { color: #dc2626 !important; }
+.smtp-defer { color: #d97706 !important; }
+.smtp-error { color: #dc2626; }
+
+/* ── Tabs scrollable on mobile ──────────────────────────────── */
+.main-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.main-tabs::-webkit-scrollbar { display: none; }
+.main-tabs .nav-item { flex-shrink: 0; }

@@ -1,8 +1,8 @@
 <?php
 /**
- * Cuakcom Expert Suite - v2.3.0
+ * Cuakcom Expert Suite - v3.0.0
  */
-define('APP_VERSION', '2.3.0');
+define('APP_VERSION', '3.0.0');
 
 // Datos del visitante (server-side)
 function getClientIp(): string {
@@ -86,6 +86,24 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 <button class="main-tab-btn" id="tab-dnsq-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-dnsquery" type="button" role="tab">
                     <i class="fa-solid fa-terminal me-1"></i>Consultas DNS
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="main-tab-btn" id="tab-red-btn" data-bs-toggle="tab"
+                        data-bs-target="#tab-red" type="button" role="tab">
+                    <i class="fa-solid fa-network-wired me-1"></i>Red &amp; IP
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="main-tab-btn" id="tab-web-btn" data-bs-toggle="tab"
+                        data-bs-target="#tab-web" type="button" role="tab">
+                    <i class="fa-solid fa-globe me-1"></i>Web
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="main-tab-btn" id="tab-ssl-btn" data-bs-toggle="tab"
+                        data-bs-target="#tab-ssl" type="button" role="tab">
+                    <i class="fa-solid fa-shield-halved me-1"></i>SSL/TLS
                 </button>
             </li>
         </ul>
@@ -306,6 +324,16 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <i class="fa-solid fa-shield-halved me-1 text-success"></i>
                         <em>*El contenido del mensaje no se compartirá con fuentes externas ni se almacenarán datos confidenciales</em>
                     </p>
+                    <!-- Relay test -->
+                    <div class="d-flex align-items-center gap-2 flex-wrap mt-2 pt-2 border-top">
+                        <span class="small text-muted fw-semibold">
+                            <i class="fa-solid fa-arrows-left-right me-1"></i>Pruebas avanzadas SMTP
+                        </span>
+                        <button class="btn btn-sm btn-outline-danger ms-auto" id="btn-relay-test" onclick="startRelayTest()">
+                            <span id="relay-btn-text"><i class="fa-solid fa-vials me-1"></i>Test relay &amp; entrega</span>
+                            <span id="relay-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -441,6 +469,35 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     </div>
                 </div>
             </div>
+            <!-- Relay results -->
+            <div id="relay-results" class="d-none mt-3">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="header-badge bg-danger">Open Relay</span>
+                                </div>
+                            </div>
+                            <div class="card-body p-3" id="body-relay-openrelay">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="header-badge" style="background:#374151">Simulación entrega</span>
+                                </div>
+                            </div>
+                            <div class="card-body p-3" id="body-relay-delivery">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div><!-- /tab-correo -->
 
         <!-- ══════════ TAB: CONSULTAS DNS ══════════ -->
@@ -506,6 +563,168 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
             </div>
         </div><!-- /tab-dnsquery -->
 
+        <!-- ══════════ TAB: RED & IP ══════════ -->
+        <div class="tab-pane fade" id="tab-red" role="tabpanel">
+            <div class="card search-options-card">
+                <div class="card-body p-3">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-12 col-sm-5">
+                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-server me-1"></i>IP o dominio</label>
+                            <input type="text" id="red-input" class="form-control form-control-sm" placeholder="1.2.3.4 o ejemplo.com">
+                        </div>
+                        <div class="col-6 col-sm-2">
+                            <button class="btn btn-dark btn-sm w-100" onclick="startGeoIp()">
+                                <span id="geo-btn-text"><i class="fa-solid fa-location-dot me-1"></i>Geolocalizar</span>
+                                <span id="geo-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                        </div>
+                        <div class="col-12"><hr class="my-2"></div>
+                        <div class="col-12 col-sm-5">
+                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-satellite-dish me-1"></i>DNS Propagación — dominio del buscador arriba</label>
+                        </div>
+                        <div class="col-6 col-sm-2">
+                            <label class="form-label small fw-semibold mb-1">Tipo</label>
+                            <select id="prop-type" class="form-select form-select-sm">
+                                <?php foreach (['A','AAAA','CNAME','MX','NS','TXT','SOA'] as $t): ?>
+                                <option value="<?= $t ?>"><?= $t ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-6 col-sm-2">
+                            <button class="btn btn-secondary btn-sm w-100" onclick="startPropagation()">
+                                <span id="prop-btn-text"><i class="fa-solid fa-globe me-1"></i>Propagación</span>
+                                <span id="prop-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="red-results" class="d-none mt-3">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge" style="background:#0369a1">Geo IP &amp; ASN</span>
+                            </div>
+                            <div class="card-body p-3" id="body-geoip">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge bg-dark">WHOIS IP</span>
+                            </div>
+                            <div class="card-body p-3" id="body-whoisip">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="prop-results" class="d-none mt-3">
+                <div class="card result-card">
+                    <div class="card-header-cuak">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="header-badge" style="background:#7c3aed">Propagación DNS</span>
+                            <span class="small text-muted" id="prop-meta"></span>
+                        </div>
+                        <button class="btn btn-link p-0" style="color:#7c3aed" onclick="downloadPropagation()" title="Descargar">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3" id="body-propagation"></div>
+                </div>
+            </div>
+        </div><!-- /tab-red -->
+
+        <!-- ══════════ TAB: WEB ══════════ -->
+        <div class="tab-pane fade" id="tab-web" role="tabpanel">
+            <div class="card search-options-card">
+                <div class="card-body p-3 d-flex align-items-center gap-3 flex-wrap">
+                    <span class="small text-muted fw-semibold">
+                        <i class="fa-solid fa-globe me-1"></i>Análisis SEO, Open Graph y tecnologías del dominio del buscador arriba
+                    </span>
+                    <button class="btn btn-dark btn-sm ms-auto fw-bold" id="btn-web-analyze" onclick="startWebAnalysis()">
+                        <span id="web-btn-text"><i class="fa-solid fa-magnifying-glass me-1"></i>Analizar web</span>
+                        <span id="web-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                    </button>
+                </div>
+            </div>
+            <div id="web-results" class="d-none mt-3">
+                <div class="row g-3">
+                    <div class="col-12 col-md-7">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge" style="background:#0f766e">SEO &amp; Meta</span>
+                            </div>
+                            <div class="card-body p-3" id="body-seo"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge" style="background:#7c3aed">Tecnologías</span>
+                            </div>
+                            <div class="card-body p-3" id="body-tech"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /tab-web -->
+
+        <!-- ══════════ TAB: SSL/TLS ══════════ -->
+        <div class="tab-pane fade" id="tab-ssl" role="tabpanel">
+            <div class="card search-options-card">
+                <div class="card-body p-3 d-flex align-items-center gap-3 flex-wrap">
+                    <span class="small text-muted fw-semibold">
+                        <i class="fa-solid fa-lock me-1"></i>Escaneo TLS/SSL extendido del dominio del buscador arriba
+                    </span>
+                    <button class="btn btn-dark btn-sm ms-auto fw-bold" id="btn-ssl-scan" onclick="startSslScan()">
+                        <span id="ssl-btn-text"><i class="fa-solid fa-shield-halved me-1"></i>Escanear SSL/TLS</span>
+                        <span id="ssl-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                    </button>
+                </div>
+            </div>
+            <div id="ssl-results" class="d-none mt-3">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge bg-success">Protocolos</span>
+                            </div>
+                            <div class="card-body p-3" id="body-ssl-protocols"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge" style="background:#0369a1">Cipher &amp; Seguridad</span>
+                            </div>
+                            <div class="card-body p-3" id="body-ssl-cipher"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <span class="header-badge" style="background:#7c3aed">Cadena de certificados</span>
+                            </div>
+                            <div class="card-body p-3" id="body-ssl-chain"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="card result-card">
+                        <div class="card-header-cuak">
+                            <span class="header-badge" style="background:#374151">SAN — Dominios alternativos</span>
+                        </div>
+                        <div class="card-body p-3" id="body-ssl-san"></div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /tab-ssl -->
+
     </div><!-- /tab-content -->
 
 </main>
@@ -546,6 +765,10 @@ document.getElementById('input-domain').addEventListener('keydown', e => {
             startMailAnalysis();
         } else if (document.getElementById('tab-dnsquery').classList.contains('show')) {
             startDnsQuery();
+        } else if (document.getElementById('tab-web').classList.contains('show')) {
+            startWebAnalysis();
+        } else if (document.getElementById('tab-ssl').classList.contains('show')) {
+            startSslScan();
         } else {
             startAnalysis();
         }
@@ -1429,6 +1652,376 @@ function downloadEmlReport() {
     text += `CABECERAS (${emlData.total_headers}):\n`;
     (emlData.headers ?? []).forEach(h => { text += `${h.name}: ${h.value}\n`; });
     downloadText(text, `eml_report_${stamp()}.txt`);
+}
+
+// ── Red & IP tab ─────────────────────────────────────────────
+let lastPropData = null;
+
+async function startGeoIp() {
+    const input = (document.getElementById('red-input').value.trim() || normalizeDomain());
+    if (!input) { alert('Introduce una IP o dominio'); return; }
+    document.getElementById('geo-btn-text').classList.add('d-none');
+    document.getElementById('geo-btn-loading').classList.remove('d-none');
+    document.getElementById('red-results').classList.remove('d-none');
+    document.getElementById('body-geoip').innerHTML   = skeletonHtml();
+    document.getElementById('body-whoisip').innerHTML = skeletonHtml();
+    try {
+        const enc = encodeURIComponent(input);
+        const [geoRes, whoisRes] = await Promise.allSettled([
+            fetch(`api.php?module=geoip&domain=${enc}`).then(r => r.json()),
+            fetch(`api.php?module=whois&domain=${enc}`).then(r => r.json()),
+        ]);
+        const geo = geoRes.status === 'fulfilled' ? geoRes.value : null;
+        const wh  = whoisRes.status === 'fulfilled' ? whoisRes.value : null;
+        geo ? (geo.success ? renderGeoIp(geo) : setBodyErr('geoip', geo.error))
+            : setBodyErr('geoip', 'Error');
+        wh  ? (wh.success  ? document.getElementById('body-whoisip').innerHTML = `<div class="whois-scroll">${esc(wh.data)}</div>`
+                           : setBodyErr('whoisip', wh.error))
+            : setBodyErr('whoisip', 'Error');
+    } catch(e) {
+        setBodyErr('geoip', e.message); setBodyErr('whoisip', e.message);
+    } finally {
+        document.getElementById('geo-btn-text').classList.remove('d-none');
+        document.getElementById('geo-btn-loading').classList.add('d-none');
+    }
+}
+
+function setBodyErr(id, msg) {
+    const el = document.getElementById('body-' + id);
+    if (el) el.innerHTML = `<div class="alert alert-danger py-2 mb-0 small"><i class="fa-solid fa-triangle-exclamation me-1"></i>${esc(msg ?? 'Error')}</div>`;
+}
+function skeletonHtml() {
+    return `<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`;
+}
+
+function renderGeoIp(d) {
+    const flag  = d.country_code ? `<img src="https://flagcdn.com/24x18/${d.country_code.toLowerCase()}.png" alt="${esc(d.country_code)}" class="me-1" style="vertical-align:middle">` : '';
+    const badge = (icon, val, sub) => val ? `<div class="geoip-row"><i class="fa-solid ${icon} me-2 text-muted"></i><div><div class="geoip-val">${esc(val)}</div>${sub ? `<div class="geoip-sub">${esc(sub)}</div>` : ''}</div></div>` : '';
+    const tags  = [];
+    if (d.is_proxy)   tags.push(`<span class="badge bg-warning text-dark me-1">Proxy/VPN</span>`);
+    if (d.is_hosting) tags.push(`<span class="badge bg-secondary me-1">Hosting/DC</span>`);
+    if (d.is_mobile)  tags.push(`<span class="badge bg-info text-dark me-1">Móvil</span>`);
+    document.getElementById('body-geoip').innerHTML = `
+        <div class="geoip-header mb-2">
+            ${flag}<span class="fw-bold">${esc(d.ip)}</span>
+            ${d.ptr ? `<span class="ttl-badge ms-2">${esc(d.ptr)}</span>` : ''}
+        </div>
+        ${tags.join('')}
+        ${badge('fa-location-dot',   d.country, (d.city ? d.city + ', ' + (d.region ?? '') : null))}
+        ${badge('fa-clock',          d.timezone, null)}
+        ${badge('fa-building',       d.org, d.asn)}
+        ${badge('fa-wifi',           d.isp, null)}
+        ${d.lat != null ? `<div class="mt-2"><a href="https://www.openstreetmap.org/?mlat=${d.lat}&mlon=${d.lon}&zoom=10" target="_blank" rel="noopener" class="small text-muted"><i class="fa-solid fa-map-location-dot me-1"></i>${d.lat}, ${d.lon}</a></div>` : ''}
+        ${d.geo_error ? `<div class="small text-muted mt-2"><i class="fa-solid fa-circle-info me-1"></i>${esc(d.geo_error)}</div>` : ''}`;
+}
+
+async function startPropagation() {
+    const domain = normalizeDomain();
+    if (!domain) { alert('Introduce un dominio en el buscador'); return; }
+    const type = document.getElementById('prop-type').value;
+    document.getElementById('prop-btn-text').classList.add('d-none');
+    document.getElementById('prop-btn-loading').classList.remove('d-none');
+    document.getElementById('prop-results').classList.remove('d-none');
+    document.getElementById('body-propagation').innerHTML = skeletonHtml();
+    try {
+        const res  = await fetch(`api.php?module=dnspropagation&domain=${encodeURIComponent(domain)}&type=${type}`);
+        const data = await res.json();
+        lastPropData = data;
+        data.success ? renderPropagation(data) : (document.getElementById('body-propagation').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small">${esc(data.error)}</div>`);
+    } catch(e) {
+        document.getElementById('body-propagation').innerHTML = `<div class="alert alert-danger py-2 mb-0 small">${esc(e.message)}</div>`;
+    } finally {
+        document.getElementById('prop-btn-text').classList.remove('d-none');
+        document.getElementById('prop-btn-loading').classList.add('d-none');
+    }
+}
+
+function renderPropagation(d) {
+    document.getElementById('prop-meta').textContent = `${d.domain} ${d.type} — ${d.unique} valor${d.unique !== 1 ? 'es distintos' : ' único'}`;
+    const consIcon = d.consistent
+        ? '<i class="fa-solid fa-circle-check text-success me-1"></i><span class="text-success fw-semibold">Propagado correctamente</span>'
+        : '<i class="fa-solid fa-triangle-exclamation text-warning me-1"></i><span class="text-warning fw-semibold">Resultados inconsistentes</span>';
+    const rows = (d.results ?? []).map(r => {
+        const ok = r.status === 'NOERROR';
+        const to = r.status === 'TIMEOUT';
+        const rowClass = to ? 'text-muted' : (ok ? '' : 'text-danger');
+        const vals = r.records.length ? r.records.map(v => `<span class="prop-val">${esc(v)}</span>`).join(' ') : `<span class="text-muted small">${r.status}</span>`;
+        return `<tr class="${rowClass}">
+            <td class="prop-server-name">${r.flag} ${esc(r.name)}</td>
+            <td class="prop-server-ip text-muted">${esc(r.server)}</td>
+            <td>${vals}</td>
+            <td class="text-end"><span class="ttl-badge">${r.ms} ms</span></td>
+        </tr>`;
+    }).join('');
+    document.getElementById('body-propagation').innerHTML = `
+        <div class="mb-2">${consIcon}</div>
+        <div class="table-responsive"><table class="prop-table w-100"><thead>
+            <tr><th>Servidor</th><th>IP</th><th>Respuesta</th><th></th></tr>
+        </thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function downloadPropagation() {
+    if (!lastPropData) return;
+    let t = `[DNS PROPAGACIÓN] ${lastPropData.domain} ${lastPropData.type}\n`;
+    (lastPropData.results ?? []).forEach(r => {
+        t += `${r.name} (${r.server}): ${r.records.join(', ') || r.status} — ${r.ms}ms\n`;
+    });
+    downloadText(t, `propagation_${lastPropData.domain}_${stamp()}.txt`);
+}
+
+// ── Web tab ───────────────────────────────────────────────────
+async function startWebAnalysis() {
+    const domain = normalizeDomain();
+    if (!domain) { alert('Introduce un dominio en el buscador'); return; }
+    document.getElementById('web-btn-text').classList.add('d-none');
+    document.getElementById('web-btn-loading').classList.remove('d-none');
+    document.getElementById('btn-web-analyze').disabled = true;
+    document.getElementById('web-results').classList.remove('d-none');
+    document.getElementById('body-seo').innerHTML  = skeletonHtml();
+    document.getElementById('body-tech').innerHTML = skeletonHtml();
+    try {
+        const res  = await fetch(`api.php?module=seocheck&domain=${encodeURIComponent(domain)}`);
+        const data = await res.json();
+        if (data.success) { renderSeo(data); renderTech(data); }
+        else { setBodyErr('seo', data.error); setBodyErr('tech', data.error); }
+    } catch(e) { setBodyErr('seo', e.message); setBodyErr('tech', e.message); }
+    finally {
+        document.getElementById('web-btn-text').classList.remove('d-none');
+        document.getElementById('web-btn-loading').classList.add('d-none');
+        document.getElementById('btn-web-analyze').disabled = false;
+    }
+}
+
+function renderSeo(d) {
+    const s = d.seo ?? {};
+    const chk = (ok, label, hint) => {
+        const ic = ok === true ? 'fa-circle-check text-success' : (ok === false ? 'fa-circle-xmark text-danger' : 'fa-circle-question text-muted');
+        return `<div class="hdr-row d-flex align-items-start gap-2">
+            <i class="fa-solid ${ic} mt-1 small"></i>
+            <div><div class="hdr-label">${label}</div>${hint ? `<div class="hdr-desc">${esc(hint)}</div>` : ''}</div>
+        </div>`;
+    };
+    const field = (label, val, cls) => val
+        ? `<div class="seo-field mb-2"><div class="seo-label">${label}</div><div class="seo-val ${cls ?? ''}">${esc(val)}</div></div>` : '';
+
+    const statusRow = d.status_code ? `<span class="ttl-badge me-1">HTTP ${d.status_code}</span>` : '';
+    const timeRow   = d.response_ms ? `<span class="ttl-badge me-1">${d.response_ms} ms</span>` : '';
+
+    const ogHtml = (s.og_title || s.og_image || s.og_description) ? `
+        <div class="mt-3 pt-2 border-top">
+            <div class="dns-type-label">Open Graph</div>
+            ${s.og_image ? `<img src="${esc(s.og_image)}" alt="OG image" class="img-fluid rounded mb-2" style="max-height:100px;object-fit:cover">` : ''}
+            ${field('og:title', s.og_title)}
+            ${field('og:description', s.og_description)}
+            ${field('og:type', s.og_type)}
+            ${field('og:site_name', s.og_site_name)}
+        </div>` : '';
+
+    const twHtml = s.tw_card ? `
+        <div class="mt-3 pt-2 border-top">
+            <div class="dns-type-label">Twitter Card</div>
+            ${field('twitter:card', s.tw_card)}
+            ${field('twitter:title', s.tw_title)}
+            ${field('twitter:site', s.tw_site)}
+        </div>` : '';
+
+    document.getElementById('body-seo').innerHTML = `
+        <div class="mb-2">${statusRow}${timeRow}</div>
+        ${field('Título', s.title, s.title_ok ? 'text-success' : (s.title ? 'text-warning' : 'text-danger'))}
+        ${s.title_len != null ? `<div class="seo-hint">${s.title_len} caracteres ${s.title_ok ? '✓ ideal 30-60' : '(ideal 30-60)'}</div>` : ''}
+        ${field('Descripción', s.description, s.desc_ok ? 'text-success' : (s.description ? 'text-warning' : 'text-danger'))}
+        ${s.desc_len  != null ? `<div class="seo-hint">${s.desc_len} caracteres ${s.desc_ok ? '✓ ideal 70-160' : '(ideal 70-160)'}</div>` : ''}
+        ${field('Canonical', s.canonical)}
+        ${field('Robots', s.robots)}
+        ${s.h1_count != null ? `<div class="seo-field mb-2"><div class="seo-label">H1 <span class="ttl-badge ms-1">${s.h1_count}</span></div>${s.h1?.slice(0,2).map(h => `<div class="seo-val">${esc(h)}</div>`).join('') ?? ''}</div>` : ''}
+        <div class="mt-2">
+            ${chk(!!s.title,       'Título presente',        !s.title ? 'El título es crítico para SEO' : null)}
+            ${chk(!!s.description,'Meta descripción',        !s.description ? 'Aumenta el CTR en buscadores' : null)}
+            ${chk(!!s.canonical,  'URL canonical definida',  !s.canonical ? 'Evita contenido duplicado' : null)}
+            ${chk(!!s.og_title,   'Open Graph configurado',  !s.og_title ? 'Mejora la presentación en redes sociales' : null)}
+            ${chk(!!s.tw_card,    'Twitter Card configurado', !s.tw_card ? 'Mejora el preview en Twitter/X' : null)}
+            ${chk(s.h1_count === 1,'H1 único',               s.h1_count !== 1 ? `Se encontraron ${s.h1_count ?? 0} H1 (se recomienda uno solo)` : null)}
+        </div>
+        ${ogHtml}${twHtml}`;
+}
+
+function renderTech(d) {
+    if (!(d.tech ?? []).length) {
+        document.getElementById('body-tech').innerHTML = '<p class="text-muted small mb-0">No se detectaron tecnologías conocidas.</p>';
+        return;
+    }
+    const cats = {};
+    for (const t of d.tech) {
+        if (!cats[t.cat]) cats[t.cat] = [];
+        cats[t.cat].push(t);
+    }
+    const catIcons = {
+        'Servidor web':'fa-server','CMS':'fa-pencil','eCommerce':'fa-cart-shopping',
+        'Constructor':'fa-wand-magic-sparkles','CSS Framework':'fa-palette',
+        'JS':'fa-code','JS Framework':'fa-code','Runtime':'fa-microchip',
+        'Framework':'fa-layer-group','Analytics':'fa-chart-bar',
+        'CDN/Seguridad':'fa-shield-halved','Seguridad':'fa-shield-halved','UI':'fa-star',
+    };
+    let html = '';
+    for (const [cat, items] of Object.entries(cats)) {
+        const icon = catIcons[cat] ?? 'fa-puzzle-piece';
+        html += `<div class="mb-3">
+            <div class="tech-cat-label"><i class="fa-solid ${icon} me-1"></i>${esc(cat)}</div>
+            <div class="tech-badges">${items.map(t =>
+                `<span class="tech-badge">${esc(t.name)}${t.version ? ` <small>${esc(t.version)}</small>` : ''}</span>`
+            ).join('')}</div>
+        </div>`;
+    }
+    document.getElementById('body-tech').innerHTML = `
+        <div class="mb-2 small text-muted">${d.tech_count} tecnolog${d.tech_count === 1 ? 'ía detectada' : 'ías detectadas'}</div>${html}`;
+}
+
+// ── SSL/TLS tab ───────────────────────────────────────────────
+async function startSslScan() {
+    const domain = normalizeDomain();
+    if (!domain) { alert('Introduce un dominio en el buscador'); return; }
+    document.getElementById('ssl-btn-text').classList.add('d-none');
+    document.getElementById('ssl-btn-loading').classList.remove('d-none');
+    document.getElementById('btn-ssl-scan').disabled = true;
+    document.getElementById('ssl-results').classList.remove('d-none');
+    ['ssl-protocols','ssl-cipher','ssl-chain','ssl-san'].forEach(id =>
+        document.getElementById('body-' + id).innerHTML = skeletonHtml());
+    try {
+        const res  = await fetch(`api.php?module=sslscan&domain=${encodeURIComponent(domain)}`);
+        const data = await res.json();
+        if (data.success) renderSslScan(data);
+        else ['ssl-protocols','ssl-cipher','ssl-chain','ssl-san'].forEach(id => setBodyErr(id, data.error));
+    } catch(e) {
+        ['ssl-protocols','ssl-cipher','ssl-chain','ssl-san'].forEach(id => setBodyErr(id, e.message));
+    } finally {
+        document.getElementById('ssl-btn-text').classList.remove('d-none');
+        document.getElementById('ssl-btn-loading').classList.add('d-none');
+        document.getElementById('btn-ssl-scan').disabled = false;
+    }
+}
+
+function renderSslScan(d) {
+    // Protocols
+    const protos = (d.protocols ?? []).map(p => {
+        const ok = p.supported === true;
+        const warn = p.supported === true && !p.secure;
+        const ic = ok ? (warn ? 'fa-triangle-exclamation text-warning' : 'fa-circle-check text-success') : 'fa-circle-xmark text-muted';
+        return `<div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fa-solid ${ic}"></i>
+            <span class="fw-semibold small">${esc(p.version)}</span>
+            ${warn ? '<span class="ttl-badge text-warning">Obsoleto</span>' : ''}
+            ${p.supported === null ? '<span class="ttl-badge text-muted">No determinado</span>' : ''}
+        </div>`;
+    }).join('') || '<p class="text-muted small mb-0">No se pudo detectar.</p>';
+    document.getElementById('body-ssl-protocols').innerHTML = protos;
+
+    // Cipher & Security
+    const fsIcon = d.forward_secrecy ? '<i class="fa-solid fa-circle-check text-success me-1"></i>' : '<i class="fa-solid fa-circle-xmark text-danger me-1"></i>';
+    const hstsIcon = d.hsts ? '<i class="fa-solid fa-circle-check text-success me-1"></i>' : '<i class="fa-solid fa-circle-xmark text-danger me-1"></i>';
+    document.getElementById('body-ssl-cipher').innerHTML = `
+        ${d.cipher ? `<div class="mb-2"><div class="seo-label">Cipher Suite</div><code class="small">${esc(d.cipher)}</code></div>` : ''}
+        ${d.negotiated ? `<div class="mb-2"><div class="seo-label">Protocolo negociado</div><span class="fw-semibold">${esc(d.negotiated)}</span></div>` : ''}
+        ${d.key_bits != null ? `<div class="mb-2"><div class="seo-label">Clave pública</div><span class="fw-semibold">${d.key_bits} bits</span></div>` : ''}
+        <div class="mt-2">
+            <div class="d-flex align-items-center gap-2 mb-1">${fsIcon}<span class="small">Forward Secrecy ${d.forward_secrecy ? '(ECDHE/DHE)' : '— no configurado'}</span></div>
+            <div class="d-flex align-items-center gap-2 mb-1">${hstsIcon}<span class="small">HSTS ${d.hsts ? 'activado' : '— no configurado'}</span></div>
+            ${d.hsts_header ? `<div class="dns-value small text-muted mt-1">${esc(d.hsts_header)}</div>` : ''}
+        </div>`;
+
+    // Chain
+    const chain = (d.chain ?? []).map((c, i) => {
+        const expire = c.days_left != null ? (c.days_left < 30 ? 'text-danger' : (c.days_left < 60 ? 'text-warning' : 'text-muted')) : 'text-muted';
+        return `<div class="ssl-chain-entry ${c.is_ca ? 'ssl-chain-ca' : 'ssl-chain-leaf'}">
+            <div class="ssl-chain-idx">${i + 1}</div>
+            <div class="flex-grow-1 min-w-0">
+                <div class="fw-semibold small">${esc(c.subject)}</div>
+                <div class="small text-muted">Emisor: ${esc(c.issuer)}</div>
+                <div class="small ${expire}">${esc(c.not_before)} → ${esc(c.not_after)}${c.days_left != null ? ` (${c.days_left}d)` : ''}</div>
+                ${c.fingerprint ? `<div class="seo-hint">${c.fingerprint.slice(0, 29)}…</div>` : ''}
+            </div>
+        </div>`;
+    }).join('<div class="ssl-chain-arrow">↓</div>');
+    document.getElementById('body-ssl-chain').innerHTML = chain || '<p class="text-muted small mb-0">No se pudo obtener la cadena.</p>';
+
+    // SAN
+    const sans = d.san ?? [];
+    document.getElementById('body-ssl-san').innerHTML = sans.length
+        ? `<div class="san-grid">${sans.map(s => `<span class="san-entry">${esc(s)}</span>`).join('')}</div>`
+        : '<p class="text-muted small mb-0">Sin dominios alternativos (SAN).</p>';
+}
+
+// ── SMTP Relay tab ─────────────────────────────────────────────
+async function startRelayTest() {
+    const domain = normalizeDomain();
+    if (!domain) { alert('Introduce un dominio en el buscador'); return; }
+    const email = (document.getElementById('input-email-test')?.value ?? '').trim();
+    document.getElementById('relay-btn-text').classList.add('d-none');
+    document.getElementById('relay-btn-loading').classList.remove('d-none');
+    document.getElementById('btn-relay-test').disabled = true;
+    document.getElementById('relay-results').classList.remove('d-none');
+    ['relay-openrelay','relay-delivery'].forEach(id =>
+        document.getElementById('body-' + id).innerHTML = skeletonHtml());
+    try {
+        let url = `api.php?module=smtprelay&domain=${encodeURIComponent(domain)}`;
+        if (email) url += `&email=${encodeURIComponent(email)}`;
+        const res  = await fetch(url);
+        const data = await res.json();
+        data.success ? renderSmtpRelay(data)
+            : ['relay-openrelay','relay-delivery'].forEach(id => setBodyErr(id, data.error));
+    } catch(e) {
+        ['relay-openrelay','relay-delivery'].forEach(id => setBodyErr(id, e.message));
+    } finally {
+        document.getElementById('relay-btn-text').classList.remove('d-none');
+        document.getElementById('relay-btn-loading').classList.add('d-none');
+        document.getElementById('btn-relay-test').disabled = false;
+    }
+}
+
+function renderSmtpDialog(log) {
+    return (log ?? []).map(e => {
+        if (e.dir === 'ERROR') return `<div class="smtp-line smtp-error"><i class="fa-solid fa-triangle-exclamation me-1"></i>${esc(e.msg)}</div>`;
+        const dir  = e.dir === '>>>' ? 'smtp-send' : 'smtp-recv';
+        const code = e.code ? `<span class="ttl-badge ms-1">${e.code}</span>` : '';
+        const ok   = e.code >= 200 && e.code < 400;
+        const cls  = e.code >= 500 ? 'smtp-fail' : (e.code >= 400 ? 'smtp-defer' : '');
+        return `<div class="smtp-line ${dir} ${cls}"><span class="smtp-dir">${e.dir}</span> ${esc(e.msg)}${code}</div>`;
+    }).join('');
+}
+
+function renderSmtpRelay(d) {
+    const relayOk   = !d.open_relay;
+    const relayIcon = relayOk ? 'fa-circle-check text-success' : 'fa-circle-xmark text-danger';
+    const relayText = d.open_relay ? '¡RELAY ABIERTO! El servidor puede ser utilizado para enviar spam.' : 'El servidor no acepta relay abierto. Configuración correcta.';
+    document.getElementById('body-relay-openrelay').innerHTML = `
+        <div class="d-flex align-items-start gap-2 mb-3">
+            <i class="fa-solid ${relayIcon} fa-lg mt-1"></i>
+            <div>
+                <div class="fw-bold ${d.open_relay ? 'text-danger' : 'text-success'}">${relayText}</div>
+                <div class="small text-muted mt-1">MX: ${esc(d.mx_host)}${d.mx_ip ? ` (${esc(d.mx_ip)})` : ''}</div>
+            </div>
+        </div>
+        <details><summary class="small text-muted" style="cursor:pointer">Ver diálogo SMTP</summary>
+            <div class="smtp-dialog mt-2">${renderSmtpDialog(d.relay_log)}</div>
+        </details>`;
+
+    const resMap = {accepted:'Aceptado ✓', rejected:'Rechazado', deferred:'Diferido', unknown:'No determinado'};
+    const resClass = {accepted:'text-success', rejected:'text-danger', deferred:'text-warning', unknown:'text-muted'};
+    const r = d.delivery_result ?? 'unknown';
+    document.getElementById('body-relay-delivery').innerHTML = `
+        <div class="mb-2">
+            <div class="seo-label">Cuenta probada</div>
+            <code class="small">${esc(d.test_email)}</code>
+        </div>
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <i class="fa-solid ${r === 'accepted' ? 'fa-circle-check' : (r === 'rejected' ? 'fa-circle-xmark' : 'fa-circle-question')} ${resClass[r]}"></i>
+            <span class="fw-semibold ${resClass[r]}">${resMap[r]}</span>
+            <span class="ttl-badge">${d.delivery_code}</span>
+        </div>
+        <p class="small text-muted">Resultado orientativo — los servidores con catch-all siempre responden 250.</p>
+        <details><summary class="small text-muted" style="cursor:pointer">Ver diálogo SMTP</summary>
+            <div class="smtp-dialog mt-2">${renderSmtpDialog(d.delivery_log)}</div>
+        </details>`;
 }
 
 // ── SortableJS ────────────────────────────────────────────────
