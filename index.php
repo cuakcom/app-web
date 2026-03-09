@@ -24,8 +24,8 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetScope — Analizador DNS, SSL, Correo y Web</title>
-    <meta name="description" content="NetScope: herramienta gratuita de diagnóstico DNS, escáner SSL/TLS, análisis de correo (SPF, DKIM, DMARC, blacklist), propagación DNS, geolocalización IP y análisis SEO web. Todo en un solo lugar.">
+    <title>Tools Check Dominios y DNS</title>
+    <meta name="description" content="Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación">
     <meta name="keywords" content="dns checker, ssl scanner, análisis correo, SPF DKIM DMARC, blacklist email, propagación dns, traceroute online, geolocalización ip, whois dominio, análisis seo web">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Cuakcom">
@@ -75,9 +75,12 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <!-- ===================== HEADER ===================== -->
 <header class="header-section">
     <div class="container d-flex align-items-center justify-content-between">
-        <h1 class="h5 fw-bold m-0">
-            <i class="fa-solid fa-network-wired me-2"></i>NetScope
-        </h1>
+        <div class="header-title-block">
+            <h1 class="header-title-main">
+                <i class="fa-solid fa-network-wired me-2"></i>Tools Check Dominios y DNS
+            </h1>
+            <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
+        </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro">
                 <i class="fa-solid fa-moon"></i>

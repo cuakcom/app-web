@@ -1079,6 +1079,31 @@ body.dark-mode .popover {
 }
 body.dark-mode .popover-arrow::after { border-bottom-color: #1e293b; }
 
+/* ── Header title block ──────────────────────────────────────── */
+.header-title-block {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.header-title-main {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
+    color: inherit;
+}
+.header-title-sub {
+    font-size: 0.72rem;
+    font-weight: 400;
+    opacity: 0.65;
+    line-height: 1.3;
+}
+@media (max-width: 575px) {
+    .header-title-sub { display: none; }
+    .header-title-main { font-size: 1rem; }
+}
+
 /* ── Footer Tus datos label ──────────────────────────────────── */
 .visitor-footer-inner { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
 .visitor-label-prefix {
