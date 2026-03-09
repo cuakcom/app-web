@@ -172,20 +172,24 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 </button>
             </div>
 
-            <!-- Web info card (always visible after analysis) -->
+            <!-- Web info card (mitad derecha, siempre visible al analizar) -->
             <div id="card-webinfo" class="d-none mt-3">
-                <div class="card result-card">
-                    <div class="card-header-cuak">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
-                            <span class="header-badge" style="background:#0f766e">Web Info</span>
+                <div class="row g-3 justify-content-end">
+                    <div class="col-12 col-md-6">
+                        <div class="card result-card">
+                            <div class="card-header-cuak">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                                    <span class="header-badge" style="background:#0f766e">Web Info</span>
+                                </div>
+                                <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadCard('webinfo')" title="Descargar">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                            <div class="card-body p-3" id="body-webinfo">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
                         </div>
-                        <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadCard('webinfo')" title="Descargar">
-                            <i class="fa-solid fa-download"></i>
-                        </button>
-                    </div>
-                    <div class="card-body p-3" id="body-webinfo">
-                        <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
                     </div>
                 </div>
             </div>
@@ -298,6 +302,10 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         </label>
                         <span class="small text-muted" id="eml-filename">Sube un archivo .eml para analizar sus cabeceras</span>
                     </div>
+                    <p class="small text-muted mb-0 mt-1" style="font-size:0.72rem">
+                        <i class="fa-solid fa-shield-halved me-1 text-success"></i>
+                        <em>*El contenido del mensaje no se compartirá con fuentes externas ni se almacenarán datos confidenciales</em>
+                    </p>
                 </div>
             </div>
 

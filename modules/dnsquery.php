@@ -13,9 +13,9 @@
 // ── Validar parámetros extra ──────────────────────────────────────────────────
 $validTypes = ['A','AAAA','CNAME','MX','NS','TXT','SOA','SRV','CAA',
                'PTR','ANY','NAPTR','DNSKEY','DS','TLSA','CERT','HINFO'];
-$qType   = strtoupper(preg_replace('/[^A-Z0-9]/', '', $_GET['qtype']   ?? 'A'));
-$qServer = preg_replace('/[^a-zA-Z0-9.\-]/', '', $_GET['qserver'] ?? '8.8.8.8');
-$qPort   = max(1, min(65535, (int)($_GET['qport'] ?? 53)));
+$qType   = strtoupper(preg_replace('/[^A-Z0-9]/', '', $_GET['type']   ?? 'A'));
+$qServer = preg_replace('/[^a-zA-Z0-9.\-]/', '', $_GET['server'] ?? '8.8.8.8');
+$qPort   = max(1, min(65535, (int)($_GET['port'] ?? 53)));
 
 if (!in_array($qType, $validTypes, true)) $qType = 'A';
 if (!$qServer || (!filter_var($qServer, FILTER_VALIDATE_IP) &&
@@ -61,7 +61,7 @@ if ($digPath) {
                     'ttl'   => (int)$parts[1],
                     'class' => $parts[2],
                     'type'  => $parts[3],
-                    'data'  => $parts[4],
+                    'value' => $parts[4],
                 ];
             }
         }
@@ -91,7 +91,7 @@ if ($digPath) {
             'ttl'   => $r['ttl'] ?? 0,
             'class' => 'IN',
             'type'  => $qType,
-            'data'  => $data,
+            'value' => $data,
         ];
     }
     $rcode      = empty($records) ? 'NXDOMAIN' : 'NOERROR';
@@ -99,15 +99,15 @@ if ($digPath) {
 }
 
 echo json_encode([
-    'success'    => true,
-    'domain'     => $domain,
-    'type'       => $qType,
-    'server'     => $usedServer,
-    'port'       => $qPort,
-    'records'    => $records,
-    'count'      => count($records),
-    'rcode'      => $rcode,
-    'query_ms'   => $queryMs,
-    'raw'        => $raw,
-    'used_dig'   => $usedDig,
+    'success'      => true,
+    'domain'       => $domain,
+    'type'         => $qType,
+    'server_used'  => $usedServer,
+    'port'         => $qPort,
+    'records'      => $records,
+    'count'        => count($records),
+    'status'       => $rcode,
+    'query_time_ms'=> $queryMs,
+    'raw_output'   => $raw,
+    'source'       => $usedDig ? 'dig' : 'dns_get_record',
 ]);
