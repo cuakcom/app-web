@@ -24,7 +24,46 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuakcom Expert Suite</title>
+    <title>NetScope — Analizador DNS, SSL, Correo y Web</title>
+    <meta name="description" content="NetScope: herramienta gratuita de diagnóstico DNS, escáner SSL/TLS, análisis de correo (SPF, DKIM, DMARC, blacklist), propagación DNS, geolocalización IP y análisis SEO web. Todo en un solo lugar.">
+    <meta name="keywords" content="dns checker, ssl scanner, análisis correo, SPF DKIM DMARC, blacklist email, propagación dns, traceroute online, geolocalización ip, whois dominio, análisis seo web">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Cuakcom">
+    <link rel="canonical" href="https://tools.cuakcom.com/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="NetScope — Analizador DNS, SSL, Correo y Web">
+    <meta property="og:description" content="Diagnóstico DNS completo, escáner SSL/TLS, análisis SPF/DKIM/DMARC, comprobación de blacklists, geolocalización IP, propagación DNS y análisis SEO web.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tools.cuakcom.com/">
+    <meta property="og:image" content="https://tools.cuakcom.com/favicon.svg">
+    <meta property="og:site_name" content="NetScope by Cuakcom">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="NetScope — Analizador DNS, SSL, Correo y Web">
+    <meta name="twitter:description" content="Diagnóstico DNS, SSL, correo (SPF/DKIM/DMARC), blacklist, traceroute, geolocalización y análisis SEO. Gratis y sin registro.">
+    <meta name="twitter:site" content="@cuakcom">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "NetScope",
+      "description": "Suite de herramientas de diagnóstico de red: DNS checker, SSL scanner, análisis de correo electrónico, propagación DNS, geolocalización IP y análisis SEO web.",
+      "url": "https://tools.cuakcom.com/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "provider": { "@type": "Organization", "name": "Cuakcom", "url": "https://cuakcom.com" }
+    }
+    </script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,7 +76,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <header class="header-section">
     <div class="container d-flex align-items-center justify-content-between">
         <h1 class="h5 fw-bold m-0">
-            <i class="fa-solid fa-bolt me-2"></i>Cuakcom Expert Suite
+            <i class="fa-solid fa-network-wired me-2"></i>NetScope
         </h1>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro">
@@ -58,36 +97,54 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 <button class="main-tab-btn active" id="tab-diag-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-diagnostico" type="button" role="tab">
                     <i class="fa-solid fa-magnifying-glass-chart me-1"></i>Diagnóstico
+                    <span class="info-popover-btn" data-info-key="tab-diagnostico" title="Información" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="main-tab-btn" id="tab-mail-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-correo" type="button" role="tab">
                     <i class="fa-solid fa-envelope me-1"></i>Correo
+                    <span class="info-popover-btn" data-info-key="tab-correo" title="Información" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="main-tab-btn" id="tab-dnsq-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-dnsquery" type="button" role="tab">
                     <i class="fa-solid fa-terminal me-1"></i>Consultas DNS
+                    <span class="info-popover-btn" data-info-key="tab-dnsquery" title="Información" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="main-tab-btn" id="tab-red-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-red" type="button" role="tab">
                     <i class="fa-solid fa-network-wired me-1"></i>Red &amp; IP
+                    <span class="info-popover-btn" data-info-key="tab-red" title="Información" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="main-tab-btn" id="tab-web-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-web" type="button" role="tab">
                     <i class="fa-solid fa-globe me-1"></i>Web
+                    <span class="info-popover-btn" data-info-key="tab-web" title="Información" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="main-tab-btn" id="tab-ssl-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-ssl" type="button" role="tab">
                     <i class="fa-solid fa-shield-halved me-1"></i>SSL/TLS
+                    <span class="info-popover-btn" data-info-key="tab-ssl" title="Información" onclick="event.stopPropagation()">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
                 </button>
             </li>
         </ul>
@@ -220,6 +277,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
                                     <span class="header-badge <?= $badgeCls ?? '' ?>" <?= $extra ?> <?= $badgeId ? "id=\"{$badgeId}\"" : '' ?>><?= $label ?></span>
+                                    <span class="info-popover-btn" data-info-key="mod-<?= $mod ?>"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0 <?= $dlCls ?? '' ?>" <?= $dlExtra ?> <?= $mod === 'ssl' ? 'id="dl-ssl"' : '' ?> onclick="downloadCard('<?= $mod ?>')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -239,6 +297,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
                                     <span class="header-badge" style="background:#0f766e">Web Info</span>
+                                    <span class="info-popover-btn" data-info-key="mod-webinfo"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadCard('webinfo')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -273,6 +332,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
                                     <span class="header-badge <?= $badgeCls ?? '' ?>" <?= $extra ?> <?= $badgeId ? "id=\"{$badgeId}\"" : '' ?>><?= $label ?></span>
+                                    <span class="info-popover-btn" data-info-key="mod-<?= $mod ?>"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0 <?= $dlCls ?? '' ?>" <?= $dlExtra ?> <?= $mod === 'blacklist' ? 'id="dl-blacklist"' : '' ?> onclick="downloadCard('<?= $mod ?>')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -341,6 +401,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge" style="background:#1d4ed8" id="badge-mail-score">Entregabilidad</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-score"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0" style="color:#1d4ed8" onclick="downloadMailCard('score')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -358,6 +419,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge bg-warning text-dark">MX Records</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-mx"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0 text-warning" onclick="downloadMailCard('mx')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -373,6 +435,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge" style="background:#374151">SMTP</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-smtp"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0" style="color:#374151" onclick="downloadMailCard('smtp')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -388,6 +451,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge bg-success" id="badge-mail-blacklist">Blacklist MX</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-blacklist"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0 text-success" id="dl-mail-blacklist" onclick="downloadMailCard('blacklist')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -405,6 +469,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge" style="background:#0f766e">SPF</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-spf"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadMailCard('spf')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -420,6 +485,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge" style="background:#7c3aed">DMARC</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-dmarc"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0" style="color:#7c3aed" onclick="downloadMailCard('dmarc')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -435,6 +501,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                                     <span class="header-badge" style="background:#0891b2">DKIM</span>
+                                    <span class="info-popover-btn" data-info-key="mod-mail-dkim"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                                 <button class="btn btn-link p-0" style="color:#0891b2" onclick="downloadMailCard('dkim')" title="Descargar">
                                     <i class="fa-solid fa-download"></i>
@@ -454,6 +521,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="d-flex align-items-center gap-2">
                             <i class="fa-solid fa-up-down-left-right drag-handle"></i>
                             <span class="header-badge" style="background:#0369a1">Análisis .eml</span>
+                            <span class="info-popover-btn" data-info-key="mod-eml"><i class="fa-solid fa-circle-info"></i></span>
                         </div>
                         <button class="btn btn-link p-0" style="color:#0369a1" onclick="downloadEmlReport()" title="Descargar">
                             <i class="fa-solid fa-download"></i>
@@ -472,6 +540,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                             <div class="card-header-cuak">
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="header-badge bg-danger">Open Relay</span>
+                                    <span class="info-popover-btn" data-info-key="mod-relay-open"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                             </div>
                             <div class="card-body p-3" id="body-relay-openrelay">
@@ -484,6 +553,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                             <div class="card-header-cuak">
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="header-badge" style="background:#374151">Simulación entrega</span>
+                                    <span class="info-popover-btn" data-info-key="mod-relay-delivery"><i class="fa-solid fa-circle-info"></i></span>
                                 </div>
                             </div>
                             <div class="card-body p-3" id="body-relay-delivery">
@@ -600,6 +670,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge" style="background:#0369a1">Geo IP &amp; ASN</span>
+                                <span class="info-popover-btn" data-info-key="mod-geoip"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-geoip">
                                 <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
@@ -610,6 +681,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge bg-dark">WHOIS IP</span>
+                                <span class="info-popover-btn" data-info-key="mod-whoisip"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-whoisip">
                                 <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
@@ -624,6 +696,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="d-flex align-items-center gap-2">
                             <span class="header-badge" style="background:#7c3aed">Propagación DNS</span>
                             <span class="small text-muted" id="prop-meta"></span>
+                            <span class="info-popover-btn" data-info-key="mod-propagation"><i class="fa-solid fa-circle-info"></i></span>
                         </div>
                         <button class="btn btn-link p-0" style="color:#7c3aed" onclick="downloadPropagation()" title="Descargar">
                             <i class="fa-solid fa-download"></i>
@@ -653,6 +726,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge" style="background:#0f766e">SEO &amp; Meta</span>
+                                <span class="info-popover-btn" data-info-key="mod-seo"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-seo"></div>
                         </div>
@@ -661,6 +735,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge" style="background:#7c3aed">Tecnologías</span>
+                                <span class="info-popover-btn" data-info-key="mod-tech"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-tech"></div>
                         </div>
@@ -688,6 +763,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge bg-success">Protocolos</span>
+                                <span class="info-popover-btn" data-info-key="mod-ssl-protocols"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-ssl-protocols"></div>
                         </div>
@@ -696,6 +772,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge" style="background:#0369a1">Cipher &amp; Seguridad</span>
+                                <span class="info-popover-btn" data-info-key="mod-ssl-cipher"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-ssl-cipher"></div>
                         </div>
@@ -704,6 +781,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <div class="card result-card">
                             <div class="card-header-cuak">
                                 <span class="header-badge" style="background:#7c3aed">Cadena de certificados</span>
+                                <span class="info-popover-btn" data-info-key="mod-ssl-chain"><i class="fa-solid fa-circle-info"></i></span>
                             </div>
                             <div class="card-body p-3" id="body-ssl-chain"></div>
                         </div>
@@ -713,6 +791,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     <div class="card result-card">
                         <div class="card-header-cuak">
                             <span class="header-badge" style="background:#374151">SAN — Dominios alternativos</span>
+                            <span class="info-popover-btn" data-info-key="mod-ssl-san"><i class="fa-solid fa-circle-info"></i></span>
                         </div>
                         <div class="card-body p-3" id="body-ssl-san"></div>
                     </div>
@@ -727,8 +806,11 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <!-- ===================== FOOTER VISITANTE ===================== -->
 <footer class="visitor-footer">
     <div class="container">
-        <div class="visitor-footer-inner" id="visitor-info">
-            <span class="visitor-item"><i class="fa-solid fa-circle-notch fa-spin me-1"></i>Cargando datos de acceso…</span>
+        <div class="visitor-footer-inner">
+            <span class="visitor-label-prefix"><i class="fa-solid fa-user me-1"></i>Tus datos</span>
+            <div id="visitor-info" class="d-inline-flex flex-wrap gap-3 align-items-center">
+                <span class="visitor-item"><i class="fa-solid fa-circle-notch fa-spin me-1"></i>Cargando datos de acceso…</span>
+            </div>
         </div>
     </div>
 </footer>
@@ -1963,6 +2045,7 @@ async function startRelayTest() {
     document.getElementById('relay-btn-loading').classList.remove('d-none');
     document.getElementById('btn-relay-test').disabled = true;
     document.getElementById('relay-results').classList.remove('d-none');
+    document.getElementById('relay-results').scrollIntoView({behavior:'smooth', block:'start'});
     ['relay-openrelay','relay-delivery'].forEach(id =>
         document.getElementById('body-' + id).innerHTML = skeletonHtml());
     try {
@@ -2026,6 +2109,85 @@ function renderSmtpRelay(d) {
             <div class="smtp-dialog mt-2">${renderSmtpDialog(d.delivery_log)}</div>
         </details>`;
 }
+
+// ── Info Popovers ─────────────────────────────────────────────
+const INFO_CONTENT = {
+    // Tabs
+    'tab-diagnostico': '<strong>Diagnóstico completo</strong><br>Analiza resolución DNS, puertos TCP, certificado SSL, ping, cabeceras HTTP de seguridad, listas negras (blacklist), traceroute y cadena de redirecciones de un dominio o IP.',
+    'tab-correo':      '<strong>Diagnóstico de correo</strong><br>Comprueba registros MX, conectividad SMTP, autenticación SPF, DKIM y DMARC, presencia en blacklists, puntuación de entregabilidad y permite analizar archivos .eml.',
+    'tab-dnsquery':    '<strong>Consulta DNS personalizada</strong><br>Realiza consultas DNS de cualquier tipo (A, AAAA, MX, TXT, SOA…) contra el servidor DNS de tu elección. Útil para depurar registros o verificar la configuración de zona.',
+    'tab-red':         '<strong>Red & IP</strong><br>Geolocaliza cualquier IP o dominio, muestra su ASN, proveedor, organización y coordenadas. Incluye herramienta de propagación DNS mundial para comprobar si un cambio de registro se ha propagado.',
+    'tab-web':         '<strong>Análisis web & SEO</strong><br>Extrae metadatos SEO (título, descripción, canonical, robots), Open Graph, Twitter Card, etiquetas H1 y detecta más de 30 tecnologías web: CMS, frameworks JS, analytics, CDN y más.',
+    'tab-ssl':         '<strong>Escáner SSL/TLS extendido</strong><br>Analiza los protocolos TLS soportados (1.0 a 1.3), cipher suite negociado, forward secrecy, HSTS, cadena de certificados con fechas y fingerprints SHA-256, y dominios SAN.',
+
+    // Diagnóstico modules
+    'mod-resolution':  '<strong>Resolución DNS</strong><br>Muestra la IP principal del dominio (registro A/AAAA) y su PTR (DNS inverso). Es el punto de partida de cualquier diagnóstico de conectividad.',
+    'mod-ssl':         '<strong>SSL / TLS</strong><br>Verifica la validez del certificado HTTPS: emisor, fechas de validez, días restantes, nombre común y Subject Alternative Names (SAN).',
+    'mod-ports':       '<strong>Puertos TCP</strong><br>Comprueba la accesibilidad de los puertos más comunes: HTTP (80), HTTPS (443), SMTP (25/587/465), FTP (21), SSH (22), RDP (3389) y otros.',
+    'mod-ping':        '<strong>Ping</strong><br>Mide la latencia y disponibilidad del servidor mediante ICMP. Indica si el host responde y cuánto tiempo tarda en responder en milisegundos.',
+    'mod-headers':     '<strong>Cabeceras HTTP</strong><br>Analiza las cabeceras de seguridad HTTP: Content-Security-Policy, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy y otras cabeceras relevantes.',
+    'mod-blacklist':   '<strong>Blacklist</strong><br>Comprueba si la IP del servidor está listada en más de 20 listas negras (DNSBL) utilizadas por los servidores de correo para filtrar spam.',
+    'mod-traceroute':  '<strong>Traceroute</strong><br>Muestra la ruta que siguen los paquetes de red desde el servidor hasta el destino, con cada salto (hop), su IP y latencia. Útil para detectar cuellos de botella.',
+    'mod-redirect':    '<strong>Redirecciones HTTP</strong><br>Sigue la cadena de redirecciones (301, 302…) hasta la URL final. Detecta bucles y muestra el código de estado de cada paso.',
+    'mod-webinfo':     '<strong>Web Info</strong><br>Captura visual de la web, historial en Wayback Machine, tiempo de respuesta HTTP, popularidad Tranco y tecnologías detectadas en las cabeceras del servidor.',
+    'mod-dns':         '<strong>Registros DNS</strong><br>Lista todos los registros DNS configurados: A, AAAA, CNAME, MX, NS, TXT, SPF, DMARC, DKIM, CAA, SOA, BIMI y más. Esencial para verificar la configuración DNS.',
+    'mod-whois':       '<strong>WHOIS</strong><br>Información de registro del dominio: titular, registrador, fechas de creación y expiración, servidores de nombres y datos de contacto según la base de datos WHOIS.',
+
+    // Mail modules
+    'mod-mail-score':    '<strong>Puntuación de entregabilidad</strong><br>Evalúa la configuración de correo y genera una puntuación del 0 al 10. Tiene en cuenta SPF, DKIM, DMARC, blacklist, PTR del MX y conectividad SMTP.',
+    'mod-mail-mx':       '<strong>Registros MX</strong><br>Lista los servidores de correo configurados para el dominio, con su prioridad, IP y verificación PTR. Un MX bien configurado es esencial para recibir correo.',
+    'mod-mail-smtp':     '<strong>Conectividad SMTP</strong><br>Prueba la conexión a los puertos SMTP habituales (25, 587, 465). Verifica si soportan STARTTLS/SSL y muestra el banner del servidor.',
+    'mod-mail-blacklist':'<strong>Blacklist del servidor MX</strong><br>Comprueba si la IP del servidor de correo aparece en listas negras anti-spam. Una IP en blacklist puede hacer que el correo sea rechazado o marcado como spam.',
+    'mod-mail-spf':      '<strong>SPF (Sender Policy Framework)</strong><br>Verifica el registro SPF del dominio que autoriza qué servidores pueden enviar correo en su nombre. Sin SPF, el correo puede llegar a spam.',
+    'mod-mail-dmarc':    '<strong>DMARC</strong><br>Comprueba la política DMARC (Domain-based Message Authentication). Define qué hacer con correos que fallan SPF/DKIM y permite recibir reportes de autenticación.',
+    'mod-mail-dkim':     '<strong>DKIM (DomainKeys Identified Mail)</strong><br>Busca registros DKIM en los selectores más comunes. DKIM firma digitalmente el correo para garantizar que no ha sido modificado en tránsito.',
+    'mod-eml':           '<strong>Análisis de archivo .eml</strong><br>Analiza las cabeceras de un correo electrónico: autenticación SPF/DKIM/DMARC, ruta de servidores (Received), puntuación anti-spam, codificación y todos los metadatos. Sin envío a servicios externos.',
+
+    // Relay
+    'mod-relay-open':     '<strong>Test Open Relay</strong><br>Verifica si el servidor SMTP acepta relay abierto, es decir, si permite enviar correo desde un dominio externo hacia otro externo sin autenticación. Un relay abierto es una vulnerabilidad grave usada para enviar spam.',
+    'mod-relay-delivery': '<strong>Simulación de entrega SMTP</strong><br>Simula el envío de un correo a la cuenta indicada realizando una conversación SMTP completa hasta el comando RCPT TO. Permite detectar si el buzón existe o si el servidor rechaza el correo.',
+
+    // Red & IP
+    'mod-geoip':      '<strong>Geolocalización IP & ASN</strong><br>Determina el país, ciudad, región, zona horaria, proveedor (ISP), número de sistema autónomo (ASN) y organización de una IP o dominio. Identifica también proxies, VPNs y datacenters.',
+    'mod-whoisip':    '<strong>WHOIS de IP</strong><br>Consulta los datos de registro del bloque IP en los registros regionales de Internet (RIR): RIPE, ARIN, LACNIC, APNIC. Muestra el propietario y rango asignado.',
+    'mod-propagation':'<strong>Propagación DNS mundial</strong><br>Consulta el mismo registro DNS desde 10 servidores resolver distribuidos globalmente (Google, Cloudflare, Quad9, Yandex…). Permite detectar si un cambio DNS se ha propagado correctamente en todo el mundo.',
+
+    // Web tab
+    'mod-seo':  '<strong>SEO & Metadatos</strong><br>Extrae y evalúa el título, meta descripción, URL canonical, robots, etiquetas H1, Open Graph y Twitter Card. Analiza longitudes óptimas y detecta elementos SEO críticos ausentes.',
+    'mod-tech': '<strong>Detección de tecnologías</strong><br>Identifica el CMS (WordPress, Drupal…), frameworks JS (React, Vue, Next.js…), plataformas eCommerce (Shopify, WooCommerce…), herramientas analytics, librerías CSS y más, a partir de las cabeceras y el HTML.',
+
+    // SSL tab
+    'mod-ssl-protocols': '<strong>Protocolos TLS soportados</strong><br>Prueba qué versiones de TLS acepta el servidor: TLS 1.0 (obsoleto), 1.1 (obsoleto), 1.2 (recomendado) y 1.3 (óptimo). TLS 1.0 y 1.1 deben estar deshabilitados.',
+    'mod-ssl-cipher':    '<strong>Cipher Suite & Seguridad</strong><br>Muestra el algoritmo de cifrado negociado, el protocolo activo, el tamaño de la clave pública, si se usa Forward Secrecy (ECDHE/DHE) y si HSTS está activado.',
+    'mod-ssl-chain':     '<strong>Cadena de certificados</strong><br>Lista todos los certificados de la cadena de confianza: certificado del servidor, intermedios y raíz. Muestra fechas de validez, emisor, días restantes y fingerprint SHA-256.',
+    'mod-ssl-san':       '<strong>SAN — Subject Alternative Names</strong><br>Relación de dominios y subdominios que cubre el certificado SSL/TLS. Permite ver si el certificado es wildcard o multi-dominio.',
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.info-popover-btn').forEach(el => {
+        const key     = el.dataset.infoKey;
+        const content = INFO_CONTENT[key] ?? 'Información no disponible.';
+        const pop = new bootstrap.Popover(el, {
+            content,
+            html:      true,
+            trigger:   'click',
+            placement: 'auto',
+            container: 'body',
+        });
+        // Click outside to close
+        el.addEventListener('click', e => {
+            e.stopPropagation();
+            document.querySelectorAll('.info-popover-btn').forEach(o => {
+                if (o !== el) bootstrap.Popover.getInstance(o)?.hide();
+            });
+        });
+    });
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.info-popover-btn').forEach(el => {
+            bootstrap.Popover.getInstance(el)?.hide();
+        });
+    });
+});
 
 // ── SortableJS ────────────────────────────────────────────────
 const sortOpts = {group:'cards', handle:'.drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag'};

@@ -1041,3 +1041,54 @@ body.search-hidden .tab-pane.show.active > .card:first-child {
 .smtp-error { color: #dc2626; }
 
 /* (tabs scrollable on mobile — already handled in .main-tabs above) */
+
+/* ── Info Popover button ─────────────────────────────────────── */
+.info-popover-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0.55;
+    font-size: 0.75rem;
+    transition: opacity 0.15s, color 0.15s;
+    vertical-align: middle;
+    flex-shrink: 0;
+    user-select: none;
+}
+.info-popover-btn:hover { opacity: 1; color: #3b82f6; }
+.main-tab-btn .info-popover-btn {
+    margin-left: 4px;
+    font-size: 0.7rem;
+}
+
+/* Popover custom styles */
+.popover {
+    max-width: 280px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.popover-body { padding: 10px 13px; }
+body.dark-mode .popover {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+body.dark-mode .popover-arrow::after { border-bottom-color: #1e293b; }
+
+/* ── Footer Tus datos label ──────────────────────────────────── */
+.visitor-footer-inner { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+.visitor-label-prefix {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    border-right: 1.5px solid var(--border);
+    padding-right: 10px;
+    margin-right: 10px;
+}
