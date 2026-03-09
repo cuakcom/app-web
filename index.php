@@ -1,8 +1,8 @@
 <?php
 /**
- * Cuakcom Expert Suite - v2.2.0
+ * Cuakcom Expert Suite - v2.3.0
  */
-define('APP_VERSION', '2.2.0');
+define('APP_VERSION', '2.3.0');
 
 // Datos del visitante (server-side)
 function getClientIp(): string {
@@ -80,6 +80,12 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 <button class="main-tab-btn" id="tab-mail-btn" data-bs-toggle="tab"
                         data-bs-target="#tab-correo" type="button" role="tab">
                     <i class="fa-solid fa-envelope me-1"></i>Correo
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="main-tab-btn" id="tab-dnsq-btn" data-bs-toggle="tab"
+                        data-bs-target="#tab-dnsquery" type="button" role="tab">
+                    <i class="fa-solid fa-terminal me-1"></i>Consultas DNS
                 </button>
             </li>
         </ul>
@@ -166,6 +172,24 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 </button>
             </div>
 
+            <!-- Web info card (always visible after analysis) -->
+            <div id="card-webinfo" class="d-none mt-3">
+                <div class="card result-card">
+                    <div class="card-header-cuak">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                            <span class="header-badge" style="background:#0f766e">Web Info</span>
+                        </div>
+                        <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadCard('webinfo')" title="Descargar">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3" id="body-webinfo">
+                        <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Results grid -->
             <div id="results" class="d-none mt-3">
                 <div class="row g-3">
@@ -250,14 +274,30 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
         <!-- ══════════ TAB: CORREO ══════════ -->
         <div class="tab-pane fade" id="tab-correo" role="tabpanel">
             <div class="card search-options-card">
-                <div class="card-body p-3 d-flex align-items-center gap-3 flex-wrap">
-                    <span class="small text-muted fw-semibold">
-                        <i class="fa-solid fa-envelope me-1"></i>Diagnóstico de correo para el dominio introducido arriba
-                    </span>
-                    <button class="btn btn-mail-analyze ms-auto fw-bold" id="btn-mail-analyze" onclick="startMailAnalysis()">
-                        <span id="mail-btn-text"><i class="fa-solid fa-paper-plane me-1"></i>Analizar correo</span>
-                        <span id="mail-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                    </button>
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-3 flex-wrap mb-2">
+                        <span class="small text-muted fw-semibold">
+                            <i class="fa-solid fa-envelope me-1"></i>Diagnóstico de correo para el dominio introducido arriba
+                        </span>
+                        <button class="btn btn-mail-analyze ms-auto fw-bold" id="btn-mail-analyze" onclick="startMailAnalysis()">
+                            <span id="mail-btn-text"><i class="fa-solid fa-paper-plane me-1"></i>Analizar correo</span>
+                            <span id="mail-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                        </button>
+                    </div>
+                    <!-- Email account test -->
+                    <div class="d-flex align-items-center gap-2 flex-wrap mt-1">
+                        <input type="email" id="input-email-test" class="form-control form-control-sm" style="max-width:260px"
+                               placeholder="cuenta@dominio.com — prueba RCPT TO (opcional)">
+                        <span class="small text-muted">Verifica si el buzón existe (resultado orientativo)</span>
+                    </div>
+                    <!-- EML upload -->
+                    <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+                        <label class="btn btn-sm btn-outline-secondary mb-0" style="cursor:pointer">
+                            <i class="fa-solid fa-file-arrow-up me-1"></i>Analizar .eml
+                            <input type="file" id="input-eml" accept=".eml,.txt" class="d-none" onchange="uploadEml(this)">
+                        </label>
+                        <span class="small text-muted" id="eml-filename">Sube un archivo .eml para analizar sus cabeceras</span>
+                    </div>
                 </div>
             </div>
 
@@ -376,7 +416,87 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     </div>
                 </div>
             </div>
+            <!-- EML results -->
+            <div id="eml-results" class="d-none mt-3">
+                <div class="card result-card">
+                    <div class="card-header-cuak">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle"></i>
+                            <span class="header-badge" style="background:#0369a1">Análisis .eml</span>
+                        </div>
+                        <button class="btn btn-link p-0" style="color:#0369a1" onclick="downloadEmlReport()" title="Descargar">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3" id="body-eml">
+                        <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                    </div>
+                </div>
+            </div>
         </div><!-- /tab-correo -->
+
+        <!-- ══════════ TAB: CONSULTAS DNS ══════════ -->
+        <div class="tab-pane fade" id="tab-dnsquery" role="tabpanel">
+            <div class="card search-options-card">
+                <div class="card-body p-3">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-12 col-sm-4">
+                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-globe me-1"></i>Dominio</label>
+                            <input type="text" id="dnsq-domain" class="form-control form-control-sm" placeholder="ejemplo.com">
+                        </div>
+                        <div class="col-6 col-sm-2">
+                            <label class="form-label small fw-semibold mb-1">Tipo</label>
+                            <select id="dnsq-type" class="form-select form-select-sm">
+                                <?php foreach (['A','AAAA','CNAME','MX','NS','TXT','SOA','SRV','CAA','PTR','ANY'] as $t): ?>
+                                <option value="<?= $t ?>"><?= $t ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <label class="form-label small fw-semibold mb-1">Servidor DNS</label>
+                            <select id="dnsq-server" class="form-select form-select-sm" onchange="toggleCustomDns()">
+                                <option value="8.8.8.8">8.8.8.8 — Google</option>
+                                <option value="8.8.4.4">8.8.4.4 — Google Alt</option>
+                                <option value="1.1.1.1">1.1.1.1 — Cloudflare</option>
+                                <option value="1.0.0.1">1.0.0.1 — Cloudflare Alt</option>
+                                <option value="9.9.9.9">9.9.9.9 — Quad9</option>
+                                <option value="208.67.222.222">208.67.222.222 — OpenDNS</option>
+                                <option value="94.140.14.14">94.140.14.14 — AdGuard</option>
+                                <option value="custom">Personalizado…</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-sm-2" id="dnsq-custom-wrap" style="display:none">
+                            <label class="form-label small fw-semibold mb-1">IP servidor</label>
+                            <input type="text" id="dnsq-custom" class="form-control form-control-sm" placeholder="x.x.x.x">
+                        </div>
+                        <div class="col-3 col-sm-1">
+                            <label class="form-label small fw-semibold mb-1">Puerto</label>
+                            <input type="number" id="dnsq-port" class="form-control form-control-sm" value="53" min="1" max="65535">
+                        </div>
+                        <div class="col-3 col-sm-2">
+                            <button class="btn btn-dark btn-sm w-100" onclick="startDnsQuery()">
+                                <span id="dnsq-btn-text"><i class="fa-solid fa-search me-1"></i>Consultar</span>
+                                <span id="dnsq-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dnsq-results" class="d-none mt-3">
+                <div class="card result-card">
+                    <div class="card-header-cuak">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="header-badge" style="background:#7c3aed">Resultado</span>
+                            <span class="small text-muted" id="dnsq-meta"></span>
+                        </div>
+                        <button class="btn btn-link p-0" style="color:#7c3aed" onclick="downloadDnsQuery()" title="Descargar">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3" id="body-dnsq"></div>
+                </div>
+            </div>
+        </div><!-- /tab-dnsquery -->
 
     </div><!-- /tab-content -->
 
@@ -416,6 +536,8 @@ document.getElementById('input-domain').addEventListener('keydown', e => {
         // Analizar según la pestaña activa
         if (document.getElementById('tab-correo').classList.contains('show')) {
             startMailAnalysis();
+        } else if (document.getElementById('tab-dnsquery').classList.contains('show')) {
+            startDnsQuery();
         } else {
             startAnalysis();
         }
@@ -510,6 +632,10 @@ function startAnalysis() {
     document.getElementById('export-bar').classList.remove('d-none');
     document.getElementById('analyzed-domain-label').textContent = '🔍 ' + domain;
 
+    // webinfo always visible
+    document.getElementById('card-webinfo').classList.remove('d-none');
+    setCardLoading('webinfo');
+
     const allCards = ['resolution','dns','ports','whois','ssl','ping','headers','blacklist','traceroute','redirect'];
     allCards.forEach(m => {
         const card = document.getElementById('card-' + m);
@@ -518,7 +644,7 @@ function startAnalysis() {
         else card.classList.add('d-none');
     });
 
-    Promise.allSettled(active.map(m => fetchModule(m, domain)))
+    Promise.allSettled([...active.map(m => fetchModule(m, domain)), fetchModule('webinfo', domain)])
         .then(() => setAnalyzing(false));
 }
 
@@ -544,7 +670,10 @@ async function startMailAnalysis() {
         .forEach(id => setMailCardLoading(id.replace('mail-','')));
 
     try {
-        const res  = await fetch(`api.php?module=mailtest&domain=${encodeURIComponent(domain)}`);
+        const emailTest = (document.getElementById('input-email-test')?.value ?? '').trim();
+        let url = `api.php?module=mailtest&domain=${encodeURIComponent(domain)}`;
+        if (emailTest) url += `&email=${encodeURIComponent(emailTest)}`;
+        const res  = await fetch(url);
         const data = await res.json();
         mailExport['mailtest'] = data;
         if (data.success) renderMailResults(data);
@@ -587,23 +716,29 @@ function renderMailScore(d) {
     const cls = pct >= 70 ? 'bg-success' : (pct >= 40 ? 'bg-warning' : 'bg-danger');
     const txt = pct >= 70 ? 'Buena entregabilidad' : (pct >= 40 ? 'Entregabilidad mejorable' : 'Entregabilidad deficiente');
     document.getElementById('badge-mail-score').className = 'header-badge ' + cls;
-    const checks = [
-        [d.mx?.length > 0,           'MX configurado'],
-        [d.mx?.[0]?.ptr_ok,          'PTR inverso válido'],
-        [d.spf?.exists,              'SPF presente'],
-        [d.spf?.strict,              'SPF con -all/~all'],
-        [d.dmarc?.exists,            'DMARC presente'],
-        [['quarantine','reject'].includes(d.dmarc?.policy), 'Política DMARC fuerte'],
-        [d.dkim?.length > 0,         'DKIM encontrado'],
-        [d.blacklist?.listed === 0,  'IP no en blacklists'],
-        [d.smtp?.some(s => s.open),  'SMTP accesible'],
-    ];
-    const rows = checks.map(([ok, label]) =>
+    const items = d.score_items ?? [];
+    const rows = items.map(item =>
         `<div class="d-flex align-items-center gap-2 mb-1">
-            <i class="fa-solid ${ok ? 'fa-circle-check text-success' : 'fa-circle-xmark text-danger'} small"></i>
-            <span class="small ${ok ? '' : 'text-muted'}">${label}</span>
+            <i class="fa-solid ${item.ok ? 'fa-circle-check text-success' : 'fa-circle-xmark text-danger'} small"></i>
+            <span class="small ${item.ok ? '' : 'text-muted'}">${esc(item.label)}</span>
+            ${item.weight > 1 ? `<span class="ttl-badge ms-1">×${item.weight}</span>` : ''}
          </div>`
     ).join('');
+    // RCPT TO result
+    let rcptHtml = '';
+    if (d.rcpt_to) {
+        const r = d.rcpt_to;
+        const ic = r.result === 'exists' ? 'fa-circle-check text-success' : (r.result === 'not_exists' ? 'fa-circle-xmark text-danger' : 'fa-circle-question text-warning');
+        const lbl = r.result === 'exists' ? 'Buzón existe' : (r.result === 'not_exists' ? 'Buzón no existe' : 'No determinado');
+        rcptHtml = `<div class="mt-2 pt-2 border-top">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="fa-solid ${ic} small"></i>
+                <span class="small fw-semibold">RCPT TO: ${lbl}</span>
+                ${r.code ? `<span class="ttl-badge">${r.code}</span>` : ''}
+            </div>
+            ${r.note ? `<div class="small text-muted">${esc(r.note)}</div>` : ''}
+        </div>`;
+    }
     document.getElementById('body-mail-score').innerHTML = `
         <div class="d-flex align-items-center gap-3 mb-3">
             <div class="mail-score-circle ${cls.replace('bg-','score-')}">
@@ -615,10 +750,10 @@ function renderMailScore(d) {
                 <div class="progress mt-1" style="height:6px;width:140px">
                     <div class="progress-bar ${cls}" style="width:${pct}%"></div>
                 </div>
-                ${d.arsys ? '<span class="arsys-badge mt-1"><i class="fa-solid fa-server me-1"></i>ARSYS</span>' : ''}
+                ${d.arsys ? '<span class="arsys-badge mt-1 d-inline-block"><i class="fa-solid fa-server me-1"></i>ARSYS</span>' : ''}
             </div>
         </div>
-        <div class="row g-0">${rows}</div>`;
+        <div class="row g-0">${rows}</div>${rcptHtml}`;
 }
 
 function renderMailMx(d) {
@@ -643,16 +778,22 @@ function renderMailSmtp(d) {
     const rows = (d.smtp ?? []).map(s => {
         const cls  = s.open ? 'text-success' : 'text-muted';
         const icon = s.open ? 'fa-circle-check' : 'fa-circle-xmark';
-        return `<div class="d-flex align-items-start gap-2 mb-1">
+        const tlsIcon = s.open && s.starttls
+            ? `<span class="ttl-badge ms-1 text-success"><i class="fa-solid fa-lock me-1"></i>${s.port===465?'SSL/TLS':'STARTTLS'}</span>`
+            : (s.open ? `<span class="ttl-badge ms-1 text-warning">Sin TLS</span>` : '');
+        const caps = (s.capabilities ?? []).filter(c => c !== 'SSL/TLS implícito').slice(0, 6);
+        const capsHtml = caps.length ? `<div class="mt-1">${caps.map(c => `<span class="ttl-badge me-1">${esc(c)}</span>`).join('')}</div>` : '';
+        return `<div class="d-flex align-items-start gap-2 mb-2">
             <i class="fa-solid ${icon} ${cls} mt-1 small"></i>
             <div>
                 <span class="fw-semibold small">${s.port} ${esc(s.label)}</span>
-                ${s.open ? `<span class="ttl-badge ms-1">${s.ms} ms</span>` : ''}
+                ${s.open ? `<span class="ttl-badge ms-1">${s.ms} ms</span>` : ''}${tlsIcon}
                 ${s.banner ? `<div class="dns-value small text-muted">${esc(s.banner)}</div>` : ''}
+                ${capsHtml}
             </div>
         </div>`;
     }).join('');
-    document.getElementById('body-mail-smtp').innerHTML = rows;
+    document.getElementById('body-mail-smtp').innerHTML = rows || '<p class="text-muted small mb-0">Sin datos SMTP.</p>';
 }
 
 function renderMailSpf(d) {
@@ -800,7 +941,7 @@ function setCardError(module, msg) {
 function renderCard(module, data) {
     ({resolution:renderResolution,dns:renderDNS,ports:renderPorts,whois:renderWhois,
       ssl:renderSSL,ping:renderPing,headers:renderHeaders,blacklist:renderBlacklist,
-      traceroute:renderTraceroute,redirect:renderRedirect})[module]?.(data);
+      traceroute:renderTraceroute,redirect:renderRedirect,webinfo:renderWebInfo})[module]?.(data);
 }
 
 function arsysBadgeHtml() {
@@ -1018,6 +1159,7 @@ function formatExport(module, data) {
         case 'blacklist':  return `[BLACKLIST]\nIP: ${data.ip}\n${data.clean?'LIMPIA':'LISTADA en '+data.listed}`;
         case 'traceroute': return `[TRACEROUTE]\n${data.output}`;
         case 'redirect':   return `[REDIRECCIONES]\n`+(data.chain??[]).map((s,i)=>`${i+1}. [${s.code}] ${s.url}`).join('\n');
+        case 'webinfo':    return `[WEB INFO]\nScreenshot: ${data.screenshot_url??''}\nWayback: ${data.wayback?.first_date??'?'} → ${data.wayback?.last_date??'?'}\nTranco: #${data.tranco?.rank??'N/A'}`;
         default:           return `[${module.toUpperCase()}]\n${JSON.stringify(data,null,2)}`;
     }
 }
@@ -1053,6 +1195,233 @@ function esc(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function stamp() { return new Date().toISOString().replace(/[:.]/g,'-').slice(0,19); }
+
+// ── Web Info renderer ─────────────────────────────────────────
+function renderWebInfo(data) {
+    const ss = data.screenshot_url;
+    const wb = data.wayback ?? {};
+    const tr = data.tranco ?? {};
+    const ms = data.response_ms ?? null;
+
+    let ssHtml = '';
+    if (ss) ssHtml = `<a href="${esc(ss)}" target="_blank" rel="noopener">
+        <img src="${esc(ss)}" alt="Captura web" class="webinfo-screenshot img-fluid rounded mb-3"
+             onerror="this.closest('.webinfo-screenshot-wrap').classList.add('d-none')">
+        </a>`;
+
+    const stats = [];
+    if (ms !== null) stats.push(['<i class="fa-solid fa-bolt me-1"></i>Respuesta', ms + ' ms']);
+    if (wb.first_date) stats.push(['<i class="fa-solid fa-calendar me-1"></i>Primera vez en Wayback', esc(wb.first_date)]);
+    if (wb.last_date)  stats.push(['<i class="fa-solid fa-history me-1"></i>Última captura Wayback', esc(wb.last_date)]);
+    if (wb.snapshots)  stats.push(['<i class="fa-solid fa-camera me-1"></i>Capturas archivadas', esc(wb.snapshots)]);
+    if (tr.rank)       stats.push(['<i class="fa-solid fa-trophy me-1"></i>Tranco rank', '#' + esc(tr.rank)]);
+
+    const statsHtml = stats.length
+        ? `<div class="webinfo-stats">${stats.map(([k,v]) =>
+            `<div class="webinfo-stat"><div class="webinfo-stat-label">${k}</div><div class="webinfo-stat-val">${v}</div></div>`
+          ).join('')}</div>`
+        : '';
+
+    const notes = data.notes ?? [];
+    const notesHtml = notes.length
+        ? `<div class="mt-2">${notes.map(n => `<div class="small text-muted"><i class="fa-solid fa-circle-info me-1"></i>${esc(n)}</div>`).join('')}</div>`
+        : '';
+
+    document.getElementById('body-webinfo').innerHTML =
+        `<div class="webinfo-screenshot-wrap">${ssHtml}</div>${statsHtml}${notesHtml}`;
+}
+
+// ── DNS Query tab ─────────────────────────────────────────────
+let lastDnsQueryData = null;
+
+function toggleCustomDns() {
+    const sel = document.getElementById('dnsq-server').value;
+    document.getElementById('dnsq-custom-wrap').style.display = sel === 'custom' ? '' : 'none';
+}
+
+async function startDnsQuery() {
+    const rawDomain = (document.getElementById('dnsq-domain').value.trim() || normalizeDomain());
+    const domain = rawDomain.replace(/^https?:\/\/(www\.)?/i,'').split('/')[0].split('?')[0].toLowerCase();
+    if (!domain) { alert('Introduce un dominio'); return; }
+    const type   = document.getElementById('dnsq-type').value;
+    const selVal = document.getElementById('dnsq-server').value;
+    const server = selVal === 'custom' ? document.getElementById('dnsq-custom').value.trim() : selVal;
+    const port   = parseInt(document.getElementById('dnsq-port').value) || 53;
+
+    document.getElementById('dnsq-btn-text').classList.add('d-none');
+    document.getElementById('dnsq-btn-loading').classList.remove('d-none');
+    document.getElementById('dnsq-results').classList.remove('d-none');
+    document.getElementById('body-dnsq').innerHTML =
+        `<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`;
+
+    try {
+        const url = `api.php?module=dnsquery&domain=${encodeURIComponent(domain)}&type=${encodeURIComponent(type)}&server=${encodeURIComponent(server)}&port=${port}`;
+        const res  = await fetch(url);
+        const data = await res.json();
+        lastDnsQueryData = data;
+        renderDnsQuery(data, domain, type, server, port);
+    } catch(e) {
+        document.getElementById('body-dnsq').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small"><i class="fa-solid fa-triangle-exclamation me-1"></i>Error: ${esc(e.message)}</div>`;
+    } finally {
+        document.getElementById('dnsq-btn-text').classList.remove('d-none');
+        document.getElementById('dnsq-btn-loading').classList.add('d-none');
+    }
+}
+
+function renderDnsQuery(data, domain, type, server, port) {
+    if (!data.success) {
+        document.getElementById('body-dnsq').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small">${esc(data.error ?? 'Error desconocido')}</div>`;
+        return;
+    }
+    const meta = `${esc(domain)} ${esc(type)} @ ${esc(server)}${port !== 53 ? ':'+port : ''}`;
+    document.getElementById('dnsq-meta').textContent = meta;
+
+    const records = data.records ?? [];
+    let recHtml = '';
+    if (records.length) {
+        recHtml = records.map(r => {
+            const bc = DNS_COLORS[r.type] ?? 'bg-dark';
+            return `<div class="dns-row d-flex align-items-start gap-2">
+                <span class="badge dns-badge ${bc}">${esc(r.type)}</span>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="dns-value">${esc(r.value)}</div>
+                    ${r.ttl != null ? `<span class="ttl-badge">TTL ${r.ttl}s</span>` : ''}
+                </div>
+            </div>`;
+        }).join('');
+    } else {
+        recHtml = '<p class="text-muted small mb-0">Sin respuesta (NXDOMAIN o tipo no encontrado).</p>';
+    }
+
+    const metaInfo = [];
+    if (data.query_time_ms != null) metaInfo.push(`<span class="ttl-badge">Tiempo: ${data.query_time_ms} ms</span>`);
+    if (data.status)               metaInfo.push(`<span class="ttl-badge">Status: ${esc(data.status)}</span>`);
+    if (data.server_used)          metaInfo.push(`<span class="ttl-badge">Servidor: ${esc(data.server_used)}</span>`);
+    if (data.source)               metaInfo.push(`<span class="ttl-badge">Fuente: ${esc(data.source)}</span>`);
+
+    const rawHtml = data.raw_output
+        ? `<details class="mt-3"><summary class="small text-muted" style="cursor:pointer"><i class="fa-solid fa-terminal me-1"></i>Salida raw dig</summary>
+            <pre class="terminal mt-2">${esc(data.raw_output)}</pre></details>`
+        : '';
+
+    document.getElementById('body-dnsq').innerHTML =
+        `<div class="mb-2">${metaInfo.join(' ')}</div>${recHtml}${rawHtml}`;
+}
+
+function downloadDnsQuery() {
+    if (!lastDnsQueryData) return;
+    const lines = [`[DNS QUERY]\n`];
+    (lastDnsQueryData.records ?? []).forEach(r => lines.push(`${r.type.padEnd(8)} ${r.value}`));
+    if (lastDnsQueryData.raw_output) lines.push('\n--- RAW ---\n' + lastDnsQueryData.raw_output);
+    downloadText(lines.join('\n'), `dnsquery_${stamp()}.txt`);
+}
+
+// ── EML upload & render ───────────────────────────────────────
+let emlData = null;
+
+async function uploadEml(input) {
+    const file = input.files[0];
+    if (!file) return;
+    document.getElementById('eml-filename').textContent = file.name;
+    document.getElementById('eml-results').classList.remove('d-none');
+    document.getElementById('body-eml').innerHTML =
+        `<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`;
+
+    try {
+        const fd = new FormData();
+        fd.append('eml', file);
+        const res  = await fetch('emlparse.php', {method:'POST', body: fd});
+        const data = await res.json();
+        emlData = data;
+        if (data.success) renderEmlHeaders(data);
+        else document.getElementById('body-eml').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small">${esc(data.error ?? 'Error')}</div>`;
+    } catch(e) {
+        document.getElementById('body-eml').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small">Error: ${esc(e.message)}</div>`;
+    }
+    input.value = '';
+}
+
+function renderEmlHeaders(data) {
+    // Summary row
+    const authBadge = (result, label) => {
+        if (!result) return '';
+        const cls = result === 'pass' ? 'bg-success' : (result === 'fail' ? 'bg-danger' : 'bg-warning text-dark');
+        return `<span class="badge ${cls} me-1">${label}: ${esc(result)}</span>`;
+    };
+    let summaryHtml = `
+        <div class="eml-summary mb-3">
+            ${data.subject  ? `<div class="mb-1"><span class="eml-field-label">Asunto:</span> <span class="fw-semibold">${esc(data.subject)}</span></div>` : ''}
+            ${data.from     ? `<div class="mb-1"><span class="eml-field-label">De:</span> ${esc(data.from)}</div>` : ''}
+            ${data.to       ? `<div class="mb-1"><span class="eml-field-label">Para:</span> ${esc(data.to)}</div>` : ''}
+            ${data.date     ? `<div class="mb-1"><span class="eml-field-label">Fecha:</span> ${esc(data.date)}</div>` : ''}
+            <div class="mt-2">
+                ${authBadge(data.auth?.spf,  'SPF')}
+                ${authBadge(data.auth?.dkim, 'DKIM')}
+                ${authBadge(data.auth?.dmarc,'DMARC')}
+                ${data.spam_score != null ? `<span class="ttl-badge">Spam score: ${data.spam_score}</span>` : ''}
+                <span class="ttl-badge ms-1">${data.total_headers} cabeceras</span>
+                <span class="ttl-badge ms-1">${data.hops} saltos</span>
+            </div>
+        </div>`;
+
+    // Received chain
+    let chainHtml = '';
+    if ((data.received ?? []).length) {
+        chainHtml = `<div class="mb-3">
+            <div class="dns-type-label">Ruta del mensaje (${data.hops} saltos)</div>
+            ${data.received.map((r, i) =>
+                `<div class="rd-step mb-1">
+                    <span class="rd-code text-muted">${i+1}</span>
+                    <span class="rd-url">${esc(r)}</span>
+                </div>`
+            ).join('<div class="rd-arrow">↓</div>')}
+        </div>`;
+    }
+
+    // Group headers by category
+    const cats = {};
+    for (const h of (data.headers ?? [])) {
+        if (!cats[h.category]) cats[h.category] = [];
+        cats[h.category].push(h);
+    }
+    const catOrder = ['Autenticación','Origen','Destino','Spam','Fecha','Identificación','Hilo','Formato','Software','Red','Lista','Otras'];
+    const catColors = {
+        'Autenticación':'#1d4ed8','Origen':'#7c3aed','Destino':'#0891b2','Spam':'#dc2626',
+        'Fecha':'#0f766e','Identificación':'#374151','Hilo':'#92400e','Formato':'#065f46',
+        'Software':'#be185d','Red':'#0369a1','Lista':'#6d28d9','Otras':'#64748b',
+    };
+    let headersHtml = '<div class="eml-headers-grid">';
+    for (const cat of catOrder) {
+        if (!cats[cat]) continue;
+        const color = catColors[cat] ?? '#64748b';
+        headersHtml += `<div class="eml-cat-block">
+            <div class="eml-cat-title" style="color:${color}">${esc(cat)}</div>`;
+        for (const h of cats[cat]) {
+            headersHtml += `<div class="eml-header-row">
+                <div class="eml-header-name">${esc(h.name)}</div>
+                <div class="eml-header-value dns-value">${esc(h.value)}</div>
+                ${h.desc ? `<div class="eml-header-desc">${esc(h.desc)}</div>` : ''}
+            </div>`;
+        }
+        headersHtml += '</div>';
+    }
+    headersHtml += '</div>';
+
+    document.getElementById('body-eml').innerHTML = summaryHtml + chainHtml + headersHtml;
+}
+
+function downloadEmlReport() {
+    if (!emlData) return;
+    let text = `ANÁLISIS EML\nAsunto: ${emlData.subject ?? ''}\nDe: ${emlData.from ?? ''}\nPara: ${emlData.to ?? ''}\nFecha: ${emlData.date ?? ''}\n\n`;
+    text += `SPF: ${emlData.auth?.spf ?? '—'}  DKIM: ${emlData.auth?.dkim ?? '—'}  DMARC: ${emlData.auth?.dmarc ?? '—'}\n\n`;
+    text += `CABECERAS (${emlData.total_headers}):\n`;
+    (emlData.headers ?? []).forEach(h => { text += `${h.name}: ${h.value}\n`; });
+    downloadText(text, `eml_report_${stamp()}.txt`);
+}
 
 // ── SortableJS ────────────────────────────────────────────────
 const sortOpts = {group:'cards', handle:'.drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag'};
