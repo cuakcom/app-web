@@ -599,46 +599,60 @@ body {
     .visitor-footer-inner { flex-direction: column; gap: 6px; }
 }
 
-/* ── Tabs ─────────────────────────────────────────────────── */
+/* ── Tabs (estilo botones, encima del buscador) ───────────── */
 .main-tabs-wrap {
-    background: var(--card-bg);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    border-radius: 0 0 10px 10px;
-    margin-bottom: 16px;
-    overflow: hidden;
+    background: transparent;
+    border: none;
+    margin-bottom: 8px;
+    overflow: visible;
 }
 
 .main-tabs {
     display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
     border: none;
-    background: var(--field-bg);
+    background: transparent;
     padding: 0;
     margin: 0;
     list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
+.main-tabs::-webkit-scrollbar { display: none; }
+.main-tabs .nav-item { flex-shrink: 0; }
 
 .main-tab-btn {
-    background: transparent;
-    border: none;
-    border-bottom: 3px solid transparent;
-    padding: 10px 20px;
-    font-size: 0.82rem;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 15px;
+    font-size: 0.80rem;
     font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
     outline: none;
     white-space: nowrap;
+    line-height: 1.3;
 }
-.main-tab-btn:hover { color: var(--text); }
+.main-tab-btn:hover {
+    background: var(--field-bg);
+    color: var(--text);
+    border-color: #94a3b8;
+}
 .main-tab-btn.active {
-    color: #1a2a6c;
-    border-bottom-color: #1a2a6c;
-    background: var(--card-bg);
+    background: #1a2a6c;
+    color: #fff;
+    border-color: #1a2a6c;
+    box-shadow: 0 2px 8px rgba(26,42,108,0.25);
 }
-body.dark-mode .main-tab-btn.active { color: #93c5fd; border-bottom-color: #93c5fd; }
+body.dark-mode .main-tab-btn.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.35);
+}
 
 /* search-options-card: continuación visual de la search-card */
 .search-options-card {
@@ -650,6 +664,14 @@ body.dark-mode .main-tab-btn.active { color: #93c5fd; border-bottom-color: #93c5
 .tab-pane > .search-options-card {
     border-radius: 0 0 10px 10px;
     margin-bottom: 0;
+}
+/* Cuando la search card está oculta, el primer elemento de la pestaña necesita borde superior */
+body.search-hidden .tab-pane.show.active > .search-options-card:first-child {
+    border-radius: 10px 10px 0 0 !important;
+    border-top: 1px solid var(--border) !important;
+}
+body.search-hidden .tab-pane.show.active > .card:first-child {
+    border-radius: 10px 10px 0 0 !important;
 }
 
 /* ── Botón activar todo ──────────────────────────────────── */
@@ -1018,12 +1040,4 @@ body.dark-mode .main-tab-btn.active { color: #93c5fd; border-bottom-color: #93c5
 .smtp-defer { color: #d97706 !important; }
 .smtp-error { color: #dc2626; }
 
-/* ── Tabs scrollable on mobile ──────────────────────────────── */
-.main-tabs {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-.main-tabs::-webkit-scrollbar { display: none; }
-.main-tabs .nav-item { flex-shrink: 0; }
+/* (tabs scrollable on mobile — already handled in .main-tabs above) */

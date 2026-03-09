@@ -51,23 +51,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <!-- ===================== MAIN ===================== -->
 <main class="container py-3 py-md-4">
 
-    <!-- Search card (compartida entre pestañas) -->
-    <div class="card search-card mb-0 mb-md-0" style="border-radius:10px 10px 0 0; border-bottom:none;">
-        <div class="card-body p-3 p-md-4 pb-2">
-            <div class="input-group position-relative">
-                <input type="text" id="input-domain" class="form-control form-control-lg"
-                       placeholder="dominio.com o IP" autocomplete="off" spellcheck="false"
-                       aria-label="Dominio a analizar">
-                <button class="btn btn-dark btn-lg fw-bold px-3 px-md-4" id="btn-analyze" type="button">
-                    <span id="btn-text"><i class="fa-solid fa-magnifying-glass me-1 d-none d-sm-inline"></i>ANALIZAR</span>
-                    <span id="btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                </button>
-                <div id="history-dropdown" class="history-dropdown d-none"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tabs -->
+    <!-- Tabs (encima del buscador) -->
     <div class="main-tabs-wrap">
         <ul class="nav main-tabs" id="mainTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -107,6 +91,24 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 </button>
             </li>
         </ul>
+    </div>
+
+    <!-- Search card (se oculta en pestañas con input propio) -->
+    <div id="search-card-wrap">
+    <div class="card search-card mb-0" style="border-radius:10px 10px 0 0; border-bottom:none;">
+        <div class="card-body p-3 p-md-4 pb-2">
+            <div class="input-group position-relative">
+                <input type="text" id="input-domain" class="form-control form-control-lg"
+                       placeholder="dominio.com o IP" autocomplete="off" spellcheck="false"
+                       aria-label="Dominio a analizar">
+                <button class="btn btn-dark btn-lg fw-bold px-3 px-md-4" id="btn-analyze" type="button">
+                    <span id="btn-text"><i class="fa-solid fa-magnifying-glass me-1 d-none d-sm-inline"></i>ANALIZAR</span>
+                    <span id="btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                </button>
+                <div id="history-dropdown" class="history-dropdown d-none"></div>
+            </div>
+        </div>
+    </div>
     </div>
 
     <div class="tab-content mb-4">
@@ -190,28 +192,6 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 </button>
             </div>
 
-            <!-- Web info card (mitad derecha, siempre visible al analizar) -->
-            <div id="card-webinfo" class="d-none mt-3">
-                <div class="row g-3 justify-content-end">
-                    <div class="col-12 col-md-6">
-                        <div class="card result-card">
-                            <div class="card-header-cuak">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
-                                    <span class="header-badge" style="background:#0f766e">Web Info</span>
-                                </div>
-                                <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadCard('webinfo')" title="Descargar">
-                                    <i class="fa-solid fa-download"></i>
-                                </button>
-                            </div>
-                            <div class="card-body p-3" id="body-webinfo">
-                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Results grid -->
             <div id="results" class="d-none mt-3">
                 <div class="row g-3">
@@ -253,6 +233,21 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     </div>
 
                     <div class="col-12 col-md-6 d-flex flex-column gap-3" id="col-right">
+                        <!-- Web Info (siempre visible al analizar) -->
+                        <div class="card result-card" id="card-webinfo">
+                            <div class="card-header-cuak">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-up-down-left-right drag-handle" title="Mover"></i>
+                                    <span class="header-badge" style="background:#0f766e">Web Info</span>
+                                </div>
+                                <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadCard('webinfo')" title="Descargar">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                            <div class="card-body p-3" id="body-webinfo">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
+                        </div>
                         <?php foreach ([
                             ['dns',       null,  null,           'DNS',          null],
                             ['whois',     'bg-danger', 'text-danger', 'WHOIS',  null],
@@ -782,6 +777,14 @@ document.addEventListener('click', e => {
         hideHistoryDropdown();
 });
 
+// ── Ocultar buscador en pestañas con input propio ──────────────
+const TABS_NO_SEARCH = new Set(['tab-dnsq-btn', 'tab-red-btn']);
+document.getElementById('mainTabs').addEventListener('shown.bs.tab', e => {
+    const hide = TABS_NO_SEARCH.has(e.target.id);
+    document.getElementById('search-card-wrap').classList.toggle('d-none', hide);
+    document.body.classList.toggle('search-hidden', hide);
+});
+
 // DNS chips toggle
 document.getElementById('mod-dns').addEventListener('change', function () {
     document.getElementById('dns-types-row').classList.toggle('d-none', !this.checked);
@@ -863,8 +866,6 @@ function startAnalysis() {
     document.getElementById('export-bar').classList.remove('d-none');
     document.getElementById('analyzed-domain-label').textContent = '🔍 ' + domain;
 
-    // webinfo always visible
-    document.getElementById('card-webinfo').classList.remove('d-none');
     setCardLoading('webinfo');
 
     const allCards = ['resolution','dns','ports','whois','ssl','ping','headers','blacklist','traceroute','redirect'];
@@ -1665,6 +1666,7 @@ async function startGeoIp() {
     document.getElementById('red-results').classList.remove('d-none');
     document.getElementById('body-geoip').innerHTML   = skeletonHtml();
     document.getElementById('body-whoisip').innerHTML = skeletonHtml();
+    document.getElementById('red-results').scrollIntoView({behavior:'smooth', block:'start'});
     try {
         const enc = encodeURIComponent(input);
         const [geoRes, whoisRes] = await Promise.allSettled([
@@ -1722,6 +1724,7 @@ async function startPropagation() {
     document.getElementById('prop-btn-text').classList.add('d-none');
     document.getElementById('prop-btn-loading').classList.remove('d-none');
     document.getElementById('prop-results').classList.remove('d-none');
+    document.getElementById('prop-results').scrollIntoView({behavior:'smooth', block:'start'});
     document.getElementById('body-propagation').innerHTML = skeletonHtml();
     try {
         const res  = await fetch(`api.php?module=dnspropagation&domain=${encodeURIComponent(domain)}&type=${type}`);
