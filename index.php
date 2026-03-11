@@ -629,6 +629,50 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     <div class="card-body p-3" id="body-dnsq"></div>
                 </div>
             </div>
+
+            <!-- ── Validador SPF ── -->
+            <div class="card search-options-card mt-3">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="header-badge" style="background:#0f766e; font-size:0.75rem">
+                            <i class="fa-solid fa-shield-halved me-1"></i>Validador SPF
+                        </span>
+                        <span class="info-popover-btn" data-info-key="mod-spfcheck"><i class="fa-solid fa-circle-info"></i></span>
+                        <span class="small text-muted ms-1">¿Está autorizada esta IP para enviar correo en nombre del dominio?</span>
+                    </div>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-12 col-sm-4">
+                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-globe me-1"></i>Dominio</label>
+                            <input type="text" id="spf-domain" class="form-control form-control-sm" placeholder="ejemplo.com">
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-server me-1"></i>IP del servidor remitente</label>
+                            <input type="text" id="spf-ip" class="form-control form-control-sm" placeholder="1.2.3.4 ó 2001:db8::1">
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <button class="btn btn-dark btn-sm w-100" onclick="startSpfCheck()">
+                                <span id="spf-btn-text"><i class="fa-solid fa-magnifying-glass me-1"></i>Verificar SPF</span>
+                                <span id="spf-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="spf-results" class="d-none mt-3">
+                <div class="card result-card">
+                    <div class="card-header-cuak">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="header-badge" style="background:#0f766e">SPF Check</span>
+                            <span class="small text-muted" id="spf-meta"></span>
+                        </div>
+                        <button class="btn btn-link p-0" style="color:#0f766e" onclick="downloadSpfCheck()" title="Descargar">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3" id="body-spf"></div>
+                </div>
+            </div>
+
         </div><!-- /tab-dnsquery -->
 
         <!-- ══════════ TAB: RED & IP ══════════ -->
@@ -1740,6 +1784,117 @@ function downloadEmlReport() {
     downloadText(text, `eml_report_${stamp()}.txt`);
 }
 
+// ── SPF Validator ─────────────────────────────────────────────
+let lastSpfData = null;
+
+async function startSpfCheck() {
+    const domain = (document.getElementById('spf-domain').value.trim() || normalizeDomain());
+    const ip     = document.getElementById('spf-ip').value.trim();
+    if (!domain) { alert('Introduce un dominio'); return; }
+    if (!ip)     { alert('Introduce una IP'); return; }
+
+    document.getElementById('spf-btn-text').classList.add('d-none');
+    document.getElementById('spf-btn-loading').classList.remove('d-none');
+    document.getElementById('spf-results').classList.remove('d-none');
+    document.getElementById('spf-results').scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('body-spf').innerHTML = skeletonHtml();
+    document.getElementById('spf-meta').textContent = '';
+
+    try {
+        const res  = await fetch(`api.php?module=spfcheck&domain=${encodeURIComponent(domain)}&ip=${encodeURIComponent(ip)}`);
+        const data = await res.json();
+        lastSpfData = data;
+        data.success ? renderSpfCheck(data) : setBodyErr('spf', data.error);
+    } catch(e) {
+        setBodyErr('spf', e.message);
+    } finally {
+        document.getElementById('spf-btn-text').classList.remove('d-none');
+        document.getElementById('spf-btn-loading').classList.add('d-none');
+    }
+}
+
+function renderSpfCheck(d) {
+    document.getElementById('spf-meta').textContent = `${d.domain} · ${d.ip}`;
+
+    const RESULT_CFG = {
+        pass:      { icon: 'fa-circle-check',       cls: 'text-success', label: 'PASS',      desc: 'La IP está autorizada para enviar correo en nombre de este dominio.' },
+        fail:      { icon: 'fa-circle-xmark',        cls: 'text-danger',  label: 'FAIL',      desc: 'La IP NO está autorizada. El correo debe ser rechazado.' },
+        softfail:  { icon: 'fa-triangle-exclamation',cls: 'text-warning', label: 'SOFTFAIL',  desc: 'La IP no está autorizada pero el dominio prefiere no rechazar (solo marcar como sospechoso).' },
+        neutral:   { icon: 'fa-circle-question',     cls: 'text-muted',   label: 'NEUTRAL',   desc: 'El dominio no hace ninguna afirmación sobre esta IP.' },
+        none:      { icon: 'fa-circle-minus',         cls: 'text-muted',   label: 'NONE',      desc: 'No existe ningún registro SPF para este dominio.' },
+        permerror: { icon: 'fa-triangle-exclamation', cls: 'text-danger',  label: 'PERMERROR', desc: 'Error permanente evaluando el SPF (demasiados lookups, recursión o registro mal formado).' },
+        temperror: { icon: 'fa-circle-exclamation',   cls: 'text-warning', label: 'TEMPERROR', desc: 'Error temporal durante la evaluación (problema DNS transitorio).' },
+    };
+
+    const cfg = RESULT_CFG[d.result] ?? RESULT_CFG.neutral;
+
+    // SPF raw record
+    const spfHtml = d.spf_raw
+        ? `<div class="spf-raw-block mt-3"><div class="seo-label">Registro SPF</div><code class="small">${esc(d.spf_raw)}</code></div>`
+        : `<div class="small text-muted mt-2"><i class="fa-solid fa-circle-info me-1"></i>No se encontró registro SPF para <strong>${esc(d.domain)}</strong>.</div>`;
+
+    // Trace table
+    let traceHtml = '';
+    if ((d.trace ?? []).length) {
+        const rows = d.trace.map(t => {
+            if (t.mechanism) {
+                const matchIcon = t.matched
+                    ? '<i class="fa-solid fa-circle-check text-success small me-1"></i>'
+                    : '<i class="fa-solid fa-circle-xmark text-muted small me-1"></i>';
+                const qual = t.qualifier ? `<span class="ttl-badge ms-1">${{'+':'pass','-':'fail','~':'softfail','?':'neutral'}[t.qualifier] ?? t.qualifier}</span>` : '';
+                const note = t.note ? `<span class="small text-muted ms-2">(${esc(t.note)})</span>` : '';
+                const sub  = t.sub_result ? `<span class="ttl-badge ms-1">${esc(t.sub_result)}</span>` : '';
+                const ptr  = t.ptr ? `<span class="small text-muted ms-2">PTR: ${esc(t.ptr)}</span>` : '';
+                return `<tr class="${t.matched ? 'spf-trace-match' : ''}">
+                    <td>${matchIcon}<code class="small">${esc(t.mechanism)}</code>${note}${ptr}</td>
+                    <td>${qual}${sub}</td>
+                </tr>`;
+            }
+            if (t.domain) {
+                return `<tr class="spf-trace-domain">
+                    <td colspan="2"><i class="fa-solid fa-arrow-right me-1 text-muted small"></i><strong>${esc(t.domain)}</strong>
+                    ${t.spf ? `<code class="small text-muted ms-2">${esc(t.spf.slice(0, 80))}${t.spf.length > 80 ? '…' : ''}</code>` : '<span class="small text-muted ms-2">sin SPF</span>'}
+                    </td>
+                </tr>`;
+            }
+            return '';
+        }).join('');
+        traceHtml = `
+            <div class="mt-3 pt-2 border-top">
+                <div class="seo-label mb-2">Evaluación de mecanismos <span class="ttl-badge ms-1">${d.lookups} lookup${d.lookups !== 1 ? 's' : ''} DNS</span></div>
+                <div class="table-responsive">
+                    <table class="spf-trace-table w-100"><tbody>${rows}</tbody></table>
+                </div>
+            </div>`;
+    }
+
+    document.getElementById('body-spf').innerHTML = `
+        <div class="d-flex align-items-start gap-3 mb-2">
+            <i class="fa-solid ${cfg.icon} ${cfg.cls} fa-2x mt-1"></i>
+            <div>
+                <div class="fw-bold fs-5 ${cfg.cls}">${cfg.label}</div>
+                <div class="small mt-1">${cfg.desc}</div>
+                <div class="small text-muted mt-1">
+                    <span class="ttl-badge me-1">${esc(d.ip_type)}</span>
+                    Mecanismo coincidente: <code>${esc(d.matched ?? '—')}</code>
+                </div>
+            </div>
+        </div>
+        ${spfHtml}
+        ${traceHtml}`;
+}
+
+function downloadSpfCheck() {
+    if (!lastSpfData) return;
+    const d = lastSpfData;
+    let t = `[SPF CHECK] ${d.domain} · IP: ${d.ip}\nResultado: ${d.result.toUpperCase()}\nCoincidencia: ${d.matched}\nLookups DNS: ${d.lookups}\n\nRegistro SPF:\n${d.spf_raw ?? '(ninguno)'}\n\nEvaluación:\n`;
+    (d.trace ?? []).forEach(e => {
+        if (e.mechanism) t += `  ${e.matched ? '✓' : '✗'} ${e.mechanism}\n`;
+        if (e.domain)    t += `→ ${e.domain}: ${e.spf ?? 'sin SPF'}\n`;
+    });
+    downloadText(t, `spf_check_${d.domain}_${stamp()}.txt`);
+}
+
 // ── Red & IP tab ─────────────────────────────────────────────
 let lastPropData = null;
 
@@ -2164,6 +2319,7 @@ const INFO_CONTENT = {
     'mod-ssl-cipher':    '<strong>Cipher Suite & Seguridad</strong><br>Muestra el algoritmo de cifrado negociado, el protocolo activo, el tamaño de la clave pública, si se usa Forward Secrecy (ECDHE/DHE) y si HSTS está activado.',
     'mod-ssl-chain':     '<strong>Cadena de certificados</strong><br>Lista todos los certificados de la cadena de confianza: certificado del servidor, intermedios y raíz. Muestra fechas de validez, emisor, días restantes y fingerprint SHA-256.',
     'mod-ssl-san':       '<strong>SAN — Subject Alternative Names</strong><br>Relación de dominios y subdominios que cubre el certificado SSL/TLS. Permite ver si el certificado es wildcard o multi-dominio.',
+    'mod-spfcheck':      '<strong>Validador SPF</strong><br>Evalúa si una IP concreta está autorizada por el registro SPF del dominio para enviar correo en su nombre. Implementa RFC 7208: mecanismos ip4, ip6, a, mx, include, redirect, exists y ptr. Resultado: <em>pass</em> (autorizada), <em>fail</em> (rechazada), <em>softfail</em> (sospechosa) o <em>neutral</em>.',
 };
 
 document.addEventListener('DOMContentLoaded', () => {

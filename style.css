@@ -1042,6 +1042,25 @@ body.search-hidden .tab-pane.show.active > .card:first-child {
 
 /* (tabs scrollable on mobile — already handled in .main-tabs above) */
 
+/* ── SPF Check ───────────────────────────────────────────────── */
+.spf-raw-block {
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    word-break: break-all;
+}
+.spf-raw-block code { color: var(--text); }
+.spf-trace-table { border-collapse: collapse; font-size: 0.78rem; }
+.spf-trace-table td {
+    padding: 3px 8px 3px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+.spf-trace-table tr:last-child td { border-bottom: none; }
+.spf-trace-domain td { padding-top: 7px; font-size: 0.75rem; color: var(--text-muted); }
+.spf-trace-match td { background: rgba(16, 185, 129, 0.07); }
+
 /* ── Info Popover button ─────────────────────────────────────── */
 .info-popover-btn {
     display: inline-flex;

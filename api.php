@@ -48,7 +48,7 @@ if (empty($domain)) {
 $allowed = ['resolution', 'dns', 'ports', 'whois', 'ssl', 'ping',
             'headers', 'blacklist', 'traceroute', 'redirect', 'mailtest',
             'dnsquery', 'webinfo', 'geoip', 'dnspropagation', 'seocheck',
-            'sslscan', 'smtprelay'];
+            'sslscan', 'smtprelay', 'spfcheck'];
 
 if (!in_array($module, $allowed, true)) {
     echo json_encode(['success' => false, 'error' => 'Módulo desconocido']);
