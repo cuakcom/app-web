@@ -372,7 +372,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     </div>
                     <!-- EML upload -->
                     <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
-                        <label class="btn btn-sm btn-outline-secondary mb-0" style="cursor:pointer">
+                        <label class="btn btn-sm btn-eml-analyze mb-0">
                             <i class="fa-solid fa-file-arrow-up me-1"></i>Analizar .eml
                             <input type="file" id="input-eml" accept=".eml,.txt" class="d-none" onchange="uploadEml(this)">
                         </label>
@@ -390,6 +390,17 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         <button class="btn btn-sm btn-outline-danger ms-auto" id="btn-relay-test" onclick="startRelayTest()">
                             <span id="relay-btn-text"><i class="fa-solid fa-vials me-1"></i>Test relay &amp; entrega</span>
                             <span id="relay-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                        </button>
+                    </div>
+                    <!-- AbuseIPDB check -->
+                    <div class="d-flex align-items-center gap-2 flex-wrap mt-2 pt-2 border-top">
+                        <span class="small fw-semibold" style="color:#d97706">
+                            <i class="fa-solid fa-shield-virus me-1"></i>Correo / Abuse — AbuseIPDB
+                        </span>
+                        <span class="small text-muted">Comprueba si la IP está reportada en abuseipdb.com</span>
+                        <button class="btn btn-sm btn-outline-warning ms-auto fw-semibold" id="btn-abuse-check" onclick="startAbuseCheck()">
+                            <span id="abuse-btn-text"><i class="fa-solid fa-bug me-1"></i>Comprobar AbuseIPDB</span>
+                            <span id="abuse-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
                         </button>
                     </div>
                 </div>
@@ -461,6 +472,22 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 </button>
                             </div>
                             <div class="card-body p-3" id="body-mail-blacklist">
+                                <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                            </div>
+                        </div>
+                        <!-- Blacklist IP (mismo módulo que en Diagnóstico, para la IP del dominio) -->
+                        <div class="card result-card" id="card-mail-ipbl">
+                            <div class="card-header-cuak">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-up-down-left-right drag-handle"></i>
+                                    <span class="header-badge bg-success" id="badge-mail-ipbl">Blacklist IP</span>
+                                    <span class="info-popover-btn" data-info-key="mod-blacklist"><i class="fa-solid fa-circle-info"></i></span>
+                                </div>
+                                <button class="btn btn-link p-0 text-success" id="dl-mail-ipbl" title="Descargar">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                            <div class="card-body p-3" id="body-mail-ipbl">
                                 <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
                             </div>
                         </div>
@@ -563,6 +590,24 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                                 <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <!-- AbuseIPDB results -->
+            <div id="abuse-results" class="d-none mt-3">
+                <div class="card result-card">
+                    <div class="card-header-cuak">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-up-down-left-right drag-handle"></i>
+                            <span class="header-badge" style="background:#d97706" id="badge-mail-abuse">Correo / Abuse</span>
+                            <span class="info-popover-btn" data-info-key="mod-abuseipdb"><i class="fa-solid fa-circle-info"></i></span>
+                        </div>
+                        <button class="btn btn-link p-0" style="color:#d97706" onclick="downloadAbuseReport()" title="Descargar">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3" id="body-mail-abuse">
+                        <div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
                     </div>
                 </div>
             </div>
@@ -1027,23 +1072,27 @@ async function startMailAnalysis() {
     document.getElementById('btn-mail-analyze').disabled = true;
     document.getElementById('mail-results').classList.remove('d-none');
 
-    ['mail-score','mail-mx','mail-smtp','mail-spf','mail-dmarc','mail-dkim','mail-blacklist']
+    ['mail-score','mail-mx','mail-smtp','mail-spf','mail-dmarc','mail-dkim','mail-blacklist','mail-ipbl']
         .forEach(id => setMailCardLoading(id.replace('mail-','')));
 
     try {
         const emailTest = (document.getElementById('input-email-test')?.value ?? '').trim();
         let url = `api.php?module=mailtest&domain=${encodeURIComponent(domain)}`;
         if (emailTest) url += `&email=${encodeURIComponent(emailTest)}`;
-        const res  = await fetch(url);
-        const data = await res.json();
+        const blUrl = `api.php?module=blacklist&domain=${encodeURIComponent(domain)}`;
+        const [res, blRes] = await Promise.all([fetch(url), fetch(blUrl)]);
+        const [data, blData] = await Promise.all([res.json(), blRes.json()]);
         mailExport['mailtest'] = data;
+        mailExport['blacklist_ip'] = blData;
         if (data.success) renderMailResults(data);
         else {
             ['score','mx','smtp','spf','dmarc','dkim','blacklist'].forEach(k =>
                 setMailCardError(k, data.error ?? 'Error desconocido'));
         }
+        if (blData.success) renderMailIpbl(blData);
+        else setMailCardError('ipbl', blData.error ?? 'Error desconocido');
     } catch(e) {
-        ['score','mx','smtp','spf','dmarc','dkim','blacklist'].forEach(k =>
+        ['score','mx','smtp','spf','dmarc','dkim','blacklist','ipbl'].forEach(k =>
             setMailCardError(k, 'Error de conexión: ' + e.message));
     } finally {
         document.getElementById('mail-btn-text').classList.remove('d-none');
@@ -1267,6 +1316,124 @@ function renderMailBlacklist(d) {
         <details><summary class="small text-muted" style="cursor:pointer">Ver detalle</summary>
             <div class="mt-2">${rows}</div>
         </details>`;
+}
+
+// ── Blacklist IP directa (módulo diagnóstico reutilizado en Correo) ──────────
+function renderMailIpbl(data) {
+    const badge = document.getElementById('badge-mail-ipbl');
+    const dl    = document.getElementById('dl-mail-ipbl');
+    if (badge) badge.className = 'header-badge ' + (data.clean ? 'bg-success' : 'bg-danger');
+    if (dl)    dl.className    = 'btn btn-link p-0 ' + (data.clean ? 'text-success' : 'text-danger');
+    const rows = (data.results ?? []).map(r =>
+        `<div class="bl-row d-flex align-items-center gap-2">
+            <i class="fa-solid ${r.listed ? 'fa-circle-xmark text-danger' : 'fa-circle-check text-success'} small"></i>
+            <span class="bl-name">${esc(r.name)}</span>
+            ${r.rcode ? `<span class="ttl-badge ms-auto">${esc(r.rcode)}</span>` : ''}
+         </div>`
+    ).join('');
+    const el = document.getElementById('body-mail-ipbl');
+    if (!el) return;
+    el.innerHTML = `
+        <div class="d-flex align-items-center mb-2">
+            <i class="fa-solid ${data.clean ? 'fa-circle-check text-success' : 'fa-circle-xmark text-danger'} fa-lg me-2"></i>
+            <span class="small fw-semibold ${data.clean ? 'text-success' : 'text-danger'}">
+                ${data.clean ? `IP limpia (${data.total} listas)` : `Listada en ${data.listed}/${data.total}`}
+            </span>
+        </div>
+        <small class="text-muted d-block mb-2">IP: <code>${esc(data.ip)}</code></small>
+        <details><summary class="small text-muted" style="cursor:pointer">Ver detalle</summary>
+            <div class="mt-2">${rows}</div>
+        </details>`;
+}
+
+// ── AbuseIPDB ─────────────────────────────────────────────────
+let abuseExportData = null;
+
+async function startAbuseCheck() {
+    const domain = normalizeDomain();
+    if (!domain) { alert('Introduce un dominio o IP en el buscador'); return; }
+    document.getElementById('abuse-btn-text').classList.add('d-none');
+    document.getElementById('abuse-btn-loading').classList.remove('d-none');
+    document.getElementById('btn-abuse-check').disabled = true;
+    document.getElementById('abuse-results').classList.remove('d-none');
+    document.getElementById('body-mail-abuse').innerHTML =
+        `<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`;
+    try {
+        const res  = await fetch(`api.php?module=abuseipdb&domain=${encodeURIComponent(domain)}`);
+        const data = await res.json();
+        abuseExportData = data;
+        if (data.success) renderMailAbuse(data);
+        else document.getElementById('body-mail-abuse').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small"><i class="fa-solid fa-triangle-exclamation me-1"></i>${esc(data.error ?? 'Error')}</div>`;
+    } catch(e) {
+        document.getElementById('body-mail-abuse').innerHTML =
+            `<div class="alert alert-danger py-2 mb-0 small"><i class="fa-solid fa-triangle-exclamation me-1"></i>Error: ${esc(e.message)}</div>`;
+    } finally {
+        document.getElementById('abuse-btn-text').classList.remove('d-none');
+        document.getElementById('abuse-btn-loading').classList.add('d-none');
+        document.getElementById('btn-abuse-check').disabled = false;
+    }
+}
+
+function renderMailAbuse(data) {
+    const score  = data.abuseConfidenceScore ?? 0;
+    const cls    = score === 0 ? 'text-success' : (score < 50 ? 'text-warning' : 'text-danger');
+    const icon   = score === 0 ? 'fa-circle-check' : (score < 50 ? 'fa-triangle-exclamation' : 'fa-circle-xmark');
+    const bCls   = score === 0 ? 'bg-success' : (score < 50 ? 'bg-warning text-dark' : 'bg-danger');
+    const badge  = document.getElementById('badge-mail-abuse');
+    if (badge) badge.className = 'header-badge ' + bCls;
+    document.getElementById('body-mail-abuse').innerHTML = `
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="mail-score-circle ${score === 0 ? 'score-success' : score < 50 ? 'score-warning' : 'score-danger'}">
+                <span class="score-num">${score}</span>
+                <span class="score-den">/100</span>
+            </div>
+            <div>
+                <div class="fw-bold ${cls}">
+                    <i class="fa-solid ${icon} me-1"></i>
+                    ${score === 0 ? 'Sin reportes de abuso' : score < 50 ? 'Actividad sospechosa' : 'IP con alto riesgo'}
+                </div>
+                <div class="small text-muted mt-1">AbuseIPDB Confidence Score</div>
+                ${data.isWhitelisted ? '<span class="ttl-badge text-success">En whitelist</span>' : ''}
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-6"><div class="ssl-field">
+                <span class="ssl-label">IP</span>
+                <span class="ssl-val">${esc(data.ip)}</span>
+            </div></div>
+            <div class="col-6"><div class="ssl-field">
+                <span class="ssl-label">Total reportes</span>
+                <span class="ssl-val">${esc(data.totalReports)}</span>
+            </div></div>
+            <div class="col-6"><div class="ssl-field">
+                <span class="ssl-label">Usuarios distintos</span>
+                <span class="ssl-val">${esc(data.numDistinctUsers ?? '—')}</span>
+            </div></div>
+            <div class="col-6"><div class="ssl-field">
+                <span class="ssl-label">País</span>
+                <span class="ssl-val">${esc(data.countryCode ?? '—')}</span>
+            </div></div>
+            <div class="col-6"><div class="ssl-field">
+                <span class="ssl-label">ISP</span>
+                <span class="ssl-val" style="font-size:0.72rem">${esc(data.isp ?? '—')}</span>
+            </div></div>
+            <div class="col-6"><div class="ssl-field">
+                <span class="ssl-label">Tipo de uso</span>
+                <span class="ssl-val" style="font-size:0.72rem">${esc(data.usageType ?? '—')}</span>
+            </div></div>
+            <div class="col-12"><div class="ssl-field">
+                <span class="ssl-label">Último reporte</span>
+                <span class="ssl-val">${data.lastReportedAt ? esc(data.lastReportedAt.split('T')[0]) : 'Sin reportes'}</span>
+            </div></div>
+        </div>`;
+}
+
+function downloadAbuseReport() {
+    if (!abuseExportData) return;
+    const d = abuseExportData;
+    const text = `[ABUSEIPDB — Correo/Abuse]\nIP: ${d.ip}\nScore: ${d.abuseConfidenceScore}/100\nReportes: ${d.totalReports}\nPaís: ${d.countryCode??'—'}\nISP: ${d.isp??'—'}\nÚltimo reporte: ${d.lastReportedAt??'—'}`;
+    downloadText(text, `abuseipdb_${currentDomain}_${stamp()}.txt`);
 }
 
 // ── Fetch módulo diagnóstico ──────────────────────────────────

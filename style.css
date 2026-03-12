@@ -1136,3 +1136,118 @@ body.dark-mode .popover-arrow::after { border-bottom-color: #1e293b; }
     padding-right: 10px;
     margin-right: 10px;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Colores vibrantes — botones y etiquetas
+   ═══════════════════════════════════════════════════════════ */
+
+/* Botón principal ANALIZAR */
+#btn-analyze {
+    background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+    border-color: transparent;
+    box-shadow: 0 2px 10px rgba(249,115,22,0.45);
+    transition: opacity 0.15s, box-shadow 0.15s;
+}
+#btn-analyze:hover  { opacity: 0.9; color: white; }
+#btn-analyze:disabled { opacity: 0.65; }
+
+/* Pestañas — color único por tab (activo) */
+#tab-diag-btn.active { background: #2563eb; border-color: #2563eb; box-shadow: 0 2px 10px rgba(37,99,235,0.4); }
+#tab-mail-btn.active { background: #10b981; border-color: #10b981; box-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+#tab-dnsq-btn.active { background: #7c3aed; border-color: #7c3aed; box-shadow: 0 2px 10px rgba(124,58,237,0.4); }
+#tab-red-btn.active  { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 2px 10px rgba(245,158,11,0.4); }
+#tab-web-btn.active  { background: #f97316; border-color: #f97316; box-shadow: 0 2px 10px rgba(249,115,22,0.4); }
+#tab-ssl-btn.active  { background: #0891b2; border-color: #0891b2; box-shadow: 0 2px 10px rgba(8,145,178,0.4); }
+.main-tab-btn.active { color: #fff !important; }
+
+/* Pestañas — hover coloreado por tab (inactivo) */
+#tab-diag-btn:not(.active):hover { border-color: #2563eb; color: #2563eb; }
+#tab-mail-btn:not(.active):hover { border-color: #10b981; color: #10b981; }
+#tab-dnsq-btn:not(.active):hover { border-color: #7c3aed; color: #7c3aed; }
+#tab-red-btn:not(.active):hover  { border-color: #f59e0b; color: #f59e0b; }
+#tab-web-btn:not(.active):hover  { border-color: #f97316; color: #f97316; }
+#tab-ssl-btn:not(.active):hover  { border-color: #0891b2; color: #0891b2; }
+
+/* Botón activar/desactivar todo */
+.btn-toggle-all {
+    border-color: #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+.btn-toggle-all:hover {
+    background: #3b82f6 !important;
+    color: white !important;
+    border-color: #3b82f6 !important;
+}
+
+/* Botón Analizar correo */
+.btn-mail-analyze {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    box-shadow: 0 2px 8px rgba(16,185,129,0.4);
+}
+.btn-mail-analyze:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    box-shadow: 0 2px 12px rgba(5,150,105,0.5);
+    color: white;
+}
+
+/* Botón Test relay & entrega */
+#btn-relay-test {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
+}
+#btn-relay-test:hover { background: #dc2626; border-color: #dc2626; color: white; }
+
+/* Botón Comprobar AbuseIPDB */
+#btn-abuse-check { color: #d97706; border-color: #d97706; }
+#btn-abuse-check:hover { background: #d97706; color: white; border-color: #d97706; }
+
+/* Botón Analizar .eml */
+.btn-eml-analyze {
+    background: transparent;
+    border: 1px solid #6366f1;
+    color: #6366f1;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-eml-analyze:hover { background: #6366f1 !important; color: white !important; border-color: #6366f1; }
+
+/* Botón exportar */
+#export-bar .btn-outline-primary {
+    border-color: #6366f1;
+    color: #6366f1;
+}
+#export-bar .btn-outline-primary:hover {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: white;
+}
+
+/* Toggle switches — azul vibrante al activar */
+.form-check-input:checked {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+
+/* Etiquetas de módulos — iconos con color único */
+label[for="mod-dns"] i       { color: #3b82f6; }
+label[for="mod-ports"] i     { color: #f97316; }
+label[for="mod-whois"] i     { color: #ef4444; }
+label[for="mod-ssl"] i       { color: #10b981; }
+label[for="mod-ping"] i      { color: #06b6d4; }
+label[for="mod-headers"] i   { color: #8b5cf6; }
+label[for="mod-blacklist"] i { color: #f59e0b; }
+label[for="mod-traceroute"] i{ color: #10b981; }
+label[for="mod-redirect"] i  { color: #e11d48; }
+
+/* DNS chips — degradado vibrante al seleccionar */
+.dns-chip input:checked + span {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    color: white !important;
+    border-color: #6366f1 !important;
+}
+.dns-chip:hover span { border-color: #6366f1; color: #6366f1; }
+.dns-chip input:checked:hover + span {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    border-color: #4f46e5 !important;
+}

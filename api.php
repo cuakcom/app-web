@@ -48,7 +48,7 @@ if (empty($domain)) {
 $allowed = ['resolution', 'dns', 'ports', 'whois', 'ssl', 'ping',
             'headers', 'blacklist', 'traceroute', 'redirect', 'mailtest',
             'dnsquery', 'webinfo', 'geoip', 'dnspropagation', 'seocheck',
-            'sslscan', 'smtprelay', 'spfcheck'];
+            'sslscan', 'smtprelay', 'spfcheck', 'abuseipdb'];
 
 if (!in_array($module, $allowed, true)) {
     echo json_encode(['success' => false, 'error' => 'Módulo desconocido']);
@@ -66,6 +66,7 @@ $cacheable = [
     'dnspropagation'=> 120,
     'seocheck'      => 600,
     'sslscan'       => 600,
+    'abuseipdb'     => 3600,
 ]; // TTL en segundos
 $useCache  = false;
 $cacheFile = null;
