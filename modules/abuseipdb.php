@@ -7,8 +7,14 @@
  * Puedes obtener una clave gratuita en https://www.abuseipdb.com/register
  */
 
-// Obtener API key desde variable de entorno o constante de configuración
-$apiKey = getenv('ABUSEIPDB_KEY') ?: (defined('ABUSEIPDB_KEY') ? ABUSEIPDB_KEY : '');
+// Cargar config.php si existe (define ABUSEIPDB_KEY)
+$configFile = __DIR__ . '/../config.php';
+if (file_exists($configFile) && !defined('ABUSEIPDB_KEY')) {
+    require_once $configFile;
+}
+
+// Obtener API key: config.php → variable de entorno
+$apiKey = (defined('ABUSEIPDB_KEY') && ABUSEIPDB_KEY !== '') ? ABUSEIPDB_KEY : (getenv('ABUSEIPDB_KEY') ?: '');
 
 if (empty($apiKey)) {
     echo json_encode([
