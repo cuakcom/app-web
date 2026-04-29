@@ -28,6 +28,7 @@ if (isset($_POST['correo_action']) && $_POST['correo_action'] === 'revisar_cabec
     }
 }
 
+if (file_exists(__DIR__ . '/config.php')) require_once __DIR__ . '/config.php';
 require_once 'functions.php';
 
 // ─── FUNCIONES ────────────────────────────────────────────────────────────────

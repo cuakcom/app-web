@@ -14,11 +14,12 @@ function parseEmailHeaders(string $raw): array {
     $lines = preg_split("/\r?\n/", $raw);
     foreach ($lines as $line) {
         if (trim($line) === '') {
-            // Fin de cabeceras
+            // Fin de cabeceras — guardar y limpiar para que el bloque post-bucle no duplique
             if ($currentKey) {
                 $k = strtolower($currentKey);
                 if ($k === 'received') $received[] = trim($currentVal);
                 else $headers[$k][] = trim($currentVal);
+                $currentKey = '';
             }
             break;
         }
