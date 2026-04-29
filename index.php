@@ -104,6 +104,18 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                     <a class="nav-link tab-btn <?= $activeTab === 'puertos' ? 'active' : '' ?>"
                        href="#" data-tab="puertos">🔌 Puertos</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'ping' ? 'active' : '' ?>"
+                       href="#" data-tab="ping">📶 Ping</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'nslookup' ? 'active' : '' ?>"
+                       href="#" data-tab="nslookup">🔎 NSLookup</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'captura' ? 'active' : '' ?>"
+                       href="#" data-tab="captura">📸 Captura</a>
+                </li>
             </ul>
 
             <!-- ══════════════════════════════════════════════════════════
@@ -459,6 +471,117 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                 <?php endif; ?>
             </div>
 
+            <!-- ══════════════════════════════════════════════════════════
+                 PESTAÑA: PING
+            ══════════════════════════════════════════════════════════ -->
+            <div id="tab-ping" class="tab-panel <?= $activeTab !== 'ping' ? 'd-none' : '' ?>">
+                <div class="card p-4 mb-4">
+                    <form action="index.php" method="POST" id="form-ping">
+                        <input type="hidden" name="active_tab" value="ping">
+                        <input type="hidden" name="tool" value="ping">
+                        <div class="row g-2">
+                            <div class="col-md-9">
+                                <input type="text" name="dominio" class="form-control form-control-lg"
+                                    placeholder="ejemplo.com" required
+                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-ping">
+                                    <span id="btn-text-ping">📶 PING</span>
+                                    <span id="btn-loading-ping"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <?php if ($activeTab === 'ping' && isset($_POST['tool']) && $_POST['tool'] === 'ping' && !empty($_POST['dominio'])):
+                    $dominio    = limpiarDominio($_POST['dominio']);
+                    $host_clean = $dominio; ?>
+                <div class="card">
+                    <div class="card-header-cuak">
+                        <span class="header-badge bg-success">📶 Ping — <?= htmlspecialchars($dominio) ?></span>
+                    </div>
+                    <div class="card-body p-3">
+                        <?php require 'modules/ping.php'; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 PESTAÑA: NSLOOKUP
+            ══════════════════════════════════════════════════════════ -->
+            <div id="tab-nslookup" class="tab-panel <?= $activeTab !== 'nslookup' ? 'd-none' : '' ?>">
+                <div class="card p-4 mb-4">
+                    <form action="index.php" method="POST" id="form-nslookup">
+                        <input type="hidden" name="active_tab" value="nslookup">
+                        <input type="hidden" name="tool" value="nslookup">
+                        <div class="row g-2">
+                            <div class="col-md-9">
+                                <input type="text" name="dominio" class="form-control form-control-lg"
+                                    placeholder="ejemplo.com" required
+                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-ns">
+                                    <span id="btn-text-ns">🔎 CONSULTAR</span>
+                                    <span id="btn-loading-ns"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <?php if ($activeTab === 'nslookup' && isset($_POST['tool']) && $_POST['tool'] === 'nslookup' && !empty($_POST['dominio'])):
+                    $dominio    = limpiarDominio($_POST['dominio']);
+                    $host_clean = $dominio; ?>
+                <div class="card">
+                    <div class="card-header-cuak">
+                        <span class="header-badge bg-info text-dark">🔎 NSLookup — <?= htmlspecialchars($dominio) ?></span>
+                    </div>
+                    <div class="card-body p-3">
+                        <?php require 'modules/nslookup.php'; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 PESTAÑA: CAPTURA
+            ══════════════════════════════════════════════════════════ -->
+            <div id="tab-captura" class="tab-panel <?= $activeTab !== 'captura' ? 'd-none' : '' ?>">
+                <div class="card p-4 mb-4">
+                    <form action="index.php" method="POST" id="form-captura">
+                        <input type="hidden" name="active_tab" value="captura">
+                        <input type="hidden" name="tool" value="captura">
+                        <div class="row g-2">
+                            <div class="col-md-9">
+                                <input type="text" name="dominio" class="form-control form-control-lg"
+                                    placeholder="ejemplo.com" required
+                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-cap">
+                                    <span id="btn-text-cap">📸 CAPTURAR</span>
+                                    <span id="btn-loading-cap"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <?php if ($activeTab === 'captura' && isset($_POST['tool']) && $_POST['tool'] === 'captura' && !empty($_POST['dominio'])):
+                    $dominio    = limpiarDominio($_POST['dominio']);
+                    $host_clean = $dominio; ?>
+                <div class="card">
+                    <div class="card-header-cuak">
+                        <span class="header-badge" style="background:#6f42c1">📸 Captura — <?= htmlspecialchars($dominio) ?></span>
+                    </div>
+                    <div class="card-body p-3">
+                        <?php require 'modules/screenshot.php'; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
         </div>
     </div>
 </div>
@@ -529,6 +652,9 @@ function setupLoading(formId, btnId, textId, loadId) {
 }
 setupLoading('form-diagnostico', 'btn-submit-diag',   'btn-text-diag',   'btn-loading-diag');
 setupLoading('form-puertos',     'btn-submit-ports',  'btn-text-ports',  'btn-loading-ports');
+setupLoading('form-ping',        'btn-submit-ping',   'btn-text-ping',   'btn-loading-ping');
+setupLoading('form-nslookup',    'btn-submit-ns',     'btn-text-ns',     'btn-loading-ns');
+setupLoading('form-captura',     'btn-submit-cap',    'btn-text-cap',    'btn-loading-cap');
 
 // ── Auto-seleccionar modo cabeceras al volver de un submit ──────────────────
 <?php if (isset($_POST['correo_action']) && $_POST['correo_action'] === 'revisar_cabeceras'): ?>
