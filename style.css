@@ -1,142 +1,245 @@
-/* Estilos Base y Tipografía */
-body { 
-    font-family: 'Inter', sans-serif; 
-    background-color: #f4f7f6; 
-    color: #334155; 
+/* ═══════════════════════════════════════════════════════
+   Cuakcom Expert Suite v1.1 — Hoja de estilos
+═══════════════════════════════════════════════════════ */
+
+/* ── Base ─────────────────────────────────────────────── */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7f6;
+    color: #334155;
 }
 
-/* Cabecera Principal */
-.header-section { 
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); 
-    color: white; 
-    padding: 25px 0; 
-    border-bottom: 5px solid #ffd700; 
+/* ── Cabecera ─────────────────────────────────────────── */
+.header-section {
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    color: white;
+    padding: 22px 0;
+    border-bottom: 5px solid #ffd700;
 }
 
-/* Tarjetas y Contenedores */
-.card { 
-    border: none; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-    overflow: hidden; 
+.version-badge {
+    font-size: 0.68rem;
+    background: rgba(255,255,255,0.22);
+    padding: 2px 9px;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-left: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
-/* Cabeceras de Sección estilo "Botón" */
-.card-header-cuak { 
-    background-color: #fff; 
-    border-bottom: 1px solid #eee; 
-    padding: 10px 15px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+/* ── Tarjetas ─────────────────────────────────────────── */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    overflow: hidden;
 }
 
-.header-badge { 
-    display: inline-block; 
-    padding: 4px 12px; 
-    border-radius: 6px; 
-    color: white; 
-    font-weight: 700; 
-    text-transform: uppercase; 
-    font-size: 0.8rem; 
-    letter-spacing: 0.5px; 
+.card-header-cuak {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Registros DNS */
-.dns-badge { 
-    width: 55px; 
-    text-align: center; 
-    font-weight: bold; 
-    border-radius: 4px; 
-    font-size: 0.7rem; 
-    display: inline-block; 
+.header-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
 }
 
-.dns-value { 
-    font-family: 'SFMono-Regular', Consolas, monospace; 
-    font-size: 0.85rem; 
-    word-break: break-all; 
-    white-space: pre-wrap; 
+/* ── Tabs de navegación principal ─────────────────────── */
+.main-tabs {
+    gap: 8px;
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    flex-wrap: wrap;
 }
 
-.dns-row { 
-    border-bottom: 1px solid #f8f9fa; 
-    padding: 8px 0; 
+.main-tabs .tab-btn {
+    background-color: #e8edf5;
+    color: #334155;
+    border-radius: 8px !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
 }
 
-/* Escáner de Puertos - Diseño de Etiquetas a la Izquierda */
-.port-row { 
-    border-bottom: 1px solid #f1f5f9; 
-    padding: 6px 0; 
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-start; 
+.main-tabs .tab-btn:hover {
+    background-color: #d1daf0;
+    color: #1a2a6c;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(26,42,108,0.15);
 }
 
-.port-label { 
-    font-size: 0.6rem; 
-    font-weight: 700; 
-    padding: 2px 6px; 
-    border-radius: 4px; 
-    text-transform: uppercase; 
-    background: #e2e8f0; 
-    color: #475569; 
-    display: inline-block; 
-    min-width: 55px; 
+.main-tabs .tab-btn.active {
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f) !important;
+    color: white !important;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(26,42,108,0.35);
+}
+
+/* ── Botón Analizar ───────────────────────────────────── */
+.btn-analyze {
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+    color: white !important;
+    border: none;
+    border-radius: 50px !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(26,42,108,0.3);
+}
+
+.btn-analyze:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(26,42,108,0.4);
+}
+
+.btn-analyze:active {
+    transform: translateY(0);
+}
+
+/* ── Botones grandes de Correo ────────────────────────── */
+.btn-correo {
+    border-radius: 14px !important;
+    min-height: 130px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-correo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.btn-correo:active {
+    transform: translateY(0);
+}
+
+.btn-correo-analizar {
+    background: linear-gradient(135deg, #1a2a6c 0%, #2563eb 100%);
+    color: white !important;
+}
+
+.btn-correo-relay {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    color: white !important;
+}
+
+.btn-correo-abuse {
+    background: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+    color: white !important;
+}
+
+.btn-correo-headers {
+    background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%);
+    color: white !important;
+}
+
+.correo-btn-icon  { font-size: 2.2rem; line-height: 1; }
+.correo-btn-label { font-weight: 700; font-size: 0.95rem; }
+.correo-btn-desc  { font-size: 0.75rem; opacity: 0.82; }
+
+/* ── DNS ──────────────────────────────────────────────── */
+.dns-badge {
+    width: 55px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    display: inline-block;
+}
+
+.dns-value {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.dns-row {
+    border-bottom: 1px solid #f8f9fa;
+    padding: 8px 0;
+}
+
+/* ── Puertos ──────────────────────────────────────────── */
+.port-row {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+}
+
+.port-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    background: #e2e8f0;
+    color: #475569;
+    display: inline-block;
+    min-width: 55px;
     text-align: center;
     margin-right: 10px;
     transition: all 0.2s ease;
 }
 
 .port-label.open {
-    background: #dcfce7; /* Verde suave */
-    color: #15803d;      /* Texto verde fuerte */
+    background: #dcfce7;
+    color: #15803d;
     border: 1px solid #86efac;
 }
 
-.port-number {
-    font-size: 0.85rem;
+.port-number { font-size: 0.85rem; font-family: monospace; }
+.port-number.open { color: #15803d; font-weight: 700; }
+
+.port-group-title {
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-top: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 2px;
+}
+
+/* ── WHOIS ────────────────────────────────────────────── */
+.whois-scroll {
+    background: #1e293b;
+    color: #f8fafc;
+    padding: 20px;
+    border-radius: 6px;
     font-family: monospace;
+    font-size: 0.85rem;
+    max-height: 500px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.6;
 }
 
-.port-number.open {
-    color: #15803d;
-    font-weight: 700;
-}
+/* ── Estados de carga ─────────────────────────────────── */
+#btn-loading-diag,
+#btn-loading-ports { display: none; }
 
-.port-group-title { 
-    font-size: 0.6rem; 
-    font-weight: 800; 
-    color: #94a3b8; 
-    text-transform: uppercase; 
-    margin-top: 12px; 
-    border-bottom: 1px solid #f1f5f9; 
-    padding-bottom: 2px; 
-}
-
-/* Bloque WHOIS */
-.whois-scroll { 
-    background: #1e293b; 
-    color: #f8fafc; 
-    padding: 20px; 
-    border-radius: 6px; 
-    font-family: monospace; 
-    font-size: 0.85rem; 
-    max-height: 500px; 
-    overflow-y: auto; 
-    white-space: pre-wrap; 
-    line-height: 1.6; 
-}
-
-/* Estado de Carga */
-#btn-loading { 
-    display: none; 
-}
-
-* Selectores de Módulos */
+/* ── Selectores de módulos ────────────────────────────── */
 .module-selectors {
     background: #f8fafc;
-    padding: 10px;
+    padding: 10px 16px;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     margin-top: 15px;
@@ -153,3 +256,6 @@ body {
     color: #475569;
     cursor: pointer;
 }
+
+/* ── Redirect chain ───────────────────────────────────── */
+.redirect-chain .font-monospace { font-size: 0.8rem; }
