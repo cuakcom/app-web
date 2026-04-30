@@ -13,19 +13,19 @@ body {
 .header-section {
     background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
     color: white;
-    padding: 22px 0;
-    border-bottom: 5px solid #ffd700;
+    padding: 10px 0;
+    border-bottom: 4px solid #ffd700;
 }
 
 .version-badge {
     font-size: 0.68rem;
     background: rgba(255,255,255,0.22);
-    padding: 2px 9px;
+    padding: 3px 10px;
     border-radius: 20px;
-    vertical-align: middle;
-    margin-left: 8px;
-    font-weight: 600;
+    color: white;
+    font-weight: 700;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 /* ── Tarjetas ─────────────────────────────────────────── */
@@ -56,40 +56,45 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ── Tabs de navegación principal ─────────────────────── */
+/* ── Tabs de navegación (en la cabecera) ──────────────── */
 .main-tabs {
-    gap: 8px;
-    background: #fff;
-    padding: 12px 16px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    gap: 5px;
     flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
 }
 
+/* Color base — sobrescrito por data-tab */
 .main-tabs .tab-btn {
-    background-color: #e8edf5;
-    color: #334155;
-    border-radius: 8px !important;
+    color: #fff;
+    border-radius: 6px !important;
     font-weight: 600;
-    font-size: 0.9rem;
-    padding: 8px 20px;
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
+    font-size: 0.78rem;
+    padding: 5px 13px;
+    transition: all 0.18s ease;
+    border: none;
     cursor: pointer;
+    white-space: nowrap;
+    opacity: 0.82;
 }
 
-.main-tabs .tab-btn:hover {
-    background-color: #d1daf0;
-    color: #1a2a6c;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(26,42,108,0.15);
-}
+.main-tabs .tab-btn:hover { opacity: 1; transform: translateY(-1px); }
 
+/* Gradientes individuales por pestaña */
+.tab-btn[data-tab="diagnostico"] { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+.tab-btn[data-tab="correo"]      { background: linear-gradient(135deg, #065f46, #10b981); }
+.tab-btn[data-tab="puertos"]     { background: linear-gradient(135deg, #78350f, #f59e0b); }
+.tab-btn[data-tab="ping"]        { background: linear-gradient(135deg, #4c1d95, #8b5cf6); }
+.tab-btn[data-tab="nslookup"]    { background: linear-gradient(135deg, #7f1d1d, #ef4444); }
+.tab-btn[data-tab="captura"]     { background: linear-gradient(135deg, #1f2937, #6b7280); }
+
+/* Activo: neon blanco alrededor */
 .main-tabs .tab-btn.active {
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f) !important;
-    color: white !important;
-    border-color: transparent;
-    box-shadow: 0 4px 14px rgba(26,42,108,0.35);
+    opacity: 1;
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,0.95),
+        0 0 10px 3px rgba(255,255,255,0.7),
+        0 0 22px 6px rgba(180,210,255,0.5) !important;
 }
 
 /* ── Botón Analizar ───────────────────────────────────── */
@@ -236,13 +241,23 @@ body {
 #btn-loading-diag,
 #btn-loading-ports { display: none; }
 
-/* ── Selectores de módulos ────────────────────────────── */
+/* ── Formulario compacto ──────────────────────────────── */
+.compact-form {
+    /* el p-3 viene del HTML */
+}
+
+.compact-input {
+    max-width: 260px;
+    min-width: 160px;
+    margin-right: 4px;
+}
+
+/* ── Selectores de módulos (inline) ───────────────────── */
 .module-selectors {
-    background: #f8fafc;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    margin-top: 15px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    margin-top: 0;
 }
 
 .form-check-input:checked {
@@ -259,3 +274,77 @@ body {
 
 /* ── Redirect chain ───────────────────────────────────── */
 .redirect-chain .font-monospace { font-size: 0.8rem; }
+
+/* ── Terminal (ping, nslookup) ────────────────────────── */
+.terminal {
+    background: #1e293b;
+    color: #33ff99;
+    padding: 15px 18px;
+    border-radius: 8px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.82rem;
+    overflow-x: auto;
+    border-left: 4px solid #1a2a6c;
+    margin-bottom: 0;
+    white-space: pre-wrap;
+    line-height: 1.55;
+}
+
+/* ── Screenshot / Captura ─────────────────────────────── */
+.premium-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-left { flex: 1; min-width: 220px; }
+.header-right { flex: 1; min-width: 260px; }
+
+.presentation-table { width: 100%; border-collapse: collapse; }
+.presentation-table th,
+.presentation-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.88rem;
+}
+.presentation-table th { color: #64748b; font-weight: 600; width: 40%; }
+
+.status-dot {
+    height: 10px;
+    width: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.img-frame {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    min-height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.web-thumb {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s;
+}
+.web-thumb:hover { transform: scale(1.02); }
+
+mark {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+}

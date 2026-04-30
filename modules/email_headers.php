@@ -14,7 +14,7 @@ function parseEmailHeaders(string $raw): array {
     $lines = preg_split("/\r?\n/", $raw);
     foreach ($lines as $line) {
         if (trim($line) === '') {
-            // Fin de cabeceras — guardar y limpiar para que el bloque post-bucle no duplique
+            // Fin de cabeceras — limpiar para que el bloque post-bucle no duplique
             if ($currentKey) {
                 $k = strtolower($currentKey);
                 if ($k === 'received') $received[] = trim($currentVal);
@@ -48,85 +48,74 @@ $parsed   = parseEmailHeaders($rawHeaders);
 $headers  = $parsed['headers'];
 $received = array_reverse($parsed['received']); // Orden cronológico (más antiguo primero)
 
-// Cabeceras clave en el orden deseado
-$keyHeaders = [
-    'from'           => '📤 Remitente',
-    'to'             => '📥 Destinatario',
-    'cc'             => '📋 CC',
-    'subject'        => '📌 Asunto',
-    'date'           => '📅 Fecha',
-    'reply-to'       => '↩️ Responder a',
-    'message-id'     => '🆔 Message-ID',
-    'content-type'   => '📄 Tipo de contenido',
-    'x-mailer'       => '📮 Mailer',
-    'user-agent'     => '🌐 User-Agent',
-    'x-originating-ip' => '🖥️ IP Origen',
-    'x-spam-status'  => '🚫 Spam Status',
-    'x-spam-score'   => '🎯 Spam Score',
-    'x-spam-flag'    => '🚩 Spam Flag',
-    'authentication-results' => '🔐 Auth Results',
-    'dkim-signature' => '🔏 DKIM',
-    'arc-seal'       => '🔗 ARC Seal',
-    'arc-authentication-results' => '🛡️ ARC Auth',
+// Cabeceras principales (tabla 1)
+$mainHeaders = [
+    'from'    => '📤 Remitente',
+    'to'      => '📥 Destinatario',
+    'cc'      => '📋 CC',
+    'subject' => '📌 Asunto',
+    'date'    => '📅 Fecha',
+    'message-id' => '🆔 Message-ID',
 ];
 
-$displayed = [];
+// Cabeceras secundarias mostradas en tabla 3 (todo lo demás)
+$skipInOther = array_keys($mainHeaders);
 ?>
 
 <?php if (empty($headers) && empty($received)): ?>
 <div class="alert alert-warning">No se pudieron parsear cabeceras del contenido proporcionado.</div>
 <?php return; endif; ?>
 
-<div class="row g-3">
-    <!-- Columna izquierda: Datos del mensaje -->
-    <div class="col-md-6">
-        <h6 class="text-muted small fw-bold text-uppercase mb-3">📋 Datos del mensaje</h6>
-        <table class="table table-sm table-bordered">
-            <tbody>
-            <?php foreach ($keyHeaders as $key => $label):
-                if (!isset($headers[$key])) continue;
-                $displayed[] = $key; ?>
-                <tr>
-                    <th class="small text-muted" style="width:38%;background:#f8fafc;white-space:nowrap;vertical-align:top"><?= $label ?></th>
-                    <td class="small font-monospace" style="word-break:break-all;vertical-align:top"><?= htmlspecialchars(implode('<br>', $headers[$key])) ?></td>
-                </tr>
-            <?php endforeach; ?>
+<!-- ── TABLA 1: Datos principales ─────────────────────── -->
+<h6 class="text-muted small fw-bold text-uppercase mb-2">📋 Datos del mensaje</h6>
+<table class="table table-sm table-bordered mb-4">
+    <tbody>
+    <?php foreach ($mainHeaders as $key => $label):
+        if (!isset($headers[$key])) continue; ?>
+        <tr>
+            <th class="small text-muted" style="width:180px;background:#f8fafc;white-space:nowrap;vertical-align:top"><?= $label ?></th>
+            <td class="small font-monospace" style="word-break:break-all;vertical-align:top"><?= htmlspecialchars(implode(', ', $headers[$key])) ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
 
-            <?php // Resto de cabeceras no mostradas aún
-            foreach ($headers as $key => $vals):
-                if (in_array($key, $displayed)) continue;
-                $displayed[] = $key; ?>
-                <tr>
-                    <th class="small text-muted" style="background:#f8fafc;white-space:nowrap;vertical-align:top"><?= htmlspecialchars(ucwords(str_replace('-', ' ', $key))) ?></th>
-                    <td class="small font-monospace" style="word-break:break-all;vertical-align:top"><?= htmlspecialchars(implode(', ', $vals)) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+<!-- ── TABLA 2: Servidores de tránsito ────────────────── -->
+<h6 class="text-muted small fw-bold text-uppercase mb-2">🖥️ Servidores de tránsito (Received)</h6>
+<?php if ($received): ?>
+<table class="table table-sm table-bordered mb-4">
+    <thead>
+        <tr>
+            <th class="small text-center" style="width:36px;background:#f8fafc">#</th>
+            <th class="small" style="background:#f8fafc">Salto</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($received as $idx => $rcv): ?>
+        <tr>
+            <td class="text-center small text-muted fw-bold"><?= $idx + 1 ?></td>
+            <td class="font-monospace text-muted" style="font-size:0.72rem;word-break:break-all"><?= htmlspecialchars($rcv) ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php else: ?>
+<div class="text-muted small mb-4">No se encontraron saltos de servidores (Received headers).</div>
+<?php endif; ?>
 
-    <!-- Columna derecha: Servidores de tránsito -->
-    <div class="col-md-6">
-        <h6 class="text-muted small fw-bold text-uppercase mb-3">🖥️ Servidores de tránsito</h6>
-        <?php if ($received): ?>
-        <table class="table table-sm table-bordered">
-            <thead>
-                <tr>
-                    <th class="small text-center" style="width:36px;background:#f8fafc">#</th>
-                    <th class="small" style="background:#f8fafc">Salto (Received)</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($received as $idx => $rcv): ?>
-                <tr>
-                    <td class="text-center small text-muted fw-bold"><?= $idx + 1 ?></td>
-                    <td class="font-monospace text-muted" style="font-size:0.7rem;word-break:break-all"><?= htmlspecialchars($rcv) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-        <?php else: ?>
-            <div class="text-muted small">No se encontraron saltos de servidores (Received headers).</div>
-        <?php endif; ?>
-    </div>
-</div>
+<!-- ── TABLA 3: Resto de cabeceras ────────────────────── -->
+<?php
+$otherHeaders = array_filter($headers, fn($k) => !in_array($k, $skipInOther), ARRAY_FILTER_USE_KEY);
+if ($otherHeaders): ?>
+<h6 class="text-muted small fw-bold text-uppercase mb-2">🔧 Resto de cabeceras</h6>
+<table class="table table-sm table-bordered mb-0">
+    <tbody>
+    <?php foreach ($otherHeaders as $key => $vals): ?>
+        <tr>
+            <th class="small text-muted" style="width:180px;background:#f8fafc;white-space:nowrap;vertical-align:top"><?= htmlspecialchars(ucwords(str_replace('-', ' ', $key))) ?></th>
+            <td class="small font-monospace" style="word-break:break-all;vertical-align:top"><?= htmlspecialchars(implode(', ', $vals)) ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
