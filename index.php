@@ -1,8 +1,8 @@
 <?php
 /**
- * Cuakcom Expert Suite - v3.0.0
+ * Cuakcom Expert Suite - v3.1.0
  */
-define('APP_VERSION', '3.0.0');
+define('APP_VERSION', '3.1.0');
 
 // Datos del visitante (server-side)
 function getClientIp(): string {
@@ -24,7 +24,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools Check Dominios y DNS</title>
+    <title>Check Norris</title>
     <meta name="description" content="Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación">
     <meta name="keywords" content="dns checker, ssl scanner, análisis correo, SPF DKIM DMARC, blacklist email, propagación dns, traceroute online, geolocalización ip, whois dominio, análisis seo web">
     <meta name="robots" content="index, follow">
@@ -74,84 +74,91 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 
 <!-- ===================== HEADER ===================== -->
 <header class="header-section">
-    <div class="container d-flex align-items-center justify-content-between">
-        <div class="header-title-block">
-            <h1 class="header-title-main">
-                <i class="fa-solid fa-network-wired me-2"></i>Tools Check Dominios y DNS
-            </h1>
-            <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
+    <div class="container header-inner">
+        <div class="header-row-top">
+            <div class="header-title-block">
+                <h1 class="header-title-main">
+                    <svg class="cn-icon me-2" width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="8" cy="6" r="3.2" stroke="white" stroke-width="1.6"/>
+                        <line x1="8" y1="9.5" x2="11.5" y2="19" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="10.5" y1="14.5" x2="28" y2="9" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                        <line x1="11.5" y1="19" x2="7" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="9.5" y1="13" x2="3" y2="18" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                        <line x1="9.5" y1="13" x2="16" y2="11" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>Check Norris
+                </h1>
+                <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
+            </div>
+            <div class="header-controls d-flex align-items-center gap-2">
+                <button class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <span class="version-badge">v<?= APP_VERSION ?></span>
+            </div>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-            <span class="version-badge">v<?= APP_VERSION ?></span>
+        <div class="header-tabs-row">
+            <ul class="nav main-tabs" id="mainTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="main-tab-btn tab-diag active" id="tab-diag-btn" data-bs-toggle="tab"
+                            data-bs-target="#tab-diagnostico" type="button" role="tab">
+                        <i class="fa-solid fa-magnifying-glass-chart me-1"></i>Diagnóstico
+                        <span class="info-popover-btn" data-info-key="tab-diagnostico" title="Información" onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="main-tab-btn tab-correo" id="tab-mail-btn" data-bs-toggle="tab"
+                            data-bs-target="#tab-correo" type="button" role="tab">
+                        <i class="fa-solid fa-envelope me-1"></i>Correo
+                        <span class="info-popover-btn" data-info-key="tab-correo" title="Información" onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="main-tab-btn tab-dns" id="tab-dnsq-btn" data-bs-toggle="tab"
+                            data-bs-target="#tab-dnsquery" type="button" role="tab">
+                        <i class="fa-solid fa-terminal me-1"></i>DNS
+                        <span class="info-popover-btn" data-info-key="tab-dnsquery" title="Información" onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="main-tab-btn tab-red" id="tab-red-btn" data-bs-toggle="tab"
+                            data-bs-target="#tab-red" type="button" role="tab">
+                        <i class="fa-solid fa-network-wired me-1"></i>Red &amp; IP
+                        <span class="info-popover-btn" data-info-key="tab-red" title="Información" onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="main-tab-btn tab-web" id="tab-web-btn" data-bs-toggle="tab"
+                            data-bs-target="#tab-web" type="button" role="tab">
+                        <i class="fa-solid fa-globe me-1"></i>Web
+                        <span class="info-popover-btn" data-info-key="tab-web" title="Información" onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="main-tab-btn tab-ssl" id="tab-ssl-btn" data-bs-toggle="tab"
+                            data-bs-target="#tab-ssl" type="button" role="tab">
+                        <i class="fa-solid fa-shield-halved me-1"></i>SSL/TLS
+                        <span class="info-popover-btn" data-info-key="tab-ssl" title="Información" onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                    </button>
+                </li>
+            </ul>
         </div>
     </div>
 </header>
 
 <!-- ===================== MAIN ===================== -->
 <main class="container py-3 py-md-4">
-
-    <!-- Tabs (encima del buscador) -->
-    <div class="main-tabs-wrap">
-        <ul class="nav main-tabs" id="mainTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="main-tab-btn active" id="tab-diag-btn" data-bs-toggle="tab"
-                        data-bs-target="#tab-diagnostico" type="button" role="tab">
-                    <i class="fa-solid fa-magnifying-glass-chart me-1"></i>Diagnóstico
-                    <span class="info-popover-btn" data-info-key="tab-diagnostico" title="Información" onclick="event.stopPropagation()">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="main-tab-btn" id="tab-mail-btn" data-bs-toggle="tab"
-                        data-bs-target="#tab-correo" type="button" role="tab">
-                    <i class="fa-solid fa-envelope me-1"></i>Correo
-                    <span class="info-popover-btn" data-info-key="tab-correo" title="Información" onclick="event.stopPropagation()">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="main-tab-btn" id="tab-dnsq-btn" data-bs-toggle="tab"
-                        data-bs-target="#tab-dnsquery" type="button" role="tab">
-                    <i class="fa-solid fa-terminal me-1"></i>Consultas DNS
-                    <span class="info-popover-btn" data-info-key="tab-dnsquery" title="Información" onclick="event.stopPropagation()">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="main-tab-btn" id="tab-red-btn" data-bs-toggle="tab"
-                        data-bs-target="#tab-red" type="button" role="tab">
-                    <i class="fa-solid fa-network-wired me-1"></i>Red &amp; IP
-                    <span class="info-popover-btn" data-info-key="tab-red" title="Información" onclick="event.stopPropagation()">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="main-tab-btn" id="tab-web-btn" data-bs-toggle="tab"
-                        data-bs-target="#tab-web" type="button" role="tab">
-                    <i class="fa-solid fa-globe me-1"></i>Web
-                    <span class="info-popover-btn" data-info-key="tab-web" title="Información" onclick="event.stopPropagation()">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="main-tab-btn" id="tab-ssl-btn" data-bs-toggle="tab"
-                        data-bs-target="#tab-ssl" type="button" role="tab">
-                    <i class="fa-solid fa-shield-halved me-1"></i>SSL/TLS
-                    <span class="info-popover-btn" data-info-key="tab-ssl" title="Información" onclick="event.stopPropagation()">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </span>
-                </button>
-            </li>
-        </ul>
-    </div>
 
     <!-- Search card (se oculta en pestañas con input propio) -->
     <div id="search-card-wrap">
@@ -161,7 +168,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                 <input type="text" id="input-domain" class="form-control form-control-lg"
                        placeholder="dominio.com o IP" autocomplete="off" spellcheck="false"
                        aria-label="Dominio a analizar">
-                <button class="btn btn-dark btn-lg fw-bold px-3 px-md-4" id="btn-analyze" type="button">
+                <button class="btn btn-analyze-main btn-lg fw-bold px-3 px-md-4" id="btn-analyze" type="button">
                     <span id="btn-text"><i class="fa-solid fa-magnifying-glass me-1 d-none d-sm-inline"></i>ANALIZAR</span>
                     <span id="btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
                 </button>

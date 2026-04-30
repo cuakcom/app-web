@@ -1,5 +1,5 @@
 /* ============================================================
-   Cuakcom Expert Suite v3.0.0 — Estilos principales
+   Cuakcom Expert Suite v3.1.0 — Estilos principales
    Mobile-first, compatible con Bootstrap 5.3
    ============================================================ */
 
@@ -50,10 +50,30 @@ body {
 
 /* --- Header --- */
 .header-section {
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
     color: white;
-    padding: 16px 0;
-    border-bottom: 4px solid #ffd700;
+    padding: 12px 0 10px;
+    border-bottom: 3px solid rgba(139, 92, 246, 0.6);
+}
+
+.header-inner { display: flex; flex-direction: column; gap: 10px; }
+
+.header-row-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.header-controls { flex-shrink: 0; padding-top: 4px; }
+
+.header-tabs-row {
+    padding-left: 2px;
+}
+
+.cn-icon {
+    vertical-align: middle;
+    flex-shrink: 0;
 }
 
 .version-badge {
@@ -135,13 +155,16 @@ body {
 
 /* --- Module selectors --- */
 .module-selectors {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 18px;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 4px 18px;
     background: var(--field-bg);
     padding: 9px 14px;
     border-radius: 8px;
     border: 1px solid var(--border);
+}
+@media (max-width: 575px) {
+    .module-selectors { grid-template-columns: repeat(2, auto); }
 }
 
 .form-check-input:checked {
@@ -595,63 +618,59 @@ body {
 
     .dns-chips { gap: 4px; }
     .rd-step { flex-wrap: wrap; }
-    .main-tabs-wrap { border-radius: 0; }
     .visitor-footer-inner { flex-direction: column; gap: 6px; }
 }
 
-/* ── Tabs (estilo botones, encima del buscador) ───────────── */
-.main-tabs-wrap {
-    background: transparent;
-    border: none;
-    margin-bottom: 8px;
-    overflow: visible;
-}
-
+/* ── Tabs (en el header) ──────────────────────────────────── */
 .main-tabs {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 5px;
+    flex-wrap: wrap;
+    gap: 6px;
     border: none;
     background: transparent;
     padding: 0;
     margin: 0;
     list-style: none;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
-.main-tabs::-webkit-scrollbar { display: none; }
 .main-tabs .nav-item { flex-shrink: 0; }
 
+/* Colores base por tab */
+.tab-diag  { --tc: #6366f1; --tc-rgb: 99,102,241; }
+.tab-correo{ --tc: #06b6d4; --tc-rgb: 6,182,212;  }
+.tab-dns   { --tc: #10b981; --tc-rgb: 16,185,129; }
+.tab-red   { --tc: #a855f7; --tc-rgb: 168,85,247; }
+.tab-web   { --tc: #f59e0b; --tc-rgb: 245,158,11; }
+.tab-ssl   { --tc: #ef4444; --tc-rgb: 239,68,68;  }
+
 .main-tab-btn {
-    background: var(--card-bg);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 15px;
-    font-size: 0.80rem;
-    font-weight: 600;
-    color: var(--text-muted);
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.75);
     cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.2s, text-shadow 0.2s;
     outline: none;
     white-space: nowrap;
     line-height: 1.3;
+    position: relative;
 }
 .main-tab-btn:hover {
-    background: var(--field-bg);
-    color: var(--text);
-    border-color: #94a3b8;
+    background: rgba(var(--tc-rgb, 255,255,255), 0.25);
+    border-color: var(--tc, rgba(255,255,255,0.4));
+    color: #fff;
 }
 .main-tab-btn.active {
-    background: #1a2a6c;
-    color: #fff;
-    border-color: #1a2a6c;
-    box-shadow: 0 2px 8px rgba(26,42,108,0.25);
-}
-body.dark-mode .main-tab-btn.active {
-    background: #2563eb;
-    border-color: #2563eb;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.35);
+    background: rgba(var(--tc-rgb), 0.2);
+    border-color: var(--tc);
+    color: var(--tc);
+    box-shadow:
+        0 0 8px 2px rgba(var(--tc-rgb), 0.55),
+        0 0 18px 4px rgba(var(--tc-rgb), 0.25),
+        inset 0 0 6px rgba(var(--tc-rgb), 0.1);
+    text-shadow: 0 0 10px var(--tc), 0 0 22px rgba(var(--tc-rgb), 0.6);
 }
 
 /* search-options-card: continuación visual de la search-card */
@@ -673,6 +692,26 @@ body.search-hidden .tab-pane.show.active > .search-options-card:first-child {
 body.search-hidden .tab-pane.show.active > .card:first-child {
     border-radius: 10px 10px 0 0 !important;
 }
+
+/* ── Botón ANALIZAR ─────────────────────────────────────── */
+.btn-analyze-main {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    border: none;
+    color: white;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.5);
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.btn-analyze-main:hover {
+    background: linear-gradient(135deg, #6d28d9, #4338ca);
+    color: white;
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.65);
+    transform: translateY(-1px);
+}
+.btn-analyze-main:active { transform: translateY(0); }
+.btn-analyze-main:disabled { opacity: 0.7; }
 
 /* ── Botón activar todo ──────────────────────────────────── */
 .btn-toggle-all {
@@ -1101,26 +1140,30 @@ body.dark-mode .popover-arrow::after { border-bottom-color: #1e293b; }
 /* ── Header title block ──────────────────────────────────────── */
 .header-title-block {
     display: flex;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 2px;
 }
 .header-title-main {
-    font-size: 1.15rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 800;
     margin: 0;
-    white-space: nowrap;
     color: inherit;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.3px;
 }
 .header-title-sub {
     font-size: 0.72rem;
     font-weight: 400;
     opacity: 0.65;
     line-height: 1.3;
+    padding-left: 2px;
 }
 @media (max-width: 575px) {
     .header-title-sub { display: none; }
     .header-title-main { font-size: 1rem; }
+    .header-tabs-row .main-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .header-tabs-row .main-tabs::-webkit-scrollbar { display: none; }
 }
 
 /* ── Footer Tus datos label ──────────────────────────────────── */
