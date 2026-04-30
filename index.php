@@ -77,18 +77,47 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
 </head>
 <body>
 
-<div class="header-section text-center mb-4">
-    <div class="container">
-        <h1 class="h4 fw-bold m-0">
-            <i class="fa-solid fa-bolt me-2"></i>Cuakcom Expert Suite
-            <span class="version-badge">v<?= APP_VERSION ?></span>
-        </h1>
+<div class="header-section mb-3">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <h1 class="h5 fw-bold m-0 text-white me-2">
+                <i class="fa-solid fa-bolt me-1"></i>Cuakcom Expert Suite
+            </h1>
+            <!-- ── TABS en la cabecera ────────────────────────────── -->
+            <ul class="nav nav-pills main-tabs mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'diagnostico' ? 'active' : '' ?>"
+                       href="#" data-tab="diagnostico">🔍 Diagnóstico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'correo' ? 'active' : '' ?>"
+                       href="#" data-tab="correo">📧 Correo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'puertos' ? 'active' : '' ?>"
+                       href="#" data-tab="puertos">🔌 Puertos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'ping' ? 'active' : '' ?>"
+                       href="#" data-tab="ping">📶 Ping</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'nslookup' ? 'active' : '' ?>"
+                       href="#" data-tab="nslookup">🔎 NSLookup</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn <?= $activeTab === 'captura' ? 'active' : '' ?>"
+                       href="#" data-tab="captura">📸 Captura</a>
+                </li>
+            </ul>
+            <span class="version-badge ms-2">v<?= APP_VERSION ?></span>
+        </div>
     </div>
 </div>
 
-<div class="container pb-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-12">
+<div class="container-fluid px-4 pb-5">
+    <div class="row">
+        <div class="col-12">
 
             <!-- ── NAVEGACIÓN POR PESTAÑAS ──────────────────────────── -->
             <ul class="nav nav-pills main-tabs mb-4">
@@ -123,48 +152,42 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-diagnostico" class="tab-panel <?= $activeTab !== 'diagnostico' ? 'd-none' : '' ?>">
 
-                <div class="card p-4 mb-4">
+                <div class="card compact-form mb-3">
                     <form action="index.php" method="POST" id="form-diagnostico">
                         <input type="hidden" name="active_tab" value="diagnostico">
                         <input type="hidden" name="tool" value="diagnostico">
-                        <div class="row g-2">
-                            <div class="col-md-9">
-                                <input type="text" name="dominio" class="form-control form-control-lg"
-                                    placeholder="ejemplo.com" required
-                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-diag">
-                                    <span id="btn-text-diag">🔍 ANALIZAR</span>
-                                    <span id="btn-loading-diag"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                                </button>
-                            </div>
-                            <div class="col-12">
-                                <?php
-                                $isPostDiag  = isset($_POST['tool']) && $_POST['tool'] === 'diagnostico';
-                                $modulosDiag = $_POST['modulos'] ?? [];
-                                $defaultDiag = ['dns', 'ssl', 'redirecciones', 'whois'];
-                                $checkDiag   = fn($m) => $isPostDiag ? in_array($m, $modulosDiag) : in_array($m, $defaultDiag);
-                                $modulosDef  = [
-                                    'dns'           => ['icon' => '🌐', 'label' => 'DNS'],
-                                    'ssl'           => ['icon' => '🔒', 'label' => 'SSL'],
-                                    'redirecciones' => ['icon' => '↪️',  'label' => 'Redirecciones'],
-                                    'puertos'       => ['icon' => '🔌', 'label' => 'Puertos'],
-                                    'whois'         => ['icon' => '📋', 'label' => 'Whois'],
-                                ];
-                                ?>
-                                <div class="module-selectors d-flex gap-4 flex-wrap justify-content-center">
-                                    <?php foreach ($modulosDef as $id => $info): ?>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" name="modulos[]"
-                                            value="<?= $id ?>" id="chk-<?= $id ?>"
-                                            <?= $checkDiag($id) ? 'checked' : '' ?>>
-                                        <label class="form-check-label" for="chk-<?= $id ?>">
-                                            <?= $info['icon'] ?> <?= $info['label'] ?>
-                                        </label>
-                                    </div>
-                                    <?php endforeach; ?>
+                        <?php
+                        $isPostDiag  = isset($_POST['tool']) && $_POST['tool'] === 'diagnostico';
+                        $modulosDiag = $_POST['modulos'] ?? [];
+                        $defaultDiag = ['dns', 'ssl', 'redirecciones', 'whois'];
+                        $checkDiag   = fn($m) => $isPostDiag ? in_array($m, $modulosDiag) : in_array($m, $defaultDiag);
+                        $modulosDef  = [
+                            'dns'           => ['icon' => '🌐', 'label' => 'DNS'],
+                            'ssl'           => ['icon' => '🔒', 'label' => 'SSL'],
+                            'redirecciones' => ['icon' => '↪️',  'label' => 'Redirecciones'],
+                            'puertos'       => ['icon' => '🔌', 'label' => 'Puertos'],
+                            'whois'         => ['icon' => '📋', 'label' => 'Whois'],
+                        ];
+                        ?>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <input type="text" name="dominio" class="form-control form-control-sm compact-input"
+                                placeholder="ejemplo.com" required
+                                value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            <button type="submit" class="btn btn-analyze btn-sm fw-bold px-4" id="btn-submit-diag">
+                                <span id="btn-text-diag">🔍 ANALIZAR</span>
+                                <span id="btn-loading-diag"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                            <div class="module-selectors d-flex gap-3 flex-wrap ms-1">
+                                <?php foreach ($modulosDef as $id => $info): ?>
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" name="modulos[]"
+                                        value="<?= $id ?>" id="chk-<?= $id ?>"
+                                        <?= $checkDiag($id) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="chk-<?= $id ?>">
+                                        <?= $info['icon'] ?> <?= $info['label'] ?>
+                                    </label>
                                 </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </form>
@@ -437,22 +460,18 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-puertos" class="tab-panel <?= $activeTab !== 'puertos' ? 'd-none' : '' ?>">
 
-                <div class="card p-4 mb-4">
+                <div class="card compact-form mb-3">
                     <form action="index.php" method="POST" id="form-puertos">
                         <input type="hidden" name="active_tab" value="puertos">
                         <input type="hidden" name="tool" value="puertos">
-                        <div class="row g-2">
-                            <div class="col-md-9">
-                                <input type="text" name="dominio" class="form-control form-control-lg"
-                                    placeholder="ejemplo.com" required
-                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-ports">
-                                    <span id="btn-text-ports">🔌 ESCANEAR</span>
-                                    <span id="btn-loading-ports"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                                </button>
-                            </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" name="dominio" class="form-control form-control-sm compact-input"
+                                placeholder="ejemplo.com" required
+                                value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            <button type="submit" class="btn btn-analyze btn-sm fw-bold px-4" id="btn-submit-ports">
+                                <span id="btn-text-ports">🔌 ESCANEAR</span>
+                                <span id="btn-loading-ports"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -475,22 +494,18 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                  PESTAÑA: PING
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-ping" class="tab-panel <?= $activeTab !== 'ping' ? 'd-none' : '' ?>">
-                <div class="card p-4 mb-4">
+                <div class="card compact-form mb-3">
                     <form action="index.php" method="POST" id="form-ping">
                         <input type="hidden" name="active_tab" value="ping">
                         <input type="hidden" name="tool" value="ping">
-                        <div class="row g-2">
-                            <div class="col-md-9">
-                                <input type="text" name="dominio" class="form-control form-control-lg"
-                                    placeholder="ejemplo.com" required
-                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-ping">
-                                    <span id="btn-text-ping">📶 PING</span>
-                                    <span id="btn-loading-ping"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                                </button>
-                            </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" name="dominio" class="form-control form-control-sm compact-input"
+                                placeholder="ejemplo.com" required
+                                value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            <button type="submit" class="btn btn-analyze btn-sm fw-bold px-4" id="btn-submit-ping">
+                                <span id="btn-text-ping">📶 PING</span>
+                                <span id="btn-loading-ping"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -512,22 +527,18 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                  PESTAÑA: NSLOOKUP
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-nslookup" class="tab-panel <?= $activeTab !== 'nslookup' ? 'd-none' : '' ?>">
-                <div class="card p-4 mb-4">
+                <div class="card compact-form mb-3">
                     <form action="index.php" method="POST" id="form-nslookup">
                         <input type="hidden" name="active_tab" value="nslookup">
                         <input type="hidden" name="tool" value="nslookup">
-                        <div class="row g-2">
-                            <div class="col-md-9">
-                                <input type="text" name="dominio" class="form-control form-control-lg"
-                                    placeholder="ejemplo.com" required
-                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-ns">
-                                    <span id="btn-text-ns">🔎 CONSULTAR</span>
-                                    <span id="btn-loading-ns"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                                </button>
-                            </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" name="dominio" class="form-control form-control-sm compact-input"
+                                placeholder="ejemplo.com" required
+                                value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            <button type="submit" class="btn btn-analyze btn-sm fw-bold px-4" id="btn-submit-ns">
+                                <span id="btn-text-ns">🔎 CONSULTAR</span>
+                                <span id="btn-loading-ns"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -549,22 +560,18 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                  PESTAÑA: CAPTURA
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-captura" class="tab-panel <?= $activeTab !== 'captura' ? 'd-none' : '' ?>">
-                <div class="card p-4 mb-4">
+                <div class="card compact-form mb-3">
                     <form action="index.php" method="POST" id="form-captura">
                         <input type="hidden" name="active_tab" value="captura">
                         <input type="hidden" name="tool" value="captura">
-                        <div class="row g-2">
-                            <div class="col-md-9">
-                                <input type="text" name="dominio" class="form-control form-control-lg"
-                                    placeholder="ejemplo.com" required
-                                    value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-cap">
-                                    <span id="btn-text-cap">📸 CAPTURAR</span>
-                                    <span id="btn-loading-cap"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                                </button>
-                            </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" name="dominio" class="form-control form-control-sm compact-input"
+                                placeholder="ejemplo.com" required
+                                value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
+                            <button type="submit" class="btn btn-analyze btn-sm fw-bold px-4" id="btn-submit-cap">
+                                <span id="btn-text-cap">📸 CAPTURAR</span>
+                                <span id="btn-loading-cap"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
                         </div>
                     </form>
                 </div>

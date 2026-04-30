@@ -13,19 +13,19 @@ body {
 .header-section {
     background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
     color: white;
-    padding: 22px 0;
-    border-bottom: 5px solid #ffd700;
+    padding: 10px 0;
+    border-bottom: 4px solid #ffd700;
 }
 
 .version-badge {
     font-size: 0.68rem;
     background: rgba(255,255,255,0.22);
-    padding: 2px 9px;
+    padding: 3px 10px;
     border-radius: 20px;
-    vertical-align: middle;
-    margin-left: 8px;
-    font-weight: 600;
+    color: white;
+    font-weight: 700;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 /* ── Tarjetas ─────────────────────────────────────────── */
@@ -56,40 +56,37 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ── Tabs de navegación principal ─────────────────────── */
+/* ── Tabs de navegación (en la cabecera) ──────────────── */
 .main-tabs {
-    gap: 8px;
-    background: #fff;
-    padding: 12px 16px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    gap: 4px;
     flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
 }
 
 .main-tabs .tab-btn {
-    background-color: #e8edf5;
-    color: #334155;
-    border-radius: 8px !important;
+    background-color: rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.9);
+    border-radius: 6px !important;
     font-weight: 600;
-    font-size: 0.9rem;
-    padding: 8px 20px;
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
+    font-size: 0.8rem;
+    padding: 5px 14px;
+    transition: all 0.18s ease;
+    border: 1px solid rgba(255,255,255,0.2);
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .main-tabs .tab-btn:hover {
-    background-color: #d1daf0;
-    color: #1a2a6c;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(26,42,108,0.15);
+    background-color: rgba(255,255,255,0.3);
+    color: #fff;
 }
 
 .main-tabs .tab-btn.active {
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f) !important;
-    color: white !important;
+    background: rgba(255,255,255,0.95) !important;
+    color: #1a2a6c !important;
     border-color: transparent;
-    box-shadow: 0 4px 14px rgba(26,42,108,0.35);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 /* ── Botón Analizar ───────────────────────────────────── */
@@ -236,13 +233,22 @@ body {
 #btn-loading-diag,
 #btn-loading-ports { display: none; }
 
-/* ── Selectores de módulos ────────────────────────────── */
+/* ── Formulario compacto ──────────────────────────────── */
+.compact-form {
+    padding: 10px 16px !important;
+}
+
+.compact-input {
+    max-width: 240px;
+    min-width: 160px;
+}
+
+/* ── Selectores de módulos (inline) ───────────────────── */
 .module-selectors {
-    background: #f8fafc;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    margin-top: 15px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    margin-top: 0;
 }
 
 .form-check-input:checked {
