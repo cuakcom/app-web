@@ -50,6 +50,8 @@ foreach ($servers as $srv) {
         $records = $lines;
         $status  = $ms > 2900 ? 'TIMEOUT' : (empty($records) ? 'NXDOMAIN' : 'NOERROR');
     } else {
+        // dns_get_record() cannot target a specific resolver; it always uses the
+        // system resolver, so results are not per-server measurements.
         $res = @dns_get_record($domain, $phpMap[$qType] ?? DNS_A) ?: [];
         $ms  = (int)round((microtime(true) - $t0) * 1000);
         foreach ($res as $r) {
@@ -67,13 +69,14 @@ foreach ($servers as $srv) {
     }
 
     $results[] = [
-        'server'   => $srv['ip'],
-        'name'     => $srv['name'],
-        'location' => $srv['location'],
-        'flag'     => $srv['flag'],
-        'records'  => $records,
-        'status'   => $status,
-        'ms'       => $ms,
+        'server'    => $srv['ip'],
+        'name'      => $srv['name'],
+        'location'  => $srv['location'],
+        'flag'      => $srv['flag'],
+        'records'   => $records,
+        'status'    => $status,
+        'ms'        => $ms,
+        'dig_used'  => (bool)$digPath,
     ];
 }
 

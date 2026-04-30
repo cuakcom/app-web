@@ -116,8 +116,8 @@ if ($opensslBin) {
             $flag
         );
         $out2 = (string)@shell_exec($cmd2);
-        // Consider supported if we see cipher negotiated
-        $supported = (bool)preg_match('/Cipher\s*:\s*[A-Z0-9_\-]{3,}/i', $out2);
+        // Cipher : 0000 means failed handshake; require a real cipher name
+        $supported = (bool)preg_match('/Cipher\s*:\s*(?!0{3,})[A-Z0-9_\-]{3,}/i', $out2);
         $result['protocols'][] = [
             'version'   => $label,
             'supported' => $supported,

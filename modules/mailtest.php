@@ -8,9 +8,14 @@
 // ── SMTP test con detección de STARTTLS ───────────────────────────────────────
 function smtpTest(string $host, int $port, int $timeout = 4): array
 {
-    $t0   = microtime(true);
-    $sock = @fsockopen($host, $port, $errno, $errstr, $timeout);
-    $ms   = (int)round((microtime(true) - $t0) * 1000);
+    $t0 = microtime(true);
+    if ($port === 465) {
+        $ctx  = stream_context_create(['ssl' => ['verify_peer' => false, 'verify_peer_name' => false]]);
+        $sock = @stream_socket_client("ssl://{$host}:{$port}", $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, $ctx);
+    } else {
+        $sock = @fsockopen($host, $port, $errno, $errstr, $timeout);
+    }
+    $ms = (int)round((microtime(true) - $t0) * 1000);
     if (!$sock) {
         return ['open' => false, 'ms' => null, 'banner' => null, 'starttls' => null, 'capabilities' => []];
     }
