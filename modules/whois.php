@@ -1,12 +1,20 @@
 <?php
-// modules/whois.php
-$host_escaped_whois = escapeshellarg($host_clean);
-$es_dominio_es = (substr(strtolower($host_clean), -3) === '.es');
+/**
+ * Módulo: WHOIS (usa comando del sistema para obtener el servidor WHOIS correcto por TLD)
+ * Variables disponibles: $domain (string, sanitizado por api.php)
+ */
 
-if ($es_dominio_es) {
-    echo "<h3>5. Registro WHOIS</h3>";
-    echo "<div class='notice-box'>Dominios .es requieren consulta manual en <a href='https://www.nic.es/' target='_blank'>NIC.es</a>.</div>";
-} else {
-    echo ejecutarComando("5. Registro WHOIS", "whois $host_escaped_whois");
+if (!function_exists('shell_exec')) {
+    echo json_encode(['success' => false, 'error' => 'shell_exec deshabilitado en el servidor']);
+    exit;
 }
-?>
+
+$escaped = escapeshellarg($domain);
+$output  = @shell_exec("whois {$escaped} 2>&1");
+
+if (empty(trim($output ?? ''))) {
+    echo json_encode(['success' => false, 'error' => 'Sin respuesta del servidor WHOIS']);
+    exit;
+}
+
+echo json_encode(['success' => true, 'data' => $output]);

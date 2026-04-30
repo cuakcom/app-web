@@ -1,8 +1,8 @@
 <?php
 /**
- * Cuakcom Expert Suite v1.1
+ * Cuakcom Expert Suite v3.1.0
  */
-define('APP_VERSION', '1.1');
+define('APP_VERSION', '3.1.0');
 
 // ─── DESCARGA ─────────────────────────────────────────────────────────────────
 if (isset($_POST['action']) && $_POST['action'] === 'download') {
@@ -69,7 +69,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuakcom Expert Suite v<?= APP_VERSION ?></title>
+    <title>Check Norris</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -77,34 +77,48 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
 </head>
 <body>
 
-<div class="header-section text-center mb-4">
-    <div class="container">
-        <h1 class="h4 fw-bold m-0">
-            <i class="fa-solid fa-bolt me-2"></i>Cuakcom Expert Suite
-            <span class="version-badge">v<?= APP_VERSION ?></span>
-        </h1>
+<div class="header-section mb-4">
+    <div class="container header-inner">
+        <div class="header-row-top">
+            <div class="header-title-block">
+                <h1 class="header-title-main">
+                    <svg class="cn-icon me-2" width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="8" cy="6" r="3.2" stroke="white" stroke-width="1.6"/>
+                        <line x1="8" y1="9.5" x2="11.5" y2="19" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="10.5" y1="14.5" x2="28" y2="9" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                        <line x1="11.5" y1="19" x2="7" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="9.5" y1="13" x2="3" y2="18" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                        <line x1="9.5" y1="13" x2="16" y2="11" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>Check Norris
+                </h1>
+                <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
+            </div>
+            <div class="header-controls">
+                <span class="version-badge">v<?= APP_VERSION ?></span>
+            </div>
+        </div>
+        <div class="header-tabs-row">
+            <ul class="nav nav-pills main-tabs">
+                <li class="nav-item">
+                    <a class="nav-link tab-btn tab-diag <?= $activeTab === 'diagnostico' ? 'active' : '' ?>"
+                       href="#" data-tab="diagnostico"><i class="fa-solid fa-magnifying-glass-chart me-1"></i>Diagnóstico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn tab-correo <?= $activeTab === 'correo' ? 'active' : '' ?>"
+                       href="#" data-tab="correo"><i class="fa-solid fa-envelope me-1"></i>Correo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tab-btn tab-puertos <?= $activeTab === 'puertos' ? 'active' : '' ?>"
+                       href="#" data-tab="puertos"><i class="fa-solid fa-plug me-1"></i>Puertos</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
 <div class="container pb-5">
     <div class="row justify-content-center">
         <div class="col-lg-12">
-
-            <!-- ── NAVEGACIÓN POR PESTAÑAS ──────────────────────────── -->
-            <ul class="nav nav-pills main-tabs mb-4">
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'diagnostico' ? 'active' : '' ?>"
-                       href="#" data-tab="diagnostico">🔍 Diagnóstico</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'correo' ? 'active' : '' ?>"
-                       href="#" data-tab="correo">📧 Correo</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'puertos' ? 'active' : '' ?>"
-                       href="#" data-tab="puertos">🔌 Puertos</a>
-                </li>
-            </ul>
 
             <!-- ══════════════════════════════════════════════════════════
                  PESTAÑA: DIAGNÓSTICO
@@ -122,7 +136,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                                     value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-diag">
+                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold btn-analyze-vivid" id="btn-submit-diag">
                                     <span id="btn-text-diag">🔍 ANALIZAR</span>
                                     <span id="btn-loading-diag"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
                                 </button>
@@ -141,7 +155,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                                     'whois'         => ['icon' => '📋', 'label' => 'Whois'],
                                 ];
                                 ?>
-                                <div class="module-selectors d-flex gap-4 flex-wrap justify-content-center">
+                                <div class="module-selectors module-selectors-grid">
                                     <?php foreach ($modulosDef as $id => $info): ?>
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" name="modulos[]"
@@ -436,7 +450,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                                     value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold" id="btn-submit-ports">
+                                <button type="submit" class="btn btn-analyze btn-lg w-100 fw-bold btn-analyze-vivid" id="btn-submit-ports">
                                     <span id="btn-text-ports">🔌 ESCANEAR</span>
                                     <span id="btn-loading-ports"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
                                 </button>

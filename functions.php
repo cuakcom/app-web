@@ -1,21 +1,17 @@
 <?php
-// functions.php
+/**
+ * Cuakcom Expert Suite - Funciones auxiliares compartidas
+ */
 
-function limpiarHost($host) {
-    return preg_replace('/[^a-zA-Z0-9.-]/', '', trim((string)$host));
+/**
+ * Limpia y normaliza un hostname/dominio de entrada.
+ * Elimina protocolo, ruta, y caracteres no válidos.
+ */
+function limpiarHost(string $raw): string {
+    $host = trim($raw);
+    $host = preg_replace('#^https?://(www\.)?#i', '', $host);
+    $host = explode('/', $host)[0];
+    $host = explode('?', $host)[0];
+    $host = preg_replace('/[^a-zA-Z0-9.\-]/', '', $host);
+    return strtolower($host);
 }
-
-function ejecutarComando($titulo, $comando) {
-    if (!function_exists('shell_exec')) {
-        return "<h3>$titulo</h3><p style='color:red;'>Error: shell_exec deshabilitado.</p>";
-    }
-    
-    $salida = shell_exec($comando . " 2>&1");
-    
-    $html = "<h3>$titulo</h3>";
-    $html .= "<pre class='terminal'>";
-    $html .= ($salida) ? htmlspecialchars(trim($salida)) : "Sin respuesta del comando.";
-    $html .= "</pre>";
-    return $html;
-}
-?>
