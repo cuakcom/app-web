@@ -16,3 +16,6 @@ cgi-bin/
 # IDEs
 .vscode/
 .idea/
+
+# Claves API (no subir al repositorio)
+config.php
