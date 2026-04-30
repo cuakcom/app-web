@@ -69,7 +69,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuakcom Expert Suite v<?= APP_VERSION ?></title>
+    <title>Suite Dreamed v<?= APP_VERSION ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -81,10 +81,10 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
     <div class="container-fluid px-4">
         <div class="d-flex align-items-center gap-3 flex-wrap">
             <h1 class="h5 fw-bold m-0 text-white me-2">
-                <i class="fa-solid fa-bolt me-1"></i>Cuakcom Expert Suite
+                <i class="fa-solid fa-bolt me-1"></i>Suite Dreamed
             </h1>
             <!-- ── TABS en la cabecera ────────────────────────────── -->
-            <ul class="nav nav-pills main-tabs mx-auto">
+            <ul class="nav nav-pills main-tabs">
                 <li class="nav-item">
                     <a class="nav-link tab-btn <?= $activeTab === 'diagnostico' ? 'active' : '' ?>"
                        href="#" data-tab="diagnostico">🔍 Diagnóstico</a>
@@ -119,40 +119,12 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
     <div class="row">
         <div class="col-12">
 
-            <!-- ── NAVEGACIÓN POR PESTAÑAS ──────────────────────────── -->
-            <ul class="nav nav-pills main-tabs mb-4">
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'diagnostico' ? 'active' : '' ?>"
-                       href="#" data-tab="diagnostico">🔍 Diagnóstico</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'correo' ? 'active' : '' ?>"
-                       href="#" data-tab="correo">📧 Correo</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'puertos' ? 'active' : '' ?>"
-                       href="#" data-tab="puertos">🔌 Puertos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'ping' ? 'active' : '' ?>"
-                       href="#" data-tab="ping">📶 Ping</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'nslookup' ? 'active' : '' ?>"
-                       href="#" data-tab="nslookup">🔎 NSLookup</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link tab-btn <?= $activeTab === 'captura' ? 'active' : '' ?>"
-                       href="#" data-tab="captura">📸 Captura</a>
-                </li>
-            </ul>
-
             <!-- ══════════════════════════════════════════════════════════
                  PESTAÑA: DIAGNÓSTICO
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-diagnostico" class="tab-panel <?= $activeTab !== 'diagnostico' ? 'd-none' : '' ?>">
 
-                <div class="card compact-form mb-3">
+                <div class="card compact-form p-3 mb-3">
                     <form action="index.php" method="POST" id="form-diagnostico">
                         <input type="hidden" name="active_tab" value="diagnostico">
                         <input type="hidden" name="tool" value="diagnostico">
@@ -460,7 +432,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-puertos" class="tab-panel <?= $activeTab !== 'puertos' ? 'd-none' : '' ?>">
 
-                <div class="card compact-form mb-3">
+                <div class="card compact-form p-3 mb-3">
                     <form action="index.php" method="POST" id="form-puertos">
                         <input type="hidden" name="active_tab" value="puertos">
                         <input type="hidden" name="tool" value="puertos">
@@ -469,7 +441,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                                 placeholder="ejemplo.com" required
                                 value="<?= htmlspecialchars($_POST['dominio'] ?? '') ?>">
                             <button type="submit" class="btn btn-analyze btn-sm fw-bold px-4" id="btn-submit-ports">
-                                <span id="btn-text-ports">🔌 ESCANEAR</span>
+                                <span id="btn-text-ports"><i class="fa-solid fa-network-wired me-1"></i>ESCANEAR</span>
                                 <span id="btn-loading-ports"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
                             </button>
                         </div>
@@ -494,7 +466,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                  PESTAÑA: PING
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-ping" class="tab-panel <?= $activeTab !== 'ping' ? 'd-none' : '' ?>">
-                <div class="card compact-form mb-3">
+                <div class="card compact-form p-3 mb-3">
                     <form action="index.php" method="POST" id="form-ping">
                         <input type="hidden" name="active_tab" value="ping">
                         <input type="hidden" name="tool" value="ping">
@@ -527,7 +499,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                  PESTAÑA: NSLOOKUP
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-nslookup" class="tab-panel <?= $activeTab !== 'nslookup' ? 'd-none' : '' ?>">
-                <div class="card compact-form mb-3">
+                <div class="card compact-form p-3 mb-3">
                     <form action="index.php" method="POST" id="form-nslookup">
                         <input type="hidden" name="active_tab" value="nslookup">
                         <input type="hidden" name="tool" value="nslookup">
@@ -560,7 +532,7 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
                  PESTAÑA: CAPTURA
             ══════════════════════════════════════════════════════════ -->
             <div id="tab-captura" class="tab-panel <?= $activeTab !== 'captura' ? 'd-none' : '' ?>">
-                <div class="card compact-form mb-3">
+                <div class="card compact-form p-3 mb-3">
                     <form action="index.php" method="POST" id="form-captura">
                         <input type="hidden" name="active_tab" value="captura">
                         <input type="hidden" name="tool" value="captura">
