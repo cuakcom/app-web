@@ -1,8 +1,8 @@
 <?php
 /**
- * Cuakcom Expert Suite v3.1.0
+ * Cuakcom Expert Suite v3.1.1
  */
-define('APP_VERSION', '3.1.0');
+define('APP_VERSION', '3.1.1');
 
 // ─── DESCARGA ─────────────────────────────────────────────────────────────────
 if (isset($_POST['action']) && $_POST['action'] === 'download') {
@@ -82,13 +82,21 @@ $activeTab = $_POST['active_tab'] ?? 'diagnostico';
         <div class="header-row-top">
             <div class="header-title-block">
                 <h1 class="header-title-main">
-                    <svg class="cn-icon me-2" width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <circle cx="8" cy="6" r="3.2" stroke="white" stroke-width="1.6"/>
-                        <line x1="8" y1="9.5" x2="11.5" y2="19" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="10.5" y1="14.5" x2="28" y2="9" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
-                        <line x1="11.5" y1="19" x2="7" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="9.5" y1="13" x2="3" y2="18" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-                        <line x1="9.5" y1="13" x2="16" y2="11" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                    <svg class="cn-icon me-2" width="32" height="32" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <!-- silueta patada voladora minimalista -->
+                        <circle cx="9" cy="6" r="4" fill="white"/>
+                        <!-- torso inclinado hacia atrás -->
+                        <path d="M9 10 Q10 15 13 21" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <!-- pierna de patada extendida horizontalmente -->
+                        <path d="M11 17 L38 11" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <!-- pie de la patada -->
+                        <path d="M36 10 L38 11 L36 13" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- pierna trasera doblada -->
+                        <path d="M13 21 L9 30" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <!-- brazo trasero (equilibrio, hacia abajo-atrás) -->
+                        <path d="M11 14 L4 20" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <!-- brazo delantero (equilibrio, hacia adelante) -->
+                        <path d="M11 14 L18 12" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
                     </svg>Check Norris
                 </h1>
                 <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
