@@ -82,6 +82,14 @@ body {
     color: white;
 }
 
+/* Header logo */
+.header-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
 /* --- Cards --- */
 .card {
     border: none;
@@ -142,6 +150,21 @@ body {
     padding: 9px 14px;
     border-radius: 8px;
     border: 1px solid var(--border);
+}
+
+/* Vertical module selectors for sidebar */
+.module-selectors-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.module-selectors-vertical .form-check {
+    margin-bottom: 0;
+}
+
+.module-selectors-vertical .form-check-label {
+    margin-left: 5px;
 }
 
 .form-check-input:checked {
