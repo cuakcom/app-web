@@ -3,6 +3,7 @@
    Light, modern, professional design
    ============================================================ */
 
+html.theme-luminous,
 :root.theme-luminous {
     /* Surface Colors */
     --bg:                    #f8f9ff;
@@ -51,7 +52,7 @@
 }
 
 /* Header with subtle gradient */
-.theme-luminous .header-section {
+html.theme-luminous .header-section {
     background: linear-gradient(135deg, #0058bd 0%, #0d1c2f 100%);
     color: #ffffff;
     border-bottom: 3px solid #adc6ff;
