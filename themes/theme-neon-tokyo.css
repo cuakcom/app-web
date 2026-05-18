@@ -1,0 +1,378 @@
+/* ============================================================
+   Neon Tokyo Theme
+   Dark, cyberpunk, futuristic design
+   ============================================================ */
+
+:root.theme-neon-tokyo {
+    /* Surface Colors */
+    --bg:                    #0a0a12;
+    --card-bg:               #131320;
+    --border:                #1a1a2e;
+    --text:                  #e0e0ff;
+    --text-muted:            #a0a0c0;
+    --field-bg:              #0f0f1b;
+    --dns-border:            #2a2a4e;
+    --skeleton-1:            #1a1a2e;
+    --skeleton-2:            #2a2a4e;
+    --term-bg:               #0a0a12;
+    --term-text:             #00ff88;
+    --input-bg:              #0f0f1b;
+    --input-text:            #e0e0ff;
+    --input-border:          #ff2d78;
+    --hdr-row-bg:            #1a1a2e;
+
+    /* Neon Primary Colors */
+    --neon-pink:             #ff2d78;
+    --neon-cyan:             #00ffcc;
+    --neon-yellow:           #ffe04a;
+    --neon-green:            #00ff88;
+    --neon-purple:           #d946ef;
+
+    /* Status Colors */
+    --error:                 #ff2d78;
+    --error-light:           #ff6ba4;
+    --success:               #00ff88;
+    --warning:               #ffe04a;
+    --info:                  #00ffcc;
+
+    /* Glow Effects */
+    --glow-sm:               0 0 8px rgba(255, 45, 120, 0.2);
+    --glow-md:               0 0 16px rgba(255, 45, 120, 0.4);
+    --glow-lg:               0 0 24px rgba(255, 45, 120, 0.6);
+    --inner-glow:            inset 0 0 12px rgba(255, 45, 120, 0.1);
+}
+
+/* Base styling */
+.theme-neon-tokyo {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* Header with cyberpunk gradient */
+.theme-neon-tokyo .header-section {
+    background: linear-gradient(135deg, #0a0a12 0%, #1a0a2e 50%, #2a0a4e 100%);
+    color: var(--neon-cyan);
+    border-bottom: 2px solid var(--neon-pink);
+    text-shadow: 0 0 8px rgba(255, 45, 120, 0.3);
+}
+
+.theme-neon-tokyo .header-section h1,
+.theme-neon-tokyo .header-section .header-title-main {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(255, 45, 120, 0.4);
+}
+
+.theme-neon-tokyo .version-badge {
+    background: rgba(255, 45, 120, 0.15);
+    border: 1px solid rgba(255, 45, 120, 0.5);
+    color: var(--neon-pink);
+    text-shadow: 0 0 4px rgba(255, 45, 120, 0.3);
+}
+
+.theme-neon-tokyo .darkmode-toggle,
+.theme-neon-tokyo .theme-toggle {
+    background: rgba(255, 45, 120, 0.1);
+    border: 1px solid rgba(255, 45, 120, 0.3);
+    color: var(--neon-cyan);
+    box-shadow: var(--glow-sm);
+}
+
+.theme-neon-tokyo .darkmode-toggle:hover,
+.theme-neon-tokyo .theme-toggle:hover {
+    background: rgba(255, 45, 120, 0.2);
+    box-shadow: var(--glow-md);
+}
+
+/* Cards with neon borders */
+.theme-neon-tokyo .card {
+    background-color: var(--card-bg);
+    border: 1px solid rgba(255, 45, 120, 0.3);
+    box-shadow: var(--glow-sm), var(--inner-glow);
+    transition: all 0.3s ease;
+}
+
+.theme-neon-tokyo .card:hover {
+    border-color: rgba(0, 255, 204, 0.5);
+    box-shadow: 0 0 16px rgba(0, 255, 204, 0.3), var(--inner-glow);
+}
+
+.theme-neon-tokyo .search-card {
+    border-top: 3px solid var(--neon-pink);
+    box-shadow: var(--glow-md), var(--inner-glow);
+}
+
+/* Buttons */
+.theme-neon-tokyo .btn-primary,
+.theme-neon-tokyo .btn-primary:hover {
+    background-color: transparent;
+    border: 2px solid var(--neon-pink);
+    color: var(--neon-pink);
+    box-shadow: var(--glow-sm);
+    transition: all 0.3s ease;
+}
+
+.theme-neon-tokyo .btn-primary:hover {
+    box-shadow: var(--glow-md);
+    text-shadow: 0 0 8px rgba(255, 45, 120, 0.5);
+}
+
+.theme-neon-tokyo .btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 8px rgba(0, 255, 204, 0.2);
+}
+
+.theme-neon-tokyo .btn-secondary:hover {
+    box-shadow: 0 0 16px rgba(0, 255, 204, 0.4);
+}
+
+.theme-neon-tokyo .btn-success {
+    background-color: transparent;
+    border: 2px solid var(--neon-green);
+    color: var(--neon-green);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+.theme-neon-tokyo .btn-warning {
+    background-color: transparent;
+    border: 2px solid var(--neon-yellow);
+    color: var(--neon-yellow);
+    box-shadow: 0 0 8px rgba(255, 224, 74, 0.2);
+}
+
+.theme-neon-tokyo .btn-danger {
+    background-color: transparent;
+    border: 2px solid var(--error);
+    color: var(--error);
+    box-shadow: var(--glow-sm);
+}
+
+/* Inputs with neon bottom border */
+.theme-neon-tokyo input[type="text"],
+.theme-neon-tokyo input[type="email"],
+.theme-neon-tokyo input[type="search"],
+.theme-neon-tokyo textarea,
+.theme-neon-tokyo select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: none;
+    border-bottom: 2px solid rgba(255, 45, 120, 0.3);
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.theme-neon-tokyo input:focus,
+.theme-neon-tokyo textarea:focus,
+.theme-neon-tokyo select:focus {
+    border-bottom: 2px solid var(--neon-pink);
+    box-shadow: 0 0 12px rgba(255, 45, 120, 0.3), inset 0 0 8px rgba(255, 45, 120, 0.05);
+}
+
+/* Badges */
+.theme-neon-tokyo .badge {
+    font-weight: 500;
+    border-radius: 9999px;
+    text-shadow: 0 0 4px rgba(255, 45, 120, 0.3);
+}
+
+.theme-neon-tokyo .badge-success {
+    background-color: rgba(0, 255, 136, 0.15);
+    color: var(--neon-green);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.theme-neon-tokyo .badge-danger {
+    background-color: rgba(255, 45, 120, 0.15);
+    color: var(--neon-pink);
+    border: 1px solid rgba(255, 45, 120, 0.3);
+}
+
+.theme-neon-tokyo .badge-warning {
+    background-color: rgba(255, 224, 74, 0.15);
+    color: var(--neon-yellow);
+    border: 1px solid rgba(255, 224, 74, 0.3);
+}
+
+.theme-neon-tokyo .badge-info {
+    background-color: rgba(0, 255, 204, 0.15);
+    color: var(--neon-cyan);
+    border: 1px solid rgba(0, 255, 204, 0.3);
+}
+
+/* Tables */
+.theme-neon-tokyo .table {
+    color: var(--text);
+    border-color: rgba(255, 45, 120, 0.15);
+}
+
+.theme-neon-tokyo .table thead {
+    background-color: var(--hdr-row-bg);
+    border-color: rgba(255, 45, 120, 0.2);
+}
+
+.theme-neon-tokyo .table th {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 4px rgba(0, 255, 204, 0.3);
+}
+
+.theme-neon-tokyo .table-hover tbody tr:hover {
+    background-color: rgba(255, 45, 120, 0.1);
+    box-shadow: inset 0 0 8px rgba(255, 45, 120, 0.1);
+}
+
+/* Terminal/Code blocks with green neon */
+.theme-neon-tokyo .term-output,
+.theme-neon-tokyo .terminal-block,
+.theme-neon-tokyo pre,
+.theme-neon-tokyo code {
+    background-color: #0a0a12;
+    color: var(--neon-green);
+    border-radius: 0;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    text-shadow: 0 0 4px rgba(0, 255, 136, 0.2);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Tabs */
+.theme-neon-tokyo .nav-tabs .nav-link {
+    color: var(--text-muted);
+    border-color: transparent;
+    position: relative;
+}
+
+.theme-neon-tokyo .nav-tabs .nav-link.active {
+    color: var(--neon-cyan);
+    border-color: transparent;
+    border-bottom: 2px solid var(--neon-cyan);
+    text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+    font-weight: 600;
+}
+
+/* Spinners */
+.theme-neon-tokyo .spinner-border {
+    color: var(--neon-pink);
+    text-shadow: 0 0 12px rgba(255, 45, 120, 0.4);
+}
+
+/* Alerts */
+.theme-neon-tokyo .alert-success {
+    background-color: rgba(0, 255, 136, 0.1);
+    border-left: 3px solid var(--neon-green);
+    color: var(--neon-green);
+    text-shadow: 0 0 4px rgba(0, 255, 136, 0.2);
+}
+
+.theme-neon-tokyo .alert-danger {
+    background-color: rgba(255, 45, 120, 0.1);
+    border-left: 3px solid var(--neon-pink);
+    color: var(--neon-pink);
+    text-shadow: 0 0 4px rgba(255, 45, 120, 0.2);
+}
+
+.theme-neon-tokyo .alert-warning {
+    background-color: rgba(255, 224, 74, 0.1);
+    border-left: 3px solid var(--neon-yellow);
+    color: var(--neon-yellow);
+    text-shadow: 0 0 4px rgba(255, 224, 74, 0.2);
+}
+
+.theme-neon-tokyo .alert-info {
+    background-color: rgba(0, 255, 204, 0.1);
+    border-left: 3px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    text-shadow: 0 0 4px rgba(0, 255, 204, 0.2);
+}
+
+/* Links */
+.theme-neon-tokyo a {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.theme-neon-tokyo a:hover {
+    color: var(--neon-pink);
+    text-shadow: 0 0 8px rgba(255, 45, 120, 0.4);
+}
+
+/* Form controls */
+.theme-neon-tokyo .form-check-input {
+    background-color: var(--input-bg);
+    border: 1px solid rgba(255, 45, 120, 0.3);
+}
+
+.theme-neon-tokyo .form-check-input:checked {
+    background-color: transparent;
+    border: 2px solid var(--neon-pink);
+    box-shadow: 0 0 8px rgba(255, 45, 120, 0.3);
+}
+
+.theme-neon-tokyo .form-switch .form-check-input {
+    background-color: rgba(0, 255, 136, 0.2);
+}
+
+.theme-neon-tokyo .form-switch .form-check-input:checked {
+    background-color: var(--neon-pink);
+    border-color: var(--neon-pink);
+    box-shadow: var(--glow-sm);
+}
+
+/* Pagination */
+.theme-neon-tokyo .pagination .page-link {
+    color: var(--neon-cyan);
+    background-color: transparent;
+    border: 1px solid rgba(255, 45, 120, 0.2);
+}
+
+.theme-neon-tokyo .pagination .page-link:hover {
+    background-color: rgba(255, 45, 120, 0.1);
+    border-color: rgba(255, 45, 120, 0.4);
+    color: var(--neon-pink);
+}
+
+.theme-neon-tokyo .pagination .page-link.active {
+    background-color: transparent;
+    border: 2px solid var(--neon-pink);
+    color: var(--neon-pink);
+    box-shadow: var(--glow-sm);
+}
+
+/* Breadcrumb */
+.theme-neon-tokyo .breadcrumb {
+    background-color: transparent;
+}
+
+.theme-neon-tokyo .breadcrumb-item {
+    color: var(--text-muted);
+}
+
+.theme-neon-tokyo .breadcrumb-item.active {
+    color: var(--neon-cyan);
+}
+
+.theme-neon-tokyo .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--neon-pink);
+}
+
+/* Data visualization */
+.theme-neon-tokyo .chart-container {
+    background-color: var(--card-bg);
+    border: 1px solid rgba(255, 45, 120, 0.2);
+    border-radius: 0;
+    box-shadow: var(--glow-sm), var(--inner-glow);
+}
+
+/* Animations for Neon Tokyo */
+@keyframes neon-flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow: 0 0 12px rgba(255, 45, 120, 0.4);
+    }
+    20%, 24%, 55% {
+        text-shadow: 0 0 2px rgba(255, 45, 120, 0.1);
+    }
+}
+
+.theme-neon-tokyo .neon-flicker {
+    animation: neon-flicker 2.5s infinite;
+}
