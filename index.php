@@ -387,55 +387,63 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 
         <!-- ══════════ TAB: CORREO ══════════ -->
         <div class="tab-pane fade" id="tab-correo" role="tabpanel">
-            <div class="card search-options-card">
-                <div class="card-body p-3">
-                    <div class="d-flex align-items-center gap-3 flex-wrap mb-2">
-                        <span class="small text-muted fw-semibold">
-                            <i class="fa-solid fa-envelope me-1"></i>Diagnóstico de correo para el dominio introducido arriba
-                        </span>
-                        <button class="btn btn-mail-analyze ms-auto fw-bold" id="btn-mail-analyze" onclick="startMailAnalysis()">
-                            <span id="mail-btn-text"><i class="fa-solid fa-paper-plane me-1"></i>Analizar correo</span>
-                            <span id="mail-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                        </button>
+            <div class="row g-3">
+                <!-- Left Sidebar: Email Options -->
+                <div class="col-12 col-lg-3">
+                    <div class="card search-options-card h-100">
+                        <div class="card-body p-3">
+                            <button class="btn btn-mail-analyze w-100 mb-3 fw-bold" id="btn-mail-analyze" onclick="startMailAnalysis()">
+                                <span id="mail-btn-text"><i class="fa-solid fa-paper-plane me-1"></i>Analizar correo</span>
+                                <span id="mail-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2"><i class="fa-solid fa-at me-1"></i>Probar cuenta</label>
+                                <input type="email" id="input-email-test" class="form-control form-control-sm"
+                                       placeholder="cuenta@dominio.com">
+                                <small class="text-muted d-block mt-1">Verifica si el buzón existe</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2"><i class="fa-solid fa-file me-1"></i>Analizar .eml</label>
+                                <label class="btn btn-sm btn-eml-analyze w-100 mb-0">
+                                    <i class="fa-solid fa-file-arrow-up me-1"></i>Cargar archivo
+                                    <input type="file" id="input-eml" accept=".eml,.txt" class="d-none" onchange="uploadEml(this)">
+                                </label>
+                                <small class="text-muted d-block mt-1" id="eml-filename">Sube un .eml</small>
+                            </div>
+
+                            <div class="border-top pt-3">
+                                <button class="btn btn-sm btn-outline-danger w-100 mb-2" id="btn-relay-test" onclick="startRelayTest()">
+                                    <span id="relay-btn-text"><i class="fa-solid fa-vials me-1"></i>Test SMTP</span>
+                                    <span id="relay-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                                <small class="text-muted d-block">Relay &amp; entrega</small>
+                            </div>
+
+                            <div class="border-top pt-3 mt-3">
+                                <button class="btn btn-sm btn-outline-warning w-100 mb-2 fw-semibold" id="btn-abuse-check" onclick="startAbuseCheck()">
+                                    <span id="abuse-btn-text"><i class="fa-solid fa-bug me-1"></i>AbuseIPDB</span>
+                                    <span id="abuse-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                                <small class="text-muted d-block">Verificar IP reportada</small>
+                            </div>
+
+                            <p class="small text-muted mb-0 mt-3" style="font-size:0.72rem">
+                                <i class="fa-solid fa-shield-halved me-1 text-success"></i>
+                                <em>Datos confidenciales protegidos</em>
+                            </p>
+                        </div>
                     </div>
-                    <!-- Email account test -->
-                    <div class="d-flex align-items-center gap-2 flex-wrap mt-1">
-                        <input type="email" id="input-email-test" class="form-control form-control-sm" style="max-width:260px"
-                               placeholder="cuenta@dominio.com — prueba RCPT TO (opcional)">
-                        <span class="small text-muted">Verifica si el buzón existe (resultado orientativo)</span>
-                    </div>
-                    <!-- EML upload -->
-                    <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
-                        <label class="btn btn-sm btn-eml-analyze mb-0">
-                            <i class="fa-solid fa-file-arrow-up me-1"></i>Analizar .eml
-                            <input type="file" id="input-eml" accept=".eml,.txt" class="d-none" onchange="uploadEml(this)">
-                        </label>
-                        <span class="small text-muted" id="eml-filename">Sube un archivo .eml para analizar sus cabeceras</span>
-                    </div>
-                    <p class="small text-muted mb-0 mt-1" style="font-size:0.72rem">
-                        <i class="fa-solid fa-shield-halved me-1 text-success"></i>
-                        <em>*El contenido del mensaje no se compartirá con fuentes externas ni se almacenarán datos confidenciales</em>
-                    </p>
-                    <!-- Relay test -->
-                    <div class="d-flex align-items-center gap-2 flex-wrap mt-2 pt-2 border-top">
-                        <span class="small text-muted fw-semibold">
-                            <i class="fa-solid fa-arrows-left-right me-1"></i>Pruebas avanzadas SMTP
-                        </span>
-                        <button class="btn btn-sm btn-outline-danger ms-auto" id="btn-relay-test" onclick="startRelayTest()">
-                            <span id="relay-btn-text"><i class="fa-solid fa-vials me-1"></i>Test relay &amp; entrega</span>
-                            <span id="relay-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                        </button>
-                    </div>
-                    <!-- AbuseIPDB check -->
-                    <div class="d-flex align-items-center gap-2 flex-wrap mt-2 pt-2 border-top">
-                        <span class="small fw-semibold" style="color:#d97706">
-                            <i class="fa-solid fa-shield-virus me-1"></i>Correo / Abuse — AbuseIPDB
-                        </span>
-                        <span class="small text-muted">Comprueba si la IP está reportada en abuseipdb.com</span>
-                        <button class="btn btn-sm btn-outline-warning ms-auto fw-semibold" id="btn-abuse-check" onclick="startAbuseCheck()">
-                            <span id="abuse-btn-text"><i class="fa-solid fa-bug me-1"></i>Comprobar AbuseIPDB</span>
-                            <span id="abuse-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                        </button>
+                </div>
+
+                <!-- Right Content: Results -->
+                <div class="col-12 col-lg-9">
+                    <div class="card search-options-card">
+                        <div class="card-body p-3">
+                            <span class="small text-muted fw-semibold">
+                                <i class="fa-solid fa-envelope me-1"></i>Diagnóstico de correo para el dominio introducido arriba
+                            </span>
                     </div>
                 </div>
             </div>
@@ -645,47 +653,56 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     </div>
                 </div>
             </div>
+                    </div>
+                </div>
+            </div>
         </div><!-- /tab-correo -->
 
         <!-- ══════════ TAB: CONSULTAS DNS ══════════ -->
         <div class="tab-pane fade" id="tab-dnsquery" role="tabpanel">
-            <div class="card search-options-card">
-                <div class="card-body p-3">
-                    <div class="row g-2 align-items-end">
-                        <div class="col-12 col-sm-4">
-                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-globe me-1"></i>Dominio</label>
-                            <input type="text" id="dnsq-domain" class="form-control form-control-sm" placeholder="ejemplo.com">
-                        </div>
-                        <div class="col-6 col-sm-2">
-                            <label class="form-label small fw-semibold mb-1">Tipo</label>
-                            <select id="dnsq-type" class="form-select form-select-sm">
-                                <?php foreach (['A','AAAA','CNAME','MX','NS','TXT','SOA','SRV','CAA','PTR','ANY'] as $t): ?>
-                                <option value="<?= $t ?>"><?= $t ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-6 col-sm-3">
-                            <label class="form-label small fw-semibold mb-1">Servidor DNS</label>
-                            <select id="dnsq-server" class="form-select form-select-sm" onchange="toggleCustomDns()">
-                                <option value="8.8.8.8">8.8.8.8 — Google</option>
-                                <option value="8.8.4.4">8.8.4.4 — Google Alt</option>
-                                <option value="1.1.1.1">1.1.1.1 — Cloudflare</option>
-                                <option value="1.0.0.1">1.0.0.1 — Cloudflare Alt</option>
-                                <option value="9.9.9.9">9.9.9.9 — Quad9</option>
-                                <option value="208.67.222.222">208.67.222.222 — OpenDNS</option>
-                                <option value="94.140.14.14">94.140.14.14 — AdGuard</option>
-                                <option value="custom">Personalizado…</option>
-                            </select>
-                        </div>
-                        <div class="col-6 col-sm-2" id="dnsq-custom-wrap" style="display:none">
-                            <label class="form-label small fw-semibold mb-1">IP servidor</label>
-                            <input type="text" id="dnsq-custom" class="form-control form-control-sm" placeholder="x.x.x.x">
-                        </div>
-                        <div class="col-3 col-sm-1">
-                            <label class="form-label small fw-semibold mb-1">Puerto</label>
-                            <input type="number" id="dnsq-port" class="form-control form-control-sm" value="53" min="1" max="65535">
-                        </div>
-                        <div class="col-3 col-sm-2">
+            <div class="row g-3">
+                <!-- Left Sidebar: DNS Options -->
+                <div class="col-12 col-lg-3">
+                    <div class="card search-options-card h-100">
+                        <div class="card-body p-3">
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2"><i class="fa-solid fa-globe me-1"></i>Dominio</label>
+                                <input type="text" id="dnsq-domain" class="form-control form-control-sm" placeholder="ejemplo.com">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2">Tipo de registro</label>
+                                <select id="dnsq-type" class="form-select form-select-sm">
+                                    <?php foreach (['A','AAAA','CNAME','MX','NS','TXT','SOA','SRV','CAA','PTR','ANY'] as $t): ?>
+                                    <option value="<?= $t ?>"><?= $t ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2">Servidor DNS</label>
+                                <select id="dnsq-server" class="form-select form-select-sm" onchange="toggleCustomDns()">
+                                    <option value="8.8.8.8">8.8.8.8 — Google</option>
+                                    <option value="8.8.4.4">8.8.4.4 — Google Alt</option>
+                                    <option value="1.1.1.1">1.1.1.1 — Cloudflare</option>
+                                    <option value="1.0.0.1">1.0.0.1 — Cloudflare Alt</option>
+                                    <option value="9.9.9.9">9.9.9.9 — Quad9</option>
+                                    <option value="208.67.222.222">208.67.222.222 — OpenDNS</option>
+                                    <option value="94.140.14.14">94.140.14.14 — AdGuard</option>
+                                    <option value="custom">Personalizado…</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="dnsq-custom-wrap" style="display:none">
+                                <label class="form-label small fw-semibold mb-2">IP personalizada</label>
+                                <input type="text" id="dnsq-custom" class="form-control form-control-sm" placeholder="x.x.x.x">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2">Puerto</label>
+                                <input type="number" id="dnsq-port" class="form-control form-control-sm" value="53" min="1" max="65535">
+                            </div>
+
                             <button class="btn btn-dark btn-sm w-100" onclick="startDnsQuery()">
                                 <span id="dnsq-btn-text"><i class="fa-solid fa-search me-1"></i>Consultar</span>
                                 <span id="dnsq-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
@@ -693,7 +710,14 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- Right Content: Results -->
+                <div class="col-12 col-lg-9">
+                    <div class="card search-options-card">
+                        <div class="card-body p-3">
+                            <span class="small text-muted fw-semibold">Resultados de consulta DNS</span>
+                        </div>
+                    </div>
             <div id="dnsq-results" class="d-none mt-3">
                 <div class="card result-card">
                     <div class="card-header-cuak">
@@ -749,6 +773,9 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                         </button>
                     </div>
                     <div class="card-body p-3" id="body-spf"></div>
+                </div>
+            </div>
+                    </div>
                 </div>
             </div>
 
