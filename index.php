@@ -24,26 +24,26 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools Check Dominios y DNS</title>
-    <meta name="description" content="Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación">
+    <title>Check Norris - Analizador DNS, SSL, Correo y Web</title>
+    <meta name="description" content="Check Norris: Suite profesional de herramientas para análisis de dominios, DNS, correo electrónico, SSL/TLS y diagnóstico web.">
     <meta name="keywords" content="dns checker, ssl scanner, análisis correo, SPF DKIM DMARC, blacklist email, propagación dns, traceroute online, geolocalización ip, whois dominio, análisis seo web">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Cuakcom">
     <link rel="canonical" href="https://tools.cuakcom.com/">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="NetScope — Analizador DNS, SSL, Correo y Web">
-    <meta property="og:description" content="Diagnóstico DNS completo, escáner SSL/TLS, análisis SPF/DKIM/DMARC, comprobación de blacklists, geolocalización IP, propagación DNS y análisis SEO web.">
+    <meta property="og:title" content="Check Norris - Analizador DNS, SSL, Correo y Web">
+    <meta property="og:description" content="Suite profesional de herramientas de diagnóstico: DNS checker, SSL scanner, análisis SPF/DKIM/DMARC, blacklist, traceroute, geolocalización IP y análisis SEO.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tools.cuakcom.com/">
     <meta property="og:image" content="https://tools.cuakcom.com/favicon.svg">
-    <meta property="og:site_name" content="NetScope by Cuakcom">
+    <meta property="og:site_name" content="Check Norris">
     <meta property="og:locale" content="es_ES">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="NetScope — Analizador DNS, SSL, Correo y Web">
-    <meta name="twitter:description" content="Diagnóstico DNS, SSL, correo (SPF/DKIM/DMARC), blacklist, traceroute, geolocalización y análisis SEO. Gratis y sin registro.">
+    <meta name="twitter:title" content="Check Norris - Analizador DNS, SSL, Correo y Web">
+    <meta name="twitter:description" content="Suite profesional de herramientas de diagnóstico: DNS, SSL, correo, blacklist, traceroute, geolocalización IP y análisis SEO. Gratis y sin registro.">
     <meta name="twitter:site" content="@cuakcom">
 
     <!-- Favicon -->
@@ -54,8 +54,8 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "NetScope",
-      "description": "Suite de herramientas de diagnóstico de red: DNS checker, SSL scanner, análisis de correo electrónico, propagación DNS, geolocalización IP y análisis SEO web.",
+      "name": "Check Norris",
+      "description": "Suite profesional de herramientas de diagnóstico: DNS checker, SSL scanner, análisis de correo electrónico, propagación DNS, geolocalización IP y análisis SEO web.",
       "url": "https://tools.cuakcom.com/",
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Any",
@@ -79,9 +79,9 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     <div class="container d-flex align-items-center justify-content-between">
         <div class="header-title-block">
             <h1 class="header-title-main">
-                <i class="fa-solid fa-network-wired me-2"></i>Tools Check Dominios y DNS
+                Check Norris
             </h1>
-            <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
+            <span class="header-title-sub">Suite profesional de análisis DNS, SSL, Correo y Web</span>
         </div>
         <div class="d-flex align-items-center gap-2">
             <div class="btn-group" role="group" title="Cambiar tema">
