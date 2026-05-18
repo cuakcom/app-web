@@ -783,40 +783,46 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
 
         <!-- ══════════ TAB: RED & IP ══════════ -->
         <div class="tab-pane fade" id="tab-red" role="tabpanel">
-            <div class="card search-options-card">
-                <div class="card-body p-3">
-                    <div class="row g-2 align-items-end">
-                        <div class="col-12 col-sm-5">
-                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-server me-1"></i>IP o dominio</label>
-                            <input type="text" id="red-input" class="form-control form-control-sm" placeholder="1.2.3.4 o ejemplo.com">
-                        </div>
-                        <div class="col-6 col-sm-2">
-                            <button class="btn btn-dark btn-sm w-100" onclick="startGeoIp()">
-                                <span id="geo-btn-text"><i class="fa-solid fa-location-dot me-1"></i>Geolocalizar</span>
-                                <span id="geo-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                            </button>
-                        </div>
-                        <div class="col-12"><hr class="my-2"></div>
-                        <div class="col-12 col-sm-5">
-                            <label class="form-label small fw-semibold mb-1"><i class="fa-solid fa-satellite-dish me-1"></i>DNS Propagación — dominio del buscador arriba</label>
-                        </div>
-                        <div class="col-6 col-sm-2">
-                            <label class="form-label small fw-semibold mb-1">Tipo</label>
-                            <select id="prop-type" class="form-select form-select-sm">
-                                <?php foreach (['A','AAAA','CNAME','MX','NS','TXT','SOA'] as $t): ?>
-                                <option value="<?= $t ?>"><?= $t ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-6 col-sm-2">
-                            <button class="btn btn-secondary btn-sm w-100" onclick="startPropagation()">
-                                <span id="prop-btn-text"><i class="fa-solid fa-globe me-1"></i>Propagación</span>
-                                <span id="prop-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                            </button>
+            <div class="row g-3">
+                <!-- Left Sidebar: Network Options -->
+                <div class="col-12 col-lg-3">
+                    <div class="card search-options-card h-100">
+                        <div class="card-body p-3">
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold mb-2"><i class="fa-solid fa-location-dot me-1"></i>Geolocalización</label>
+                                <input type="text" id="red-input" class="form-control form-control-sm mb-2" placeholder="1.2.3.4 o dominio.com">
+                                <button class="btn btn-dark btn-sm w-100" onclick="startGeoIp()">
+                                    <span id="geo-btn-text"><i class="fa-solid fa-location-dot me-1"></i>Analizar IP</span>
+                                    <span id="geo-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                            </div>
+
+                            <div class="border-top pt-3">
+                                <label class="form-label small fw-semibold mb-2"><i class="fa-solid fa-globe me-1"></i>Propagación DNS</label>
+                                <div class="mb-2">
+                                    <select id="prop-type" class="form-select form-select-sm">
+                                        <?php foreach (['A','AAAA','CNAME','MX','NS','TXT','SOA'] as $t): ?>
+                                        <option value="<?= $t ?>"><?= $t ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <button class="btn btn-secondary btn-sm w-100" onclick="startPropagation()">
+                                    <span id="prop-btn-text"><i class="fa-solid fa-globe me-1"></i>Consultar</span>
+                                    <span id="prop-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                                </button>
+                                <small class="text-muted d-block mt-1">Utiliza el dominio del buscador arriba</small>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- Right Content: Results -->
+                <div class="col-12 col-lg-9">
+                    <div class="card search-options-card">
+                        <div class="card-body p-3">
+                            <span class="small text-muted fw-semibold">Resultados de análisis de red</span>
+                        </div>
+                    </div>
             <div id="red-results" class="d-none mt-3">
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
@@ -858,21 +864,35 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     <div class="card-body p-3" id="body-propagation"></div>
                 </div>
             </div>
+                    </div>
+                </div>
+            </div>
         </div><!-- /tab-red -->
 
         <!-- ══════════ TAB: WEB ══════════ -->
         <div class="tab-pane fade" id="tab-web" role="tabpanel">
-            <div class="card search-options-card">
-                <div class="card-body p-3 d-flex align-items-center gap-3 flex-wrap">
-                    <span class="small text-muted fw-semibold">
-                        <i class="fa-solid fa-globe me-1"></i>Análisis SEO, Open Graph y tecnologías del dominio del buscador arriba
-                    </span>
-                    <button class="btn btn-dark btn-sm ms-auto fw-bold" id="btn-web-analyze" onclick="startWebAnalysis()">
-                        <span id="web-btn-text"><i class="fa-solid fa-magnifying-glass me-1"></i>Analizar web</span>
-                        <span id="web-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                    </button>
+            <div class="row g-3">
+                <!-- Left Sidebar: Web Options -->
+                <div class="col-12 col-lg-3">
+                    <div class="card search-options-card h-100">
+                        <div class="card-body p-3">
+                            <button class="btn btn-dark btn-sm w-100 fw-bold" id="btn-web-analyze" onclick="startWebAnalysis()">
+                                <span id="web-btn-text"><i class="fa-solid fa-magnifying-glass me-1"></i>Analizar web</span>
+                                <span id="web-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                            <small class="text-muted d-block mt-3">SEO, Open Graph y tecnologías</small>
+                            <small class="text-muted d-block">Utiliza el dominio del buscador arriba</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Right Content: Results -->
+                <div class="col-12 col-lg-9">
+                    <div class="card search-options-card">
+                        <div class="card-body p-3">
+                            <span class="small text-muted fw-semibold">Resultados del análisis web</span>
+                        </div>
+                    </div>
             <div id="web-results" class="d-none mt-3">
                 <div class="row g-3">
                     <div class="col-12 col-md-7">
@@ -895,21 +915,35 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                     </div>
                 </div>
             </div>
+                    </div>
+                </div>
+            </div>
         </div><!-- /tab-web -->
 
         <!-- ══════════ TAB: SSL/TLS ══════════ -->
         <div class="tab-pane fade" id="tab-ssl" role="tabpanel">
-            <div class="card search-options-card">
-                <div class="card-body p-3 d-flex align-items-center gap-3 flex-wrap">
-                    <span class="small text-muted fw-semibold">
-                        <i class="fa-solid fa-lock me-1"></i>Escaneo TLS/SSL extendido del dominio del buscador arriba
-                    </span>
-                    <button class="btn btn-dark btn-sm ms-auto fw-bold" id="btn-ssl-scan" onclick="startSslScan()">
-                        <span id="ssl-btn-text"><i class="fa-solid fa-shield-halved me-1"></i>Escanear SSL/TLS</span>
-                        <span id="ssl-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                    </button>
+            <div class="row g-3">
+                <!-- Left Sidebar: SSL Options -->
+                <div class="col-12 col-lg-3">
+                    <div class="card search-options-card h-100">
+                        <div class="card-body p-3">
+                            <button class="btn btn-dark btn-sm w-100 fw-bold" id="btn-ssl-scan" onclick="startSslScan()">
+                                <span id="ssl-btn-text"><i class="fa-solid fa-shield-halved me-1"></i>Escanear SSL/TLS</span>
+                                <span id="ssl-btn-loading" class="d-none"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </button>
+                            <small class="text-muted d-block mt-3">Escaneo TLS/SSL completo</small>
+                            <small class="text-muted d-block">Protocolos, cifrados y certificados</small>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Right Content: Results -->
+                <div class="col-12 col-lg-9">
+                    <div class="card search-options-card">
+                        <div class="card-body p-3">
+                            <span class="small text-muted fw-semibold">Resultados del escaneo SSL/TLS</span>
+                        </div>
+                    </div>
             <div id="ssl-results" class="d-none mt-3">
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
@@ -947,6 +981,9 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
                             <span class="info-popover-btn" data-info-key="mod-ssl-san"><i class="fa-solid fa-circle-info"></i></span>
                         </div>
                         <div class="card-body p-3" id="body-ssl-san"></div>
+                    </div>
+                </div>
+            </div>
                     </div>
                 </div>
             </div>
