@@ -1247,6 +1247,37 @@ label[for="mod-redirect"] i  { color: #e11d48; }
     border-color: #6366f1 !important;
 }
 .dns-chip:hover span { border-color: #6366f1; color: #6366f1; }
+
+/* ========== Theme Dropdown Styling ========== */
+#theme-menu {
+    min-width: 180px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#theme-menu .dropdown-item {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+#theme-menu .dropdown-item:hover {
+    background-color: var(--field-bg);
+    color: var(--text);
+}
+
+#theme-menu .dropdown-item .fa-check {
+    width: 16px;
+    visibility: hidden;
+}
+
+#theme-menu .dropdown-item.active {
+    background-color: var(--field-bg);
+    font-weight: 600;
+}
 .dns-chip input:checked:hover + span {
     background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
     border-color: #4f46e5 !important;

@@ -1,0 +1,297 @@
+/* ============================================================
+   Luminous Analytical System Theme
+   Light, modern, professional design
+   ============================================================ */
+
+:root.theme-luminous {
+    /* Surface Colors */
+    --bg:                    #f8f9ff;
+    --card-bg:               #ffffff;
+    --border:                #dde9ff;
+    --text:                  #0d1c2f;
+    --text-muted:            #424753;
+    --field-bg:              #eff4ff;
+    --dns-border:            #dde9ff;
+    --skeleton-1:            #e6eeff;
+    --skeleton-2:            #dde9ff;
+    --term-bg:               #f8f9ff;
+    --term-text:             #0d1c2f;
+    --input-bg:              #ffffff;
+    --input-text:            #0d1c2f;
+    --input-border:          #adc6ff;
+    --hdr-row-bg:            #eff4ff;
+
+    /* Primary Colors */
+    --primary:               #0058bd;
+    --primary-light:         #2771df;
+    --primary-container:     #d8e2ff;
+    --primary-accent:        #adc6ff;
+
+    /* Secondary Colors */
+    --secondary:             #795900;
+    --secondary-light:       #febf0d;
+    --secondary-accent:      #ffdea0;
+
+    /* Tertiary Colors */
+    --tertiary:              #006b2b;
+    --tertiary-light:        #008738;
+    --tertiary-accent:       #89fa9b;
+
+    /* Status Colors */
+    --error:                 #ba1a1a;
+    --error-light:           #ffdad6;
+    --success:               #006b2b;
+    --warning:               #795900;
+    --info:                  #0058bd;
+
+    /* Elevation & Shadows */
+    --shadow-sm:             0 2px 8px rgba(5, 88, 189, 0.04);
+    --shadow-md:             0 4px 16px rgba(5, 88, 189, 0.08);
+    --shadow-lg:             0 8px 24px rgba(5, 88, 189, 0.12);
+}
+
+/* Header with subtle gradient */
+.theme-luminous .header-section {
+    background: linear-gradient(135deg, #0058bd 0%, #0d1c2f 100%);
+    color: #ffffff;
+    border-bottom: 3px solid #adc6ff;
+}
+
+.theme-luminous .darkmode-toggle,
+.theme-luminous .theme-toggle {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+.theme-luminous .darkmode-toggle:hover,
+.theme-luminous .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Cards with subtle elevation */
+.theme-luminous .card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-luminous .card:hover {
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.2s ease;
+}
+
+.theme-luminous .search-card {
+    border-top: 4px solid var(--primary);
+}
+
+/* Buttons */
+.theme-luminous .btn-primary,
+.theme-luminous .btn-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+.theme-luminous .btn-secondary {
+    background-color: var(--secondary-accent);
+    border-color: var(--secondary-accent);
+    color: var(--secondary);
+}
+
+.theme-luminous .btn-success {
+    background-color: var(--success);
+    border-color: var(--success);
+    color: #ffffff;
+}
+
+.theme-luminous .btn-warning {
+    background-color: var(--warning);
+    border-color: var(--warning);
+    color: #ffffff;
+}
+
+.theme-luminous .btn-danger {
+    background-color: var(--error);
+    border-color: var(--error);
+    color: #ffffff;
+}
+
+/* Inputs with focus glow */
+.theme-luminous input[type="text"],
+.theme-luminous input[type="email"],
+.theme-luminous input[type="search"],
+.theme-luminous textarea,
+.theme-luminous select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+}
+
+.theme-luminous input:focus,
+.theme-luminous textarea:focus,
+.theme-luminous select:focus {
+    border-width: 2px;
+    border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(5, 88, 189, 0.1);
+}
+
+/* Badges with status colors */
+.theme-luminous .badge {
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.theme-luminous .badge-success {
+    background-color: rgba(0, 107, 43, 0.1);
+    color: var(--success);
+}
+
+.theme-luminous .badge-danger {
+    background-color: rgba(186, 26, 26, 0.1);
+    color: var(--error);
+}
+
+.theme-luminous .badge-warning {
+    background-color: rgba(121, 89, 0, 0.1);
+    color: var(--warning);
+}
+
+.theme-luminous .badge-info {
+    background-color: rgba(5, 88, 189, 0.1);
+    color: var(--info);
+}
+
+/* Tables */
+.theme-luminous .table {
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.theme-luminous .table thead {
+    background-color: var(--hdr-row-bg);
+    border-color: var(--border);
+}
+
+.theme-luminous .table-hover tbody tr:hover {
+    background-color: var(--field-bg);
+}
+
+/* Terminal/Code blocks */
+.theme-luminous .term-output,
+.theme-luminous .terminal-block,
+.theme-luminous pre,
+.theme-luminous code {
+    background-color: #0d1c2f;
+    color: #adc6ff;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+}
+
+/* Tabs */
+.theme-luminous .nav-tabs .nav-link {
+    color: var(--text-muted);
+    border-color: var(--border);
+}
+
+.theme-luminous .nav-tabs .nav-link.active {
+    color: var(--primary);
+    border-color: var(--primary);
+    background-color: transparent;
+    font-weight: 600;
+}
+
+/* Spinners and loading */
+.theme-luminous .spinner-border {
+    color: var(--primary);
+}
+
+/* Alert colors */
+.theme-luminous .alert-success {
+    background-color: rgba(0, 107, 43, 0.1);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.theme-luminous .alert-danger {
+    background-color: rgba(186, 26, 26, 0.1);
+    border-color: var(--error);
+    color: var(--error);
+}
+
+.theme-luminous .alert-warning {
+    background-color: rgba(121, 89, 0, 0.1);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.theme-luminous .alert-info {
+    background-color: rgba(5, 88, 189, 0.1);
+    border-color: var(--info);
+    color: var(--info);
+}
+
+/* Links */
+.theme-luminous a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.theme-luminous a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+/* Form controls */
+.theme-luminous .form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+.theme-luminous .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.theme-luminous .form-switch .form-check-input {
+    background-color: var(--text-muted);
+}
+
+.theme-luminous .form-switch .form-check-input:checked {
+    background-color: var(--primary);
+}
+
+/* Pagination */
+.theme-luminous .pagination .page-link {
+    color: var(--primary);
+    background-color: var(--card-bg);
+    border-color: var(--border);
+}
+
+.theme-luminous .pagination .page-link:hover {
+    background-color: var(--field-bg);
+    border-color: var(--border);
+}
+
+.theme-luminous .pagination .page-link.active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Breadcrumb */
+.theme-luminous .breadcrumb {
+    background-color: transparent;
+}
+
+.theme-luminous .breadcrumb-item.active {
+    color: var(--text);
+}
+
+/* Data visualization (charts/graphs) */
+.theme-luminous .chart-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-sm);
+}

@@ -68,6 +68,8 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="themes/theme-luminous.css">
+    <link rel="stylesheet" href="themes/theme-neon-tokyo.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
 <body>
@@ -82,9 +84,26 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
             <span class="header-title-sub">Utilidades para revisar Dominios, DNS, Correo y herramientas de verificación</span>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro">
-                <i class="fa-solid fa-moon"></i>
-            </button>
+            <div class="btn-group" role="group" title="Cambiar tema">
+                <button type="button" class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro/claro">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button type="button" class="btn btn-sm darkmode-toggle dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" id="theme-dropdown" title="Seleccionar tema">
+                    <i class="fa-solid fa-palette"></i>
+                    <span class="visually-hidden">Temas</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" id="theme-menu">
+                    <li><a class="dropdown-item" href="#" data-theme="default" onclick="switchTheme('default', event)">
+                        <i class="fa-solid fa-check me-2" id="check-default"></i>Por defecto
+                    </a></li>
+                    <li><a class="dropdown-item" href="#" data-theme="luminous" onclick="switchTheme('luminous', event)">
+                        <i class="fa-solid fa-check me-2" id="check-luminous"></i>Luminous (Claro)
+                    </a></li>
+                    <li><a class="dropdown-item" href="#" data-theme="neon-tokyo" onclick="switchTheme('neon-tokyo', event)">
+                        <i class="fa-solid fa-check me-2" id="check-neon"></i>Neon Tokyo (Oscuro)
+                    </a></li>
+                </ul>
+            </div>
             <span class="version-badge">v<?= APP_VERSION ?></span>
         </div>
     </div>
@@ -2489,7 +2508,61 @@ const INFO_CONTENT = {
     'mod-spfcheck':      '<strong>Validador SPF</strong><br>Evalúa si una IP concreta está autorizada por el registro SPF del dominio para enviar correo en su nombre. Implementa RFC 7208: mecanismos ip4, ip6, a, mx, include, redirect, exists y ptr. Resultado: <em>pass</em> (autorizada), <em>fail</em> (rechazada), <em>softfail</em> (sospechosa) o <em>neutral</em>.',
 };
 
+// ── Theme Switching ───────────────────────────────────────────
+function switchTheme(themeName, event) {
+    if (event) event.preventDefault();
+
+    const root = document.documentElement;
+    const themes = ['default', 'luminous', 'neon-tokyo'];
+
+    // Remove all theme classes
+    themes.forEach(t => root.classList.remove(`theme-${t}`));
+
+    // Add selected theme class
+    if (themeName !== 'default') {
+        root.classList.add(`theme-${themeName}`);
+    }
+
+    // Save to localStorage
+    localStorage.setItem('cuakcom-theme', themeName);
+
+    // Update checkmarks
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        const theme = item.dataset.theme;
+        const checkIcon = item.querySelector('.fa-check');
+        if (theme === themeName) {
+            checkIcon.style.visibility = 'visible';
+        } else {
+            checkIcon.style.visibility = 'hidden';
+        }
+    });
+}
+
+function initializeTheme() {
+    const savedTheme = localStorage.getItem('cuakcom-theme') || 'default';
+    switchTheme(savedTheme);
+}
+
+// Initialize theme on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTheme);
+} else {
+    initializeTheme();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize checkmarks visibility
+    const savedTheme = localStorage.getItem('cuakcom-theme') || 'default';
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        const theme = item.dataset.theme;
+        const checkIcon = item.querySelector('.fa-check');
+        if (theme === savedTheme) {
+            checkIcon.style.visibility = 'visible';
+        } else {
+            checkIcon.style.visibility = 'hidden';
+        }
+    });
+
     document.querySelectorAll('.info-popover-btn').forEach(el => {
         const key     = el.dataset.infoKey;
         const content = INFO_CONTENT[key] ?? 'Información no disponible.';
