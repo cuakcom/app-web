@@ -47,7 +47,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     <meta name="twitter:site" content="@cuakcom">
 
     <!-- Favicon -->
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="https://inteligenciageneral.com/app/logocn.svg" type="image/svg+xml">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -79,7 +79,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     <div class="container d-flex align-items-center justify-content-between">
         <div class="header-title-block">
             <div class="d-flex align-items-center gap-3">
-                <img src="favicon.svg" alt="Check Norris Logo" class="header-logo" width="50" height="50">
+                <img src="https://inteligenciageneral.com/app/logocn.svg" alt="Check Norris Logo" class="header-logo" width="100" height="100">
                 <div>
                     <h1 class="header-title-main">
                         Check Norris
