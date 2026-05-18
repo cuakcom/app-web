@@ -1,42 +1,52 @@
-<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="95" fill="none" stroke="#FF6B35" stroke-width="3"/>
+<svg viewBox="0 0 240 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .norris-body { fill: #D4754F; }
+      .norris-clothes { fill: #F5DEB3; }
+      .norris-pants { fill: #1a1a1a; }
+      .norris-accent { stroke: #FF8C42; fill: none; stroke-linecap: round; }
+      .norris-outline { stroke: #000; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
 
   <!-- Head -->
-  <circle cx="100" cy="50" r="16" fill="#D4754F"/>
+  <circle cx="120" cy="50" r="22" class="norris-body"/>
+
   <!-- Hair -->
-  <path d="M 85 48 Q 83 30 100 25 Q 117 30 115 48" fill="#8B4513"/>
+  <path d="M 100 45 Q 95 20 120 15 Q 145 20 140 45" class="norris-body"/>
 
-  <!-- Body -->
-  <rect x="90" y="68" width="20" height="32" fill="#FFD700" rx="2"/>
+  <!-- Face -->
+  <circle cx="115" cy="48" r="2.5" fill="#000"/> <!-- Left eye -->
+  <circle cx="130" cy="48" r="2.5" fill="#000"/> <!-- Right eye -->
+  <path d="M 115 60 Q 122 65 130 60" class="norris-outline" stroke-width="2"/>
 
-  <!-- Left arm (extended) -->
-  <line x1="90" y1="78" x2="55" y2="70" stroke="#D4754F" stroke-width="4.5" stroke-linecap="round"/>
-  <circle cx="50" cy="68" r="3.5" fill="#D4754F"/>
+  <!-- Body/Gi -->
+  <rect x="105" y="72" width="30" height="45" fill="#F5DEB3" rx="3"/>
 
-  <!-- Right arm (back) -->
-  <line x1="110" y1="78" x2="135" y2="88" stroke="#D4754F" stroke-width="4.5" stroke-linecap="round"/>
-  <circle cx="140" cy="90" r="3.5" fill="#D4754F"/>
+  <!-- Left arm (extended punch/balance) -->
+  <line x1="105" y1="85" x2="35" y2="75" stroke="#D4754F" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="30" cy="73" r="5" class="norris-body"/>
 
-  <!-- Left leg (kicking up) -->
-  <line x1="94" y1="100" x2="72" y2="48" stroke="#1a1a1a" stroke-width="4.5" stroke-linecap="round"/>
-  <polygon points="72,48 67,53 70,63 77,58" fill="#1a1a1a"/>
+  <!-- Right arm (up) -->
+  <line x1="135" y1="82" x2="155" y2="50" stroke="#D4754F" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="160" cy="48" r="5" class="norris-body"/>
 
-  <!-- Right leg (standing) -->
-  <line x1="106" y1="100" x2="108" y2="155" stroke="#1a1a1a" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Left leg (kicking) -->
+  <line x1="110" y1="117" x2="70" y2="35" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="65" cy="30" rx="10" ry="8" fill="#000"/>
+
+  <!-- Right leg (standing/balance) -->
+  <line x1="130" y1="117" x2="130" y2="200" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round"/>
+
   <!-- Right foot -->
-  <ellipse cx="110" cy="160" rx="7" ry="5.5" fill="#1a1a1a"/>
+  <ellipse cx="130" cy="210" rx="12" ry="9" fill="#000"/>
 
-  <!-- Left foot -->
-  <ellipse cx="70" cy="50" rx="6" ry="4.5" fill="#1a1a1a"/>
+  <!-- Belt -->
+  <rect x="105" y="115" width="30" height="4" fill="#000"/>
 
-  <!-- Face details -->
-  <!-- Eyes -->
-  <circle cx="94" cy="46" r="2.2" fill="#000"/>
-  <circle cx="106" cy="46" r="2.2" fill="#000"/>
-  <!-- Mouth (confident smirk) -->
-  <path d="M 94 52 Q 100 54 106 52" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- Orange accent arc (dynamic swoosh) -->
+  <path d="M 170 220 Q 200 180 210 110" stroke="#FF8C42" stroke-width="5" fill="none" stroke-linecap="round"/>
 
-  <!-- Orange accent arc (bottom right) -->
-  <path d="M 145 165 Q 175 145 185 110" stroke="#FF6B35" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Additional dynamic lines for movement effect -->
+  <path d="M 50 100 Q 40 80 35 60" class="norris-accent" stroke-width="3"/>
 </svg>

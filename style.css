@@ -1271,6 +1271,30 @@ label[for="mod-redirect"] i  { color: #e11d48; }
 }
 .dns-chip:hover span { border-color: #6366f1; color: #6366f1; }
 
+/* ========== Tab Pane Layout Styling ========== */
+.tab-pane {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+/* On medium screens and up, create sidebar layout */
+@media (min-width: 768px) {
+    .tab-pane.has-sidebar {
+        grid-template-columns: minmax(250px, 1fr) 3fr;
+    }
+
+    .tab-pane .search-options-card:first-child {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .tab-pane .search-options-card:not(:first-child),
+    .tab-pane > div:not(.search-options-card):not(.tab-content):not(.card) {
+        grid-column: 2;
+    }
+}
+
 /* ========== Theme Dropdown Styling ========== */
 #theme-menu {
     min-width: 180px;
