@@ -8,7 +8,7 @@ header('X-Content-Type-Options: nosniff');
 
 require_once __DIR__ . '/functions.php';
 
-// ── Rate limiting (60 req/min por IP) ────────────────────────────────────────
+// ── Rate limiting (180 req/min por IP) ────────────────────────────────────────
 $clientIp = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 $rateDir  = sys_get_temp_dir() . '/cuakcom_rate';
 if (!is_dir($rateDir)) @mkdir($rateDir, 0700, true);
@@ -17,7 +17,7 @@ if (is_dir($rateDir)) {
     $rateFile = $rateDir . '/' . md5($clientIp) . '.json';
     $now      = time();
     $window   = 60;
-    $maxReqs  = 60;
+    $maxReqs  = 180;
 
     $rateData = [];
     if (file_exists($rateFile)) {

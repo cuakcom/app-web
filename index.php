@@ -2,7 +2,7 @@
 /**
  * Cuakcom Expert Suite - v3.0.0
  */
-define('APP_VERSION', '3.0.0');
+define('APP_VERSION', '3.1.0');
 
 // Datos del visitante (server-side)
 function getClientIp(): string {
@@ -47,7 +47,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     <meta name="twitter:site" content="@cuakcom">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://inteligenciageneral.com/app/logocn.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -79,7 +79,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']         ?? '';
     <div class="container d-flex align-items-center justify-content-between">
         <div class="header-title-block">
             <div class="d-flex align-items-center gap-3">
-                <img src="https://inteligenciageneral.com/app/logocn.svg" alt="Check Norris Logo" class="header-logo" width="100" height="100">
+                <img src="favicon.svg" alt="Check Norris Logo" class="header-logo" width="50" height="50">
                 <div>
                     <h1 class="header-title-main">
                         Check Norris
@@ -1542,12 +1542,19 @@ async function fetchModule(module, domain) {
             const types = getSelectedDnsTypes();
             if (types.length) url += `&types=${encodeURIComponent(types.join(','))}`;
         }
-        const res  = await fetch(url);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         exportData[module] = data;
         data.success ? renderCard(module, data) : setCardError(module, data.error ?? 'Error desconocido');
-    } catch(e) { setCardError(module, 'Error de conexión: ' + e.message); }
+    } catch(e) {
+        const msg = e.name === 'AbortError' ? 'Timeout (>15s)' : e.message;
+        setCardError(module, `Error: ${msg}`);
+    }
 }
 
 function getSelectedDnsTypes() {
