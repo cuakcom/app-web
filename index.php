@@ -1543,7 +1543,7 @@ async function fetchModule(module, domain) {
             if (types.length) url += `&types=${encodeURIComponent(types.join(','))}`;
         }
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
         const res = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
 
