@@ -1284,6 +1284,15 @@ label[for="mod-redirect"] i  { color: #e11d48; }
    angosta. Se elimina; el espaciado vertical entre bloques ya lo aportan
    las utilidades mt-3/my-3 de cada bloque. */
 
+/* Bootstrap oculta las pestañas inactivas con display:none tras su
+   animación de fade, pero en algunos navegadores/config. de movimiento
+   reducido ese paso final no llega a aplicarse y la pestaña se queda
+   invisible (opacity:0) ocupando igualmente su espacio, apilada antes
+   de la pestaña activa. Se fuerza aquí sin depender de esa animación. */
+.tab-content > .tab-pane:not(.active) {
+    display: none !important;
+}
+
 /* ========== Theme Dropdown Styling ========== */
 #theme-menu {
     min-width: 180px;
