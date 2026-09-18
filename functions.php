@@ -16,10 +16,19 @@ function limpiarHost(string $raw): string {
     return strtolower($host);
 }
 
+/**
+ * Base para llamadas internas (self HTTP). No basta con esquema+dominio:
+ * si la app vive en una subcarpeta (p.ej. https://dominio.com/app/), hay
+ * que incluirla o la llamada a /api.php da 404. Se calcula a partir de la
+ * carpeta del propio script que la invoque (smart_check.php vive junto a
+ * api.php, así que su misma carpeta es la correcta).
+ */
 function api_base_url(): string {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    return $scheme . '://' . $host;
+    $dir    = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+    $dir    = rtrim($dir, '/'); // '/' o '/app' -> '' o '/app'
+    return $scheme . '://' . $host . $dir;
 }
 
 /**
