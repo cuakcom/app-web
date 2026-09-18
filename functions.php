@@ -48,9 +48,14 @@ function run_modules(array $specs, string $domain): array {
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 20,
             CURLOPT_SSL_VERIFYPEER => true,
+            // Algunos paneles (Imunify360, mod_security...) bloquean o
+            // devuelven una página de aviso a peticiones sin User-Agent
+            // "de navegador" — esto es una llamada interna legítima.
+            CURLOPT_USERAGENT      => 'CheckBerry-Internal/1.0 (+' . api_base_url() . ')',
+            CURLOPT_HTTPHEADER     => ['Accept: application/json'],
         ]);
         curl_multi_add_handle($multi, $ch);
-        $handles[$module] = $ch;
+        $handles[$module] = ['ch' => $ch, 'url' => $url];
     }
 
     $running = null;
@@ -60,18 +65,26 @@ function run_modules(array $specs, string $domain): array {
     } while ($running > 0);
 
     $results = [];
-    foreach ($handles as $module => $ch) {
-        $body = curl_multi_getcontent($ch);
-        $err  = curl_error($ch);
+    foreach ($handles as $module => ['ch' => $ch, 'url' => $url]) {
+        $body     = curl_multi_getcontent($ch);
+        $err      = curl_error($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_multi_remove_handle($multi, $ch);
         curl_close($ch);
 
         if ($body === '' || $body === null) {
-            $results[$module] = ['success' => false, 'error' => "Error interno llamando a {$module}: {$err}"];
+            $results[$module] = ['success' => false, 'error' => "Error interno llamando a {$module} ({$url}): {$err}"];
             continue;
         }
         $data = json_decode($body, true);
-        $results[$module] = is_array($data) ? $data : ['success' => false, 'error' => "Respuesta inválida de {$module}"];
+        if (is_array($data)) {
+            $results[$module] = $data;
+        } else {
+            // Verboso a propósito: sin esto no hay forma de saber si api.php
+            // devolvió un aviso/error PHP, un 429 del rate-limit, HTML, etc.
+            $snippet = mb_substr(trim($body), 0, 300);
+            $results[$module] = ['success' => false, 'error' => "Respuesta inválida de {$module} (HTTP {$httpCode}): {$snippet}"];
+        }
     }
     curl_multi_close($multi);
 
