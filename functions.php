@@ -55,7 +55,9 @@ function run_modules(array $specs, string $domain): array {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => 20,
+            // WHOIS puede tardar más que un módulo HTTP normal (sigue
+            // referencias entre servidores registry/registrar).
+            CURLOPT_TIMEOUT        => 45,
             CURLOPT_SSL_VERIFYPEER => true,
             // Algunos paneles (Imunify360, mod_security...) bloquean o
             // devuelven una página de aviso a peticiones sin User-Agent

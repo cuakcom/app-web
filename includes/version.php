@@ -1,4 +1,4 @@
 <?php
 if (!defined('APP_VERSION')) {
-    define('APP_VERSION', '4.3.3');
+    define('APP_VERSION', '4.3.4');
 }

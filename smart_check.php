@@ -9,6 +9,12 @@
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
+// El max_execution_time por defecto de PHP (a menudo 30s) es menor que el
+// CURLOPT_TIMEOUT de 45s que usamos para WHOIS en run_modules(): sin esto,
+// PHP corta la petición (pantalla en blanco) antes de que el propio curl
+// pueda agotar su margen y devolver un error legible.
+set_time_limit(60);
+
 function smart_check_fail(string $error, int $code = 400): void {
     if (!headers_sent()) {
         http_response_code($code);
