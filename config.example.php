@@ -11,6 +11,8 @@ define('ABUSEIPDB_KEY', '');
 
 // Google Gemini API (https://aistudio.google.com/apikey) - Smart Check de la home
 define('GEMINI_API_KEY', '');
+// Opcional: modelo a usar (por defecto gemini-2.0-flash si se deja vacío).
+define('GEMINI_MODEL', '');
 
 // Secreto del webhook de GitHub que dispara el auto-deploy (deploy.php).
 // Genera un valor aleatorio largo y usa el mismo en GitHub > Settings > Webhooks > Secret.

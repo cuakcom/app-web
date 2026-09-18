@@ -8,5 +8,10 @@
         'lang' => $visitorLang,
         'ref'  => $visitorRef,
     ]) ?>;
+    // key (usado en enlaces ?tab=) -> id del botón de esa pestaña, generado desde menu.php
+    const MENU_BTN_IDS = <?= json_encode(array_combine(
+        array_column(MENU, 'key'),
+        array_column(MENU, 'btn_id')
+    )) ?>;
 </script>
 <script src="assets/app.js?v=<?= APP_VERSION ?>"></script>

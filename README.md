@@ -27,6 +27,13 @@ Diagnóstico · Web · Correo · DNS · Redes · Utilidades · Herramientas · D
 - `admin.php` (solo admins) — gestiona la whitelist y aprueba/rechaza/marca en progreso las propuestas del Roadmap.
 - El Roadmap público (listado + formulario para proponer, solo si hay sesión) vive en el pie de página de `index.php` (`includes/footer_roadmap.php` → `roadmap_propose.php`).
 
+## Smart Check (Herramientas → Gemini)
+
+- `smart_check.php` — recibe correo/dominio/IP + tipo de comprobación + pregunta libre, ejecuta en paralelo (vía `run_modules()` en `functions.php`, llamando a `api.php` internamente) los módulos reales que correspondan, y le pasa esos datos ya verificados a Gemini (`includes/gemini.php`) solo para que los resuma — nunca para que invente.
+- `includes/smart_check_types.php` — catálogo de tipos de comprobación (spam, reputación IP, SSL, caducidad...), qué módulos dispara cada uno y a qué apartados enlaza. Único archivo a tocar para añadir una opción nueva al desplegable.
+- Los enlaces "ver en detalle" (`index.php?tab=<seccion>&q=<consulta>`) los resuelve `assets/app.js` al cargar la página: activa la pestaña y rellena el buscador, sin que la IA tenga que generar URLs.
+- Sin `GEMINI_API_KEY` configurada, el resto sigue funcionando (se ven los datos crudos y un aviso en vez de resumen).
+
 ## Instalación en Plesk
 
 1. Clonar este repo en `/httpdocs/app`.

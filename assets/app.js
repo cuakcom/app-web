@@ -1538,6 +1538,7 @@ const INFO_CONTENT = {
     'tab-dns':         '<strong>DNS</strong><br>Consultas DNS personalizadas de cualquier tipo (A, AAAA, MX, TXT, SOA…) contra el servidor DNS de tu elección, y comprobación de propagación mundial del mismo registro desde 10 resolvers distintos.',
     'tab-redes':       '<strong>Redes</strong><br>Geolocaliza cualquier IP o dominio: país, ciudad, ASN, proveedor, organización y coordenadas. Identifica también proxies, VPNs y datacenters.',
     'tab-web':         '<strong>Web</strong><br>Extrae metadatos SEO (título, descripción, canonical, robots), Open Graph, Twitter Card y tecnologías detectadas. Incluye además un escáner SSL/TLS extendido: protocolos, cipher suite, cadena de certificados y dominios SAN.',
+    'tab-herramientas':'<strong>Smart Check</strong><br>Introduce un correo, dominio o IP y elige qué comprobar (spam, reputación, SSL, caducidad...). Ejecuta los módulos reales correspondientes y usa Gemini solo para resumir esos datos ya verificados, nunca para inventarlos.',
 
     // Diagnóstico modules
     'mod-resolution':  '<strong>Resolución DNS</strong><br>Muestra la IP principal del dominio (registro A/AAAA) y su PTR (DNS inverso). Es el punto de partida de cualquier diagnóstico de conectividad.',
@@ -1669,6 +1670,86 @@ new Sortable(document.getElementById('col-left'),       sortOpts);
 new Sortable(document.getElementById('col-right'),      sortOpts);
 new Sortable(document.getElementById('col-mail-left'),  sortOpts);
 new Sortable(document.getElementById('col-mail-right'), sortOpts);
+
+// ── Smart Check (Herramientas) ─────────────────────────────────
+async function startSmartCheck() {
+    const query      = document.getElementById('sc-query').value.trim();
+    const checkType  = document.getElementById('sc-type').value;
+    const question   = document.getElementById('sc-question').value.trim();
+    if (!query && !question) return;
+
+    const btnText = document.getElementById('sc-btn-text');
+    const btnLoad = document.getElementById('sc-btn-loading');
+    const btn     = document.getElementById('sc-btn');
+    const summary = document.getElementById('sc-summary');
+    const secEl   = document.getElementById('sc-sections');
+
+    btnText.classList.add('d-none');
+    btnLoad.classList.remove('d-none');
+    btn.disabled = true;
+    document.getElementById('sc-results').classList.remove('d-none');
+    summary.innerHTML = '<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>';
+    secEl.innerHTML = '';
+
+    try {
+        const body = new URLSearchParams({query, check_type: checkType, question});
+        const res  = await fetch('smart_check.php', {method: 'POST', body});
+        const data = await res.json();
+
+        if (!data.success) {
+            summary.innerHTML = `<span class="text-danger">${escapeHtml(data.error ?? 'Error desconocido')}</span>`;
+            return;
+        }
+
+        let html = '';
+        if (data.summary) {
+            html += `<p class="mb-0">${escapeHtml(data.summary).replace(/\n/g, '<br>')}</p>`;
+        } else if (data.ai_error) {
+            html += `<p class="mb-0 text-muted small"><i class="fa-solid fa-triangle-exclamation me-1"></i>${escapeHtml(data.ai_error)}</p>`;
+        } else {
+            html += '<span class="text-muted">Sin resumen.</span>';
+        }
+        summary.innerHTML = html;
+
+        (data.sections || []).forEach(s => {
+            const a = document.createElement('a');
+            a.href = s.url;
+            a.className = 'btn btn-sm btn-outline-primary';
+            a.innerHTML = `<i class="fa-solid fa-arrow-right me-1"></i>${escapeHtml(s.label)}`;
+            secEl.appendChild(a);
+        });
+    } catch (e) {
+        summary.innerHTML = `<span class="text-danger">Error de conexión: ${escapeHtml(e.message)}</span>`;
+    } finally {
+        btnText.classList.remove('d-none');
+        btnLoad.classList.add('d-none');
+        btn.disabled = false;
+    }
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+
+// Enlace de vuelta desde el Smart Check: ?tab=<seccion>&q=<consulta>
+(function handleSmartCheckDeepLink() {
+    const params = new URLSearchParams(window.location.search);
+    const tabKey = params.get('tab');
+    const q      = params.get('q');
+    if (!tabKey) return;
+
+    const btnId = (typeof MENU_BTN_IDS !== 'undefined') ? MENU_BTN_IDS[tabKey] : null;
+    const btn   = btnId ? document.getElementById(btnId) : null;
+    if (btn && window.bootstrap?.Tab) {
+        new bootstrap.Tab(btn).show();
+    }
+    if (q) {
+        const input = document.getElementById('input-domain');
+        if (input) input.value = q;
+    }
+})();
 
 // ── Footer: datos del visitante ───────────────────────────────
 // VISITOR_SERVER lo inyecta includes/scripts_bottom.php antes de este script.
