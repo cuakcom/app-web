@@ -2,8 +2,16 @@
 require_once __DIR__ . '/includes/version.php';
 require_once __DIR__ . '/includes/auth.php';
 
+/** Solo permite volver a una página propia (evita open-redirect). */
+function safe_next(?string $raw): string {
+    $raw = (string)$raw;
+    return preg_match('/^[a-zA-Z0-9_\-]+\.php$/', $raw) ? $raw : 'index.php';
+}
+
+$next = safe_next($_GET['next'] ?? $_POST['next'] ?? null);
+
 if (current_user()) {
-    header('Location: index.php');
+    header('Location: ' . $next);
     exit;
 }
 
@@ -38,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user && password_verify($password, $user['password_hash'])) {
             login_user((int)$user['id']);
-            header('Location: index.php');
+            header('Location: ' . $next);
             exit;
         }
 
@@ -62,6 +70,7 @@ require __DIR__ . '/includes/page_header_simple.php';
 
         <form method="post">
             <?= csrf_field() ?>
+            <input type="hidden" name="next" value="<?= htmlspecialchars($next) ?>">
             <div class="mb-3">
                 <label class="form-label small fw-semibold">Email</label>
                 <input type="email" name="email" class="form-control" required value="<?= htmlspecialchars($emailValue) ?>">

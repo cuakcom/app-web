@@ -14,5 +14,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check($_POST['csrf_token'] ?? 
     }
 }
 
-header('Location: index.php#roadmap');
+header('Location: roadmap.php');
 exit;
