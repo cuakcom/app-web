@@ -2,9 +2,9 @@
 /**
  * Check Berry
  */
-define('APP_VERSION', '4.0.4');
-
+require_once __DIR__ . '/includes/version.php';
 require_once __DIR__ . '/menu.php';
+require_once __DIR__ . '/includes/auth.php';
 
 // Datos del visitante (server-side)
 function getClientIp(): string {
@@ -23,6 +23,7 @@ $visitorRef  = $_SERVER['HTTP_REFERER']           ?? '';
 
 require __DIR__ . '/includes/head.php';
 require __DIR__ . '/includes/header.php';
+require __DIR__ . '/includes/footer_roadmap.php';
 require __DIR__ . '/includes/footer_visitor.php';
 require __DIR__ . '/includes/scripts_bottom.php';
 ?>

@@ -13,7 +13,7 @@ AddDefaultCharset UTF-8
 # Bloquear acceso directo a carpetas que solo deben incluirse desde PHP
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^(modules|sections|includes|py)/.*$ - [F,L]
+    RewriteRule ^(modules|sections|includes|py|data)/.*$ - [F,L]
 </IfModule>
 
 # Proteger archivos de configuración, git y claves

@@ -19,10 +19,19 @@ Diagnóstico · Web · Correo · DNS · Redes · Utilidades · Herramientas · D
 - `/py/` — scripts Python invocados vía `shell_exec` desde PHP para utilidades que lo requieran.
 - `/config.php` (no versionado, ver `config.example.php`) — claves API y secretos.
 
+## Login y Roadmap
+
+- `/data/app.db` (no versionado) — SQLite con `users`, `allowed_emails`, `roadmap_items`, `roadmap_imports`. Se crea solo la primera vez que algo llama a `db()` (`includes/db.php`).
+- Registro (`register.php`) solo permite emails que coincidan con `allowed_emails` (exactos o `*@dominio`). Whitelist inicial: `jfernandez@arsys.es` (admin), `*@arsys.es`, `*@cuak.com`.
+- `login.php` / `logout.php` — sesión nativa de PHP. `includes/auth.php` tiene los helpers (`current_user()`, `require_login()`, `require_admin()`, `email_allowed()`, CSRF).
+- `admin.php` (solo admins) — gestiona la whitelist y aprueba/rechaza/marca en progreso las propuestas del Roadmap.
+- El Roadmap público (listado + formulario para proponer, solo si hay sesión) vive en el pie de página de `index.php` (`includes/footer_roadmap.php` → `roadmap_propose.php`).
+
 ## Instalación en Plesk
 
 1. Clonar este repo en `/httpdocs/app`.
 2. Copiar `config.example.php` como `config.php` y rellenar las claves (`ABUSEIPDB_KEY`, `GEMINI_API_KEY`, `DEPLOY_SECRET`).
-3. Asegurar que `shell_exec` y `allow_url_fopen` estén habilitados en la configuración de PHP.
-4. Git safe directory: `git config --global --add safe.directory /var/www/vhosts/inteligenciageneral.com/httpdocs/app`.
-5. Configurar el webhook de GitHub (Settings → Webhooks) apuntando a `https://<dominio>/app/deploy.php`, con el mismo secreto que `DEPLOY_SECRET`, para auto-deploy en cada push a `main`.
+3. Asegurar que `shell_exec`, `allow_url_fopen` y la extensión `pdo_sqlite` estén habilitados en la configuración de PHP.
+4. Que el proceso PHP tenga permiso de escritura sobre `/data` (para crear `app.db`).
+5. Git safe directory: `git config --global --add safe.directory /var/www/vhosts/inteligenciageneral.com/httpdocs/app`.
+6. Configurar el webhook de GitHub (Settings → Webhooks) apuntando a `https://<dominio>/app/deploy.php`, con el mismo secreto que `DEPLOY_SECRET`, para auto-deploy en cada push a `main`.

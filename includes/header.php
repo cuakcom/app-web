@@ -13,6 +13,23 @@
             </div>
         </div>
         <div class="d-flex align-items-center gap-2">
+            <?php $headerUser = current_user(); ?>
+            <?php if ($headerUser): ?>
+            <div class="dropdown">
+                <button class="btn btn-sm darkmode-toggle dropdown-toggle" data-bs-toggle="dropdown" title="Mi cuenta">
+                    <i class="fa-solid fa-user"></i> <span class="d-none d-md-inline"><?= htmlspecialchars($headerUser['email']) ?></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <?php if (!empty($headerUser['is_admin'])): ?>
+                    <li><a class="dropdown-item" href="admin.php"><i class="fa-solid fa-gear me-2"></i>Panel admin</a></li>
+                    <?php endif; ?>
+                    <li><a class="dropdown-item" href="index.php#roadmap"><i class="fa-solid fa-map me-2"></i>Roadmap</a></li>
+                    <li><a class="dropdown-item" href="logout.php"><i class="fa-solid fa-right-from-bracket me-2"></i>Cerrar sesión</a></li>
+                </ul>
+            </div>
+            <?php else: ?>
+            <a href="login.php" class="btn btn-sm darkmode-toggle" title="Iniciar sesión"><i class="fa-solid fa-right-to-bracket"></i> <span class="d-none d-md-inline">Entrar</span></a>
+            <?php endif; ?>
             <div class="btn-group" role="group" title="Cambiar tema">
                 <button type="button" class="btn btn-sm darkmode-toggle" id="btn-darkmode" title="Modo oscuro/claro">
                     <i class="fa-solid fa-moon"></i>

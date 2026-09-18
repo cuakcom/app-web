@@ -751,6 +751,12 @@ body.search-hidden .tab-pane.show.active > .card:first-child {
 .score-num { font-size: 1.4rem; font-weight: 800; line-height: 1; }
 .score-den { font-size: 0.62rem; color: var(--text-muted); }
 
+/* ── Roadmap (pie de página) ────────────────────────────── */
+.roadmap-section {
+    background: var(--bg);
+    border-color: var(--border) !important;
+}
+
 /* ── Footer visitante ───────────────────────────────────── */
 .visitor-footer {
     background: var(--card-bg);
