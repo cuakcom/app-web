@@ -1,6 +1,6 @@
 <!-- ══════════ SECCIÓN: DIAGNÓSTICO ══════════ -->
 <div class="tab-pane fade show active" id="tab-diagnostico" role="tabpanel">
-    <div class="row g-3">
+    <div class="row g-3 align-items-start">
         <!-- Left Sidebar: Module Selectors -->
         <div class="col-12 col-lg-3">
             <div class="card search-options-card h-100">

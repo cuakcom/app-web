@@ -1,6 +1,6 @@
 <!-- ══════════ SECCIÓN: REDES ══════════ -->
 <div class="tab-pane fade" id="tab-redes" role="tabpanel">
-    <div class="row g-3">
+    <div class="row g-3 align-items-start">
         <!-- Left Sidebar: Network Options -->
         <div class="col-12 col-lg-3">
             <div class="card search-options-card h-100">
