@@ -1,5 +1,6 @@
+@charset "UTF-8";
 /* ============================================================
-   Cuakcom Expert Suite v3.0.0 — Estilos principales
+   Check Berry — Estilos principales
    Mobile-first, compatible con Bootstrap 5.3
    ============================================================ */
 
@@ -750,6 +751,12 @@ body.search-hidden .tab-pane.show.active > .card:first-child {
 .score-num { font-size: 1.4rem; font-weight: 800; line-height: 1; }
 .score-den { font-size: 0.62rem; color: var(--text-muted); }
 
+/* ── Roadmap (pie de página) ────────────────────────────── */
+.roadmap-section {
+    background: var(--bg);
+    border-color: var(--border) !important;
+}
+
 /* ── Footer visitante ───────────────────────────────────── */
 .visitor-footer {
     background: var(--card-bg);
@@ -1175,21 +1182,25 @@ body.dark-mode .popover-arrow::after { border-bottom-color: #1e293b; }
 #btn-analyze:disabled { opacity: 0.65; }
 
 /* Pestañas — color único por tab (activo) */
-#tab-diag-btn.active { background: #2563eb; border-color: #2563eb; box-shadow: 0 2px 10px rgba(37,99,235,0.4); }
-#tab-mail-btn.active { background: #10b981; border-color: #10b981; box-shadow: 0 2px 10px rgba(16,185,129,0.4); }
-#tab-dnsq-btn.active { background: #7c3aed; border-color: #7c3aed; box-shadow: 0 2px 10px rgba(124,58,237,0.4); }
-#tab-red-btn.active  { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 2px 10px rgba(245,158,11,0.4); }
-#tab-web-btn.active  { background: #f97316; border-color: #f97316; box-shadow: 0 2px 10px rgba(249,115,22,0.4); }
-#tab-ssl-btn.active  { background: #0891b2; border-color: #0891b2; box-shadow: 0 2px 10px rgba(8,145,178,0.4); }
+#tab-diag-btn.active  { background: #2563eb; border-color: #2563eb; box-shadow: 0 2px 10px rgba(37,99,235,0.4); }
+#tab-mail-btn.active  { background: #10b981; border-color: #10b981; box-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+#tab-dns-btn.active   { background: #7c3aed; border-color: #7c3aed; box-shadow: 0 2px 10px rgba(124,58,237,0.4); }
+#tab-redes-btn.active { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 2px 10px rgba(245,158,11,0.4); }
+#tab-web-btn.active   { background: #f97316; border-color: #f97316; box-shadow: 0 2px 10px rgba(249,115,22,0.4); }
+#tab-util-btn.active  { background: #14b8a6; border-color: #14b8a6; box-shadow: 0 2px 10px rgba(20,184,166,0.4); }
+#tab-herr-btn.active  { background: #db2777; border-color: #db2777; box-shadow: 0 2px 10px rgba(219,39,119,0.4); }
+#tab-dev-btn.active   { background: #4f46e5; border-color: #4f46e5; box-shadow: 0 2px 10px rgba(79,70,229,0.4); }
 .main-tab-btn.active { color: #fff !important; }
 
 /* Pestañas — hover coloreado por tab (inactivo) */
-#tab-diag-btn:not(.active):hover { border-color: #2563eb; color: #2563eb; }
-#tab-mail-btn:not(.active):hover { border-color: #10b981; color: #10b981; }
-#tab-dnsq-btn:not(.active):hover { border-color: #7c3aed; color: #7c3aed; }
-#tab-red-btn:not(.active):hover  { border-color: #f59e0b; color: #f59e0b; }
-#tab-web-btn:not(.active):hover  { border-color: #f97316; color: #f97316; }
-#tab-ssl-btn:not(.active):hover  { border-color: #0891b2; color: #0891b2; }
+#tab-diag-btn:not(.active):hover  { border-color: #2563eb; color: #2563eb; }
+#tab-mail-btn:not(.active):hover  { border-color: #10b981; color: #10b981; }
+#tab-dns-btn:not(.active):hover   { border-color: #7c3aed; color: #7c3aed; }
+#tab-redes-btn:not(.active):hover { border-color: #f59e0b; color: #f59e0b; }
+#tab-web-btn:not(.active):hover   { border-color: #f97316; color: #f97316; }
+#tab-util-btn:not(.active):hover  { border-color: #14b8a6; color: #14b8a6; }
+#tab-herr-btn:not(.active):hover  { border-color: #db2777; color: #db2777; }
+#tab-dev-btn:not(.active):hover   { border-color: #4f46e5; color: #4f46e5; }
 
 /* Botón activar/desactivar todo */
 .btn-toggle-all {
@@ -1271,28 +1282,22 @@ label[for="mod-redirect"] i  { color: #e11d48; }
 }
 .dns-chip:hover span { border-color: #6366f1; color: #6366f1; }
 
-/* ========== Tab Pane Layout Styling ========== */
-.tab-pane {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-}
+/* ========== Tab Pane Layout Styling ==========
+   Nota: existía aquí un layout de CSS grid (.tab-pane.has-sidebar) de una
+   iteración anterior del diseño. Esa clase nunca se usa en el HTML actual
+   (el sidebar real se hace con .row/.col-lg-3/.col-lg-9 de Bootstrap), pero
+   la regla base .tab-pane{display:grid} sí se aplicaba siempre y competía
+   con ese layout de Bootstrap, dejando la columna izquierda descentrada y
+   angosta. Se elimina; el espaciado vertical entre bloques ya lo aportan
+   las utilidades mt-3/my-3 de cada bloque. */
 
-/* On medium screens and up, create sidebar layout */
-@media (min-width: 768px) {
-    .tab-pane.has-sidebar {
-        grid-template-columns: minmax(250px, 1fr) 3fr;
-    }
-
-    .tab-pane .search-options-card:first-child {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    .tab-pane .search-options-card:not(:first-child),
-    .tab-pane > div:not(.search-options-card):not(.tab-content):not(.card) {
-        grid-column: 2;
-    }
+/* Bootstrap oculta las pestañas inactivas con display:none tras su
+   animación de fade, pero en algunos navegadores/config. de movimiento
+   reducido ese paso final no llega a aplicarse y la pestaña se queda
+   invisible (opacity:0) ocupando igualmente su espacio, apilada antes
+   de la pestaña activa. Se fuerza aquí sin depender de esa animación. */
+.tab-content > .tab-pane:not(.active) {
+    display: none !important;
 }
 
 /* ========== Theme Dropdown Styling ========== */
