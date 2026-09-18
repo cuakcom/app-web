@@ -1,6 +1,15 @@
 # Desactivar el listado de directorios
 Options -Indexes
 
+# Servir todos los archivos de texto (css/js/svg...) como UTF-8.
+# Sin esto, los acentos en comentarios/textos aparecen como mojibake
+# (p.ej. "pestañas" -> "pestaÃ±as") porque el navegador asume otra
+# codificación por defecto.
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .css .js .svg .json
+</IfModule>
+
 # Bloquear acceso directo a carpetas que solo deben incluirse desde PHP
 <IfModule mod_rewrite.c>
     RewriteEngine On
