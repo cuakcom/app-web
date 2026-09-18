@@ -47,6 +47,11 @@ if (is_dir($rateDir)) {
 $rawQuery  = trim((string)($_POST['query'] ?? ''));
 $checkType = (string)($_POST['check_type'] ?? '');
 $question  = trim((string)($_POST['question'] ?? ''));
+$modelRaw  = trim((string)($_POST['model'] ?? ''));
+
+// Solo letras/números/puntos/guiones (nombre real de modelo de Gemini);
+// cualquier otra cosa se ignora y se usa el modelo por defecto.
+$model = ($modelRaw !== '' && preg_match('/^[a-zA-Z0-9.\-]{3,60}$/', $modelRaw)) ? $modelRaw : null;
 
 if ($rawQuery === '' && $question === '') {
     smart_check_fail('Introduce un correo, dominio, IP, o escribe tu pregunta.');
@@ -99,7 +104,7 @@ $prompt = implode("\n", $promptLines);
 
 $gemini = empty($results) && $domain === ''
     ? ['success' => false, 'error' => 'No hay dominio/IP que analizar; solo se puede responder a la pregunta con conocimiento general (no verificado).']
-    : gemini_generate($prompt);
+    : gemini_generate($prompt, $model);
 
 // ── Enlaces deterministas a los apartados (no los genera la IA) ────────────
 $sections = [];
@@ -116,6 +121,7 @@ echo json_encode([
     'domain'   => $domain,
     'summary'  => $gemini['success'] ? $gemini['text'] : null,
     'ai_error' => $gemini['success'] ? null : $gemini['error'],
+    'model'    => $gemini['model'] ?? $model ?? GEMINI_DEFAULT_MODEL,
     'sections' => $sections,
     'raw'      => $results,
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

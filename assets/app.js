@@ -1602,15 +1602,14 @@ function switchTheme(themeName, event) {
     // Save to localStorage
     localStorage.setItem('cuakcom-theme', themeName);
 
-    // Update checkmarks
-    document.querySelectorAll('.dropdown-item').forEach(item => {
+    // Update checkmarks (solo dentro del menú de temas: #theme-menu también
+    // conviven otros .dropdown-item de Bootstrap sin icono de check, p.ej.
+    // el menú "Mi cuenta", y tocar su .style rompía el resto del script)
+    document.querySelectorAll('#theme-menu .dropdown-item').forEach(item => {
         const theme = item.dataset.theme;
         const checkIcon = item.querySelector('.fa-check');
-        if (theme === themeName) {
-            checkIcon.style.visibility = 'visible';
-        } else {
-            checkIcon.style.visibility = 'hidden';
-        }
+        if (!checkIcon) return;
+        checkIcon.style.visibility = (theme === themeName) ? 'visible' : 'hidden';
     });
 }
 
@@ -1619,24 +1618,26 @@ function initializeTheme() {
     switchTheme(savedTheme);
 }
 
-// Initialize theme on page load
+// Initialize theme on page load. Envuelto en try/catch: un fallo aquí no
+// debe impedir que se ejecute el resto del script (event listeners,
+// Smart Check...) más abajo en este mismo archivo.
+function safeInitializeTheme() {
+    try { initializeTheme(); } catch (e) { console.error('initializeTheme:', e); }
+}
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTheme);
+    document.addEventListener('DOMContentLoaded', safeInitializeTheme);
 } else {
-    initializeTheme();
+    safeInitializeTheme();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize checkmarks visibility
     const savedTheme = localStorage.getItem('cuakcom-theme') || 'default';
-    document.querySelectorAll('.dropdown-item').forEach(item => {
+    document.querySelectorAll('#theme-menu .dropdown-item').forEach(item => {
         const theme = item.dataset.theme;
         const checkIcon = item.querySelector('.fa-check');
-        if (theme === savedTheme) {
-            checkIcon.style.visibility = 'visible';
-        } else {
-            checkIcon.style.visibility = 'hidden';
-        }
+        if (!checkIcon) return;
+        checkIcon.style.visibility = (theme === savedTheme) ? 'visible' : 'hidden';
     });
 
     document.querySelectorAll('.info-popover-btn').forEach(el => {
@@ -1672,6 +1673,11 @@ new Sortable(document.getElementById('col-mail-left'),  sortOpts);
 new Sortable(document.getElementById('col-mail-right'), sortOpts);
 
 // ── Smart Check (Herramientas) ─────────────────────────────────
+function toggleCustomModel() {
+    const sel = document.getElementById('sc-model').value;
+    document.getElementById('sc-model-custom-wrap').classList.toggle('d-none', sel !== 'custom');
+}
+
 async function startSmartCheck() {
     const summary = document.getElementById('sc-summary');
     const secEl   = document.getElementById('sc-sections');
@@ -1679,16 +1685,23 @@ async function startSmartCheck() {
     const btnLoad = document.getElementById('sc-btn-loading');
     const btn     = document.getElementById('sc-btn');
 
+    const modelUsedEl = document.getElementById('sc-model-used');
+
     try {
-        const query     = document.getElementById('sc-query').value.trim();
-        const checkType = document.getElementById('sc-type').value;
-        const question  = document.getElementById('sc-question').value.trim();
+        const query      = document.getElementById('sc-query').value.trim();
+        const checkType  = document.getElementById('sc-type').value;
+        const question   = document.getElementById('sc-question').value.trim();
+        const modelSel   = document.getElementById('sc-model').value;
+        const model      = modelSel === 'custom'
+            ? document.getElementById('sc-model-custom').value.trim()
+            : modelSel;
 
         document.getElementById('sc-results').classList.remove('d-none');
 
         if (!query && !question) {
             summary.innerHTML = '<span class="text-danger">Escribe un correo, dominio o IP, o al menos una pregunta.</span>';
             secEl.innerHTML = '';
+            modelUsedEl.textContent = '';
             return;
         }
 
@@ -1697,8 +1710,9 @@ async function startSmartCheck() {
         btn.disabled = true;
         summary.innerHTML = '<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>';
         secEl.innerHTML = '';
+        modelUsedEl.textContent = '';
 
-        const body = new URLSearchParams({query, check_type: checkType, question});
+        const body = new URLSearchParams({query, check_type: checkType, question, model});
         const res  = await fetch('smart_check.php', {method: 'POST', body});
         const data = await res.json();
 
@@ -1706,6 +1720,8 @@ async function startSmartCheck() {
             summary.innerHTML = `<span class="text-danger">${escapeHtml(data.error ?? 'Error desconocido')}</span>`;
             return;
         }
+
+        if (data.model) modelUsedEl.textContent = data.model;
 
         let html = '';
         if (data.summary) {

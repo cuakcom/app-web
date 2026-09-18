@@ -6,7 +6,10 @@
  * que "adivine" nada por su cuenta.
  */
 
-function gemini_generate(string $prompt): array {
+const GEMINI_DEFAULT_MODEL = 'gemini-2.0-flash';
+
+/** @param string|null $modelOverride Modelo a usar en esta llamada (p.ej. elegido en el Smart Check); si es null se usa GEMINI_MODEL de config.php o GEMINI_DEFAULT_MODEL. */
+function gemini_generate(string $prompt, ?string $modelOverride = null): array {
     $configFile = __DIR__ . '/../config.php';
     if (file_exists($configFile) && !defined('GEMINI_API_KEY')) {
         require_once $configFile;
@@ -17,7 +20,8 @@ function gemini_generate(string $prompt): array {
         return ['success' => false, 'error' => 'GEMINI_API_KEY no configurada. Consigue una clave gratuita en https://aistudio.google.com/apikey y ponla en config.php.'];
     }
 
-    $model = (defined('GEMINI_MODEL') && GEMINI_MODEL !== '') ? GEMINI_MODEL : 'gemini-2.0-flash';
+    $model = $modelOverride
+        ?: ((defined('GEMINI_MODEL') && GEMINI_MODEL !== '') ? GEMINI_MODEL : GEMINI_DEFAULT_MODEL);
     $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . urlencode($apiKey);
 
     $payload = json_encode([
@@ -52,7 +56,7 @@ function gemini_generate(string $prompt): array {
 
     if ($httpCode !== 200) {
         $msg = $data['error']['message'] ?? "HTTP {$httpCode}";
-        return ['success' => false, 'error' => 'Gemini: ' . $msg];
+        return ['success' => false, 'error' => "Gemini ({$model}): {$msg}"];
     }
 
     $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
@@ -63,5 +67,5 @@ function gemini_generate(string $prompt): array {
             : 'Gemini no devolvió texto.'];
     }
 
-    return ['success' => true, 'text' => trim($text)];
+    return ['success' => true, 'text' => trim($text), 'model' => $model];
 }
