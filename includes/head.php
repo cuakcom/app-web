@@ -46,9 +46,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="themes/theme-luminous.css">
-    <link rel="stylesheet" href="themes/theme-neon-tokyo.css">
+    <link rel="stylesheet" href="style.css?v=<?= APP_VERSION ?>">
+    <link rel="stylesheet" href="themes/theme-luminous.css?v=<?= APP_VERSION ?>">
+    <link rel="stylesheet" href="themes/theme-neon-tokyo.css?v=<?= APP_VERSION ?>">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
 <body>
