@@ -2,7 +2,7 @@
 /**
  * Check Berry
  */
-define('APP_VERSION', '4.0.3');
+define('APP_VERSION', '4.0.4');
 
 require_once __DIR__ . '/menu.php';
 
