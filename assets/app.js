@@ -1673,25 +1673,31 @@ new Sortable(document.getElementById('col-mail-right'), sortOpts);
 
 // ── Smart Check (Herramientas) ─────────────────────────────────
 async function startSmartCheck() {
-    const query      = document.getElementById('sc-query').value.trim();
-    const checkType  = document.getElementById('sc-type').value;
-    const question   = document.getElementById('sc-question').value.trim();
-    if (!query && !question) return;
-
+    const summary = document.getElementById('sc-summary');
+    const secEl   = document.getElementById('sc-sections');
     const btnText = document.getElementById('sc-btn-text');
     const btnLoad = document.getElementById('sc-btn-loading');
     const btn     = document.getElementById('sc-btn');
-    const summary = document.getElementById('sc-summary');
-    const secEl   = document.getElementById('sc-sections');
-
-    btnText.classList.add('d-none');
-    btnLoad.classList.remove('d-none');
-    btn.disabled = true;
-    document.getElementById('sc-results').classList.remove('d-none');
-    summary.innerHTML = '<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>';
-    secEl.innerHTML = '';
 
     try {
+        const query     = document.getElementById('sc-query').value.trim();
+        const checkType = document.getElementById('sc-type').value;
+        const question  = document.getElementById('sc-question').value.trim();
+
+        document.getElementById('sc-results').classList.remove('d-none');
+
+        if (!query && !question) {
+            summary.innerHTML = '<span class="text-danger">Escribe un correo, dominio o IP, o al menos una pregunta.</span>';
+            secEl.innerHTML = '';
+            return;
+        }
+
+        btnText.classList.add('d-none');
+        btnLoad.classList.remove('d-none');
+        btn.disabled = true;
+        summary.innerHTML = '<div class="skeleton-wrap"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>';
+        secEl.innerHTML = '';
+
         const body = new URLSearchParams({query, check_type: checkType, question});
         const res  = await fetch('smart_check.php', {method: 'POST', body});
         const data = await res.json();
@@ -1719,7 +1725,7 @@ async function startSmartCheck() {
             secEl.appendChild(a);
         });
     } catch (e) {
-        summary.innerHTML = `<span class="text-danger">Error de conexión: ${escapeHtml(e.message)}</span>`;
+        summary.innerHTML = `<span class="text-danger">Error inesperado: ${escapeHtml(e.message)}</span>`;
     } finally {
         btnText.classList.remove('d-none');
         btnLoad.classList.add('d-none');
