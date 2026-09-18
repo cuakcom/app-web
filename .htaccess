@@ -1,14 +1,14 @@
 # Desactivar el listado de directorios
 Options -Indexes
 
-# Bloquear acceso directo a la carpeta de módulos
+# Bloquear acceso directo a carpetas que solo deben incluirse desde PHP
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^modules/.*$ - [F,L]
+    RewriteRule ^(modules|sections|includes|py)/.*$ - [F,L]
 </IfModule>
 
-# Proteger archivos de configuración y git
-<FilesMatch "^\.git|functions\.php">
+# Proteger archivos de configuración, git y claves
+<FilesMatch "^\.git|functions\.php|config\.php$|menu\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>
