@@ -39,8 +39,8 @@ document.addEventListener('click', e => {
         hideHistoryDropdown();
 });
 
-// ── Ocultar buscador en pestañas con input propio ──────────────
-const TABS_NO_SEARCH = new Set(['tab-dns-btn', 'tab-redes-btn']);
+// ── Ocultar buscador en pestañas con input propio o sin analizador ──
+const TABS_NO_SEARCH = new Set(['tab-dns-btn', 'tab-redes-btn', 'tab-util-btn', 'tab-herr-btn', 'tab-dev-btn']);
 document.getElementById('mainTabs').addEventListener('shown.bs.tab', e => {
     const hide = TABS_NO_SEARCH.has(e.target.id);
     document.getElementById('search-card-wrap').classList.toggle('d-none', hide);
