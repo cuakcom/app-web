@@ -38,7 +38,8 @@
                         <div class="col-12 col-md-5">
                             <label class="form-label small fw-semibold mb-1">Modelo de Gemini</label>
                             <select id="sc-model" class="form-select form-select-sm" onchange="toggleCustomModel()">
-                                <option value="gemini-2.0-flash" selected>gemini-2.0-flash (recomendado)</option>
+                                <option value="gemini-3.1-flash-lite" selected>gemini-3.1-flash-lite (recomendado)</option>
+                                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
                                 <option value="gemini-2.0-flash-lite">gemini-2.0-flash-lite</option>
                                 <option value="gemini-1.5-flash">gemini-1.5-flash</option>
                                 <option value="gemini-1.5-pro">gemini-1.5-pro</option>
@@ -50,7 +51,7 @@
                             <input type="text" id="sc-model-custom" class="form-control form-control-sm" placeholder="gemini-2.5-flash">
                         </div>
                     </div>
-                    <p class="small text-muted mt-1 mb-0" style="font-size:0.72rem">Por defecto usamos <code>gemini-2.0-flash</code> (gratis en Google AI Studio). Cámbialo aquí si tu clave tiene acceso a otro modelo.</p>
+                    <p class="small text-muted mt-1 mb-0" style="font-size:0.72rem">Por defecto usamos <code>gemini-3.1-flash-lite</code>. Si tu clave da error con un modelo, prueba otro de la lista o escribe el nombre exacto que veas en tu panel de Google AI Studio.</p>
                 </div>
             </div>
 

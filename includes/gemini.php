@@ -6,7 +6,11 @@
  * que "adivine" nada por su cuenta.
  */
 
-const GEMINI_DEFAULT_MODEL = 'gemini-2.0-flash';
+// gemini-2.0-flash daba 404 en las pruebas del usuario (modelo retirado);
+// gemini-3.1-flash-lite es el que confirmó como disponible en su panel de
+// Google AI Studio con más cuota. Si cambia de nuevo, se puede pasar
+// cualquier otro nombre desde el selector de Herramientas sin tocar código.
+const GEMINI_DEFAULT_MODEL = 'gemini-3.1-flash-lite';
 
 /** @param string|null $modelOverride Modelo a usar en esta llamada (p.ej. elegido en el Smart Check); si es null se usa GEMINI_MODEL de config.php o GEMINI_DEFAULT_MODEL. */
 function gemini_generate(string $prompt, ?string $modelOverride = null): array {
@@ -55,8 +59,16 @@ function gemini_generate(string $prompt, ?string $modelOverride = null): array {
     $data = json_decode($response, true);
 
     if ($httpCode !== 200) {
-        $msg = $data['error']['message'] ?? "HTTP {$httpCode}";
-        return ['success' => false, 'error' => "Gemini ({$model}): {$msg}"];
+        // Verboso a propósito: se muestra en la UI para poder diagnosticar
+        // (modelo no encontrado, clave sin permiso, cuota agotada...).
+        $msg = $data['error']['message'] ?? null;
+        $status = $data['error']['status'] ?? null;
+        if ($msg) {
+            $detail = $msg . ($status ? " [{$status}]" : '');
+        } else {
+            $detail = trim($response) !== '' ? trim($response) : "HTTP {$httpCode}";
+        }
+        return ['success' => false, 'error' => "Gemini HTTP {$httpCode} (modelo: {$model}): {$detail}"];
     }
 
     $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;

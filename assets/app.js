@@ -1714,7 +1714,18 @@ async function startSmartCheck() {
 
         const body = new URLSearchParams({query, check_type: checkType, question, model});
         const res  = await fetch('smart_check.php', {method: 'POST', body});
-        const data = await res.json();
+        const rawText = await res.text();
+
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (parseErr) {
+            // El servidor no devolvió JSON (error PHP, proxy, etc.): mostramos
+            // el texto crudo para poder diagnosticarlo en vez de fallar en silencio.
+            summary.innerHTML = `<span class="text-danger">Respuesta inesperada del servidor (HTTP ${res.status}):</span>` +
+                `<pre class="small text-muted mt-1 mb-0" style="white-space:pre-wrap">${escapeHtml(rawText).slice(0, 2000)}</pre>`;
+            return;
+        }
 
         if (!data.success) {
             summary.innerHTML = `<span class="text-danger">${escapeHtml(data.error ?? 'Error desconocido')}</span>`;
