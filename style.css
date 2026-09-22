@@ -32,6 +32,14 @@
     color: var(--text-muted) !important;
 }
 
+/* Utilidades/Desarrollo: campos de entrada/salida de código (JSON, YAML,
+   regex, hex...) en monoespaciada, igual que el resto de salidas técnicas
+   de la app (.dns-value, .whois-scroll...). */
+.tool-mono {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.78rem;
+}
+
 body.dark-mode {
     --bg:          #0f172a;
     --card-bg:     #1e293b;

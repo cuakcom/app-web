@@ -7,10 +7,6 @@
  * contiene su contenido (y, si tiene sub-apartados propios, los resuelve
  * internamente con su propia navegación izquierda).
  *
- * 'placeholder' => true = apartado aún sin utilidades (aparece en el menú,
- * pero muestra un aviso "en construcción") hasta que una fase posterior le
- * añada contenido real tocando solo el archivo de esa sección.
- *
  * 'btn_id'/'pane_id' deben coincidir con los id= usados dentro del archivo
  * de la sección (data-bs-target) y con las reglas de color en style.css.
  */
@@ -68,7 +64,6 @@ const MENU = [
         'file'        => __DIR__ . '/sections/utilidades.php',
         'btn_id'      => 'tab-util-btn',
         'pane_id'     => 'tab-utilidades',
-        'placeholder' => true,
     ],
     [
         'key'     => 'herramientas',
@@ -86,6 +81,5 @@ const MENU = [
         'file'        => __DIR__ . '/sections/desarrollo.php',
         'btn_id'      => 'tab-dev-btn',
         'pane_id'     => 'tab-desarrollo',
-        'placeholder' => true,
     ],
 ];

@@ -50,5 +50,9 @@
     <link rel="stylesheet" href="themes/theme-luminous.css?v=<?= APP_VERSION ?>">
     <link rel="stylesheet" href="themes/theme-neon-tokyo.css?v=<?= APP_VERSION ?>">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <!-- Utilidades/Desarrollo: conversores puntuales, ver assets/utilidades.js y assets/desarrollo.js -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cronstrue@2.50.0/dist/cronstrue.min.js"></script>
 </head>
 <body>

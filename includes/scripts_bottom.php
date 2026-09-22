@@ -15,3 +15,5 @@
     )) ?>;
 </script>
 <script src="assets/app.js?v=<?= APP_VERSION ?>"></script>
+<script src="assets/utilidades.js?v=<?= APP_VERSION ?>"></script>
+<script src="assets/desarrollo.js?v=<?= APP_VERSION ?>"></script>
