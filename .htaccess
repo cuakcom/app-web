@@ -1,14 +1,23 @@
 # Desactivar el listado de directorios
 Options -Indexes
 
-# Bloquear acceso directo a la carpeta de módulos
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^modules/.*$ - [F,L]
+# Servir todos los archivos de texto (css/js/svg...) como UTF-8.
+# Sin esto, los acentos en comentarios/textos aparecen como mojibake
+# (p.ej. "pestañas" -> "pestaÃ±as") porque el navegador asume otra
+# codificación por defecto.
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .css .js .svg .json
 </IfModule>
 
-# Proteger archivos de configuración y git
-<FilesMatch "^\.git|functions\.php">
+# Bloquear acceso directo a carpetas que solo deben incluirse desde PHP
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(modules|sections|includes|py|data)/.*$ - [F,L]
+</IfModule>
+
+# Proteger archivos de configuración, git y claves
+<FilesMatch "^\.git|functions\.php|config\.php$|menu\.php$|roadmap_review\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>

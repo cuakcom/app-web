@@ -6,6 +6,10 @@
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
+// Margen por encima del "timeout 20" que aplica modules/whois.php al binario
+// whois, para que el propio script de api.php nunca se corte primero.
+set_time_limit(30);
+
 require_once __DIR__ . '/functions.php';
 
 // ── Rate limiting (180 req/min por IP) ────────────────────────────────────────

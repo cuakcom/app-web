@@ -19,3 +19,9 @@ cgi-bin/
 
 # Claves API (no subir al repositorio)
 config.php
+
+# Base de datos SQLite (usuarios, whitelist, roadmap) - se crea en el servidor
+data/*.db
+data/*.db-journal
+data/*.db-shm
+data/*.db-wal

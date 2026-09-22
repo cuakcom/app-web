@@ -4,12 +4,21 @@
  * Configurar en GitHub: Settings > Webhooks > Add webhook
  * URL: https://inteligenciageneral.com/app/deploy.php
  * Content type: application/json
- * Secret: (el mismo valor que DEPLOY_SECRET abajo)
+ * Secret: el valor de DEPLOY_SECRET en config.php
  */
 
-define('DEPLOY_SECRET', 'CAMBIA_ESTE_TOKEN_POR_UNO_SEGURO');
+$configFile = __DIR__ . '/config.php';
+if (file_exists($configFile)) {
+    require_once $configFile;
+}
+
+if (!defined('DEPLOY_SECRET') || DEPLOY_SECRET === '') {
+    http_response_code(500);
+    exit('DEPLOY_SECRET no configurado en config.php');
+}
+
 define('REPO_DIR', '/var/www/vhosts/inteligenciageneral.com/httpdocs/app');
-define('BRANCH', 'master');
+define('BRANCH', 'main');
 
 // Verificar firma de GitHub
 $payload   = file_get_contents('php://input');
