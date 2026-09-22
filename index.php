@@ -6,6 +6,12 @@ require_once __DIR__ . '/includes/version.php';
 require_once __DIR__ . '/menu.php';
 require_once __DIR__ . '/includes/auth.php';
 
+// session_start() debe correr antes de imprimir cualquier byte. header.php
+// llama a current_user() para pintar "Mi cuenta", pero eso pasa DESPUÉS de
+// que head.php ya haya emitido <!DOCTYPE html> y todo el <head> — arrancar
+// la sesión aquí evita el warning "headers already sent".
+auth_start_session();
+
 // Datos del visitante (server-side)
 function getClientIp(): string {
     foreach (['HTTP_CF_CONNECTING_IP','HTTP_X_REAL_IP','HTTP_X_FORWARDED_FOR','REMOTE_ADDR'] as $h) {
