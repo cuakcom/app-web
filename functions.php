@@ -106,3 +106,31 @@ function run_modules(array $specs, string $domain): array {
 function run_module(string $module, string $domain, array $extraGet = []): array {
     return run_modules([[$module, $extraGet]], $domain)[$module];
 }
+
+/**
+ * Oculta emails y teléfonos antes de mandar datos a Gemini. Un WHOIS sin
+ * protección de privacidad expone datos personales reales del registrante
+ * (nombre, email, teléfono, dirección); pasárselo tal cual a un LLM de
+ * terceros puede hacer que su filtro de contenido bloquee la respuesta
+ * (PROHIBITED_CONTENT) y además reexpone esos datos innecesariamente. No
+ * afecta al dato crudo que ve el propio usuario (raw), solo a la copia que
+ * se usa para construir el prompt.
+ */
+function redact_personal_data_for_ai(mixed $data): mixed {
+    if (is_array($data)) {
+        return array_map('redact_personal_data_for_ai', $data);
+    }
+    if (!is_string($data)) {
+        return $data;
+    }
+    $data = preg_replace('/[\w.+-]+@[\w-]+\.[a-z]{2,}/i', '[email oculto]', $data);
+    // Solo formatos de teléfono reconocibles (prefijo "+" tipo RFC 5733
+    // "+34.912345678", con espacios "912 345 678" o con paréntesis). A
+    // propósito NO se tocan secuencias solo con guiones: coincidirían con
+    // fechas tipo "2027-01-15", justo el dato que "caducidad del dominio"
+    // necesita mostrar.
+    $data = preg_replace('/\+\d[\d\s.\-]{6,20}\d/', '[teléfono oculto]', $data);
+    $data = preg_replace('/\(\d{1,4}\)[\s.\-]?\d[\d\s.\-]{4,}\d/', '[teléfono oculto]', $data);
+    $data = preg_replace('/\b\d{2,4}(?:[ ]\d{2,4}){2,}\b/', '[teléfono oculto]', $data);
+    return $data;
+}

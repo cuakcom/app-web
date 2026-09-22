@@ -112,6 +112,7 @@ $checkLabel = $config['label'] ?? 'Consulta general';
 $promptLines = [
     'Eres el asistente de soporte técnico de Check Berry. Responde en español, tono técnico y directo, máximo 120 palabras.',
     'Basa tu respuesta ÚNICAMENTE en los datos JSON de abajo, que ya han sido verificados por herramientas reales (WHOIS, DNS, listas negras...). No inventes datos que no estén ahí. Si un dato no está disponible, dilo.',
+    'No incluyas datos personales de contacto (nombres, emails, teléfonos, direcciones) aunque aparezcan en los datos; céntrate en fechas, estado, registrador y datos técnicos del dominio.',
     '',
     'Consulta del usuario: "' . $rawQuery . '"',
     'Tipo de comprobación solicitada: ' . $checkLabel,
@@ -124,7 +125,7 @@ if (!empty($config['nota'])) {
 }
 $promptLines[] = '';
 $promptLines[] = 'Datos verificados (JSON):';
-$promptLines[] = json_encode($results, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+$promptLines[] = json_encode(redact_personal_data_for_ai($results), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 $prompt = implode("\n", $promptLines);
 
 $gemini = empty($results) && $domain === ''

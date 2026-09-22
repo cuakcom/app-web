@@ -23,6 +23,15 @@
     --hdr-row-bg:  #f8fafc;
 }
 
+/* Bootstrap fija .text-muted a su propia variable (--bs-secondary-color),
+   ajena a nuestro sistema de temas: en body.dark-mode y los temas
+   alternativos ese gris no cambia con --card-bg, y en algunos casos el
+   contraste resultante deja el texto casi invisible. Lo enganchamos a
+   nuestra propia variable, que sí está definida en los 4 temas. */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
 body.dark-mode {
     --bg:          #0f172a;
     --card-bg:     #1e293b;
