@@ -17,7 +17,7 @@ AddDefaultCharset UTF-8
 </IfModule>
 
 # Proteger archivos de configuración, git y claves
-<FilesMatch "^\.git|functions\.php|config\.php$|menu\.php$">
+<FilesMatch "^\.git|functions\.php|config\.php$|menu\.php$|roadmap_review\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>

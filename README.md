@@ -34,6 +34,15 @@ Diagnóstico · Web · Correo · DNS · Redes · Utilidades · Herramientas · D
 - Los enlaces "ver en detalle" (`index.php?tab=<seccion>&q=<consulta>`) los resuelve `assets/app.js` al cargar la página: activa la pestaña y rellena el buscador, sin que la IA tenga que generar URLs.
 - Sin `GEMINI_API_KEY` configurada, el resto sigue funcionando (se ven los datos crudos y un aviso en vez de resumen).
 
+## Revisión diaria del roadmap (Fase 5)
+
+- `roadmap_review.php` — script de línea de comandos (rechaza peticiones HTTP, y `.htaccess` ya lo bloquea igualmente por si acaso). Le pasa a Gemini la estructura actual de la app (secciones de `menu.php` + módulos de `/modules`) y, si detecta un hueco funcional que no esté ya cubierto ni propuesto antes, añade una fila a `roadmap_items` con `source = 'routine'` (se ve en `admin.php` como "propuesta automática"). Si no encuentra nada que merezca la pena, no inserta nada.
+- Solo se ejecuta una vez al día: usa la tabla `roadmap_imports` para marcar el día como procesado y no repetirse si se relanza.
+- No se puede disparar como una Routine de Claude Code: este entorno de desarrollo no tiene salida de red hacia el servidor de producción ni hacia Gemini. Tiene que ser un cron real en el propio servidor. Añade en el crontab del usuario que ejecuta PHP (ajusta la ruta si tu despliegue no está en `/httpdocs/app`):
+  ```
+  0 8 * * * /usr/bin/php /var/www/vhosts/inteligenciageneral.com/httpdocs/app/roadmap_review.php >> /var/www/vhosts/inteligenciageneral.com/httpdocs/app/roadmap_review.log 2>&1
+  ```
+
 ## Instalación en Plesk
 
 1. Clonar este repo en `/httpdocs/app`.
